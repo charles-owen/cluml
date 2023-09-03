@@ -48,15 +48,15 @@ module.exports = {
             patterns: [
                 {
                     from: 'src/img/*.png',
-                    to: 'cirsim/img/[name][ext]'
+                    to: 'cluml/img/[name][ext]'
                 },
                 {
                     from: 'src/img/*.ico',
-                    to: 'cirsim/img/[name][ext]'
+                    to: 'cluml/img/[name][ext]'
                 },
                 {
                     from: 'src/help',
-                    to: 'cirsim/help'
+                    to: 'cluml/help'
                 }
             ]
         })

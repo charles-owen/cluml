@@ -98,8 +98,8 @@ export const Options = function(options) {
     this.exit = null;
 
     /// If set to a name, a global variable will be created with that name
-    /// that points to the Cirsim Main object. This allows Javascript in a
-    /// page script tag to control a Cirsim instance.
+    /// that points to the Cluml Main object. This allows Javascript in a
+    /// page script tag to control a Cluml instance.
     this.global = null;
 
     /// Display all output states
