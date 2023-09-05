@@ -1,6 +1,7 @@
 // import {Main} from './Main';
 import {Options} from './Options';
 import {Ready} from './Utility/Ready';
+import {Main} from "./Main";
 
 /**
  * Create an instance of Cluml
