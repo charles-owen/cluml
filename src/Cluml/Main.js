@@ -7,8 +7,13 @@ import {Palette} from './Pallete';
 // import {Tabs} from './Tabs';
 // import {ExportDlg} from './Dlg/ExportDlg';
 // import {ImportDlg} from './Dlg/ImportDlg';
-import {Test} from './Test/Test';
 // import {Toast} from './Graphics/Toast';
+import {Model} from './Model';
+import {Diagram} from './Diagram';
+import {Tabs} from './Tabs';
+// import {ExportDlg} from './Dlg/ExportDlg';
+// import {ImportDlg} from './Dlg/ImportDlg';
+import {Test} from './Test/Test';
 // import {FileSaveDialog} from './Dlg/FileSaveDialog';
 // import {FileOpenDialog} from './Dlg/FileOpenDialog';
 // import {SaveDialog} from './Dlg/SaveDialog';
@@ -16,6 +21,9 @@ import {Test} from './Test/Test';
 // import {View} from './View';
 // import {HelpDiv} from './Graphics/HelpDiv';
 // import {DragAndDrop} from './UI/DragAndDrop';
+import {View} from './View';
+// import {HelpDiv} from './Graphics/HelpDiv';
+import {DragAndDrop} from './UI/DragAndDrop';
 import {Tools} from './DOM/Tools';
 import {Ajax} from './Utility/Ajax';
 import {JsonAPI} from "./Utility/JsonAPI";
@@ -37,7 +45,7 @@ export const Main = function(cluml, element, tests) {
     this.cluml = cluml;
     this.element = element;
     this.options = cluml.options;
-    // this.components = cluml.components;
+    this.components = cluml.components;
     this.test = new Test(this);
 
     /// div.main
@@ -98,7 +106,7 @@ export const Main = function(cluml, element, tests) {
                 }
             }
 
-            // this.dragAndDrop = new DragAndDrop(this);
+           this.dragAndDrop = new DragAndDrop(this);
 
             //
             // Install a mutation observer so we can know if the
@@ -120,12 +128,12 @@ export const Main = function(cluml, element, tests) {
         //
         // Instantiate a model object
         //
-        // model = new Model(this);
-        // this.model = model;
+         model = new Model(this);
+         this.model = model;
         //
-        // for(let i in this.options.tabs) {
-        //     this.model.circuits.add(new Circuit(this.options.tabs[i]));
-        // }
+        //for(let i in this.options.tabs) {
+            //this.model.diagrams.add(new Diagram(this.options.tabs[i]));
+        //}
 
         if(this.options.load !== null) {
             model.fmJSON(this.options.load);
@@ -146,8 +154,8 @@ export const Main = function(cluml, element, tests) {
 
             // this.help = new HelpDiv(this);
 
-            // tabs = new Tabs(this);
-            // this.tabs = tabs;
+            tabs = new Tabs(this);
+            this.tabs = tabs;
 
             //
             // Add the menu
@@ -195,9 +203,9 @@ export const Main = function(cluml, element, tests) {
             const canvas = document.createElement('canvas');
             div.appendChild(canvas);
 
-            // let circuit = model.circuits.getCircuit('main');
-            // let view = new View(this, canvas, circuit, 0);
-            // model.getSimulation().setView(view);
+            let diagram = model.diagrams.getDiagram('main');
+            //let view = new View(this, canvas, diagram, 0);
+            //model.getSimulation().setView(view);
 
             //
             // And the overlay
@@ -206,7 +214,7 @@ export const Main = function(cluml, element, tests) {
             divOverlay = Tools.createClassedDiv('cluml-overlay');
             element.appendChild(divOverlay);
 
-            // this.toast = new Toast(this);
+            this.toast = new Toast(this);
             this.toast.create(this.element);
         }
 
@@ -248,7 +256,7 @@ export const Main = function(cluml, element, tests) {
     }
 
     /**
-     * Backup the current circuits object in support of an Undo operation
+     * Backup the current diagrams object in support of an Undo operation
      */
     this.backup = function() {
         model.backup();
@@ -365,16 +373,16 @@ export const Main = function(cluml, element, tests) {
         dlg.open();
     };
 
-    // this.importTab = function() {
-    //     // Is the current tab in this list?
-    //     for(let i=0; i<this.options.imports.length; i++) {
-    //         const importer = this.options.imports[i];
-    //         if(importer.into === this.currentView().circuit.name) {
-    //             this.currentView().importTab(importer);
-    //             return;
-    //         }
-    //     }
-    // }
+    this.importTab = function() {
+        // Is the current tab in this list?
+        for(let i=0; i<this.options.imports.length; i++) {
+            const importer = this.options.imports[i];
+            if(importer.into === this.currentView().diagram.name) {
+                this.currentView().importTab(importer);
+                return;
+            }
+        }
+    }
 
     /**
      * Complete reload after a new model is loaded

@@ -1,7 +1,8 @@
-// import {Main} from './Main';
+
 import {Options} from './Options';
 import {Ready} from './Utility/Ready';
 import {Main} from "./Main";
+import {Components} from './Components';
 
 /**
  * Create an instance of Cluml
@@ -43,8 +44,20 @@ export const Cluml = function(sel, options) {
     // The Options object that manages user options
     this.options = new Options(options);
 
+    //
+    // Install all components and configure standard
+    // Cluml palettes.
+    //
+    this.components = new Components();
+    //All(this.components);
+
     // A collection of Main objects.
     var mains = [];
+
+    // A collection of tests.
+    // We collect those in Cluml because the actual
+    // Main may not be created, yet.
+    var tests = [];
 
     /**
      * Start Cluml running, creating the user interface.

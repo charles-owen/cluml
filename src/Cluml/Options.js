@@ -102,19 +102,24 @@ export const Options = function(options) {
     /// page script tag to control a Cluml instance.
     this.global = null;
 
+    /// Indication of what components are included in the palette.
+    /// This can be:
+    /// A string with a palette name
+    /// [or] An array containing strings that name components
+    /// or palette names.
+    ///
+    /// Examples:
+    /// components: 'combinatorial'
+    /// components: ['combinatorial', 'Or3', 'Or4']
+    /// components: ['sequential']
+    ///
+    this.components = ['combinatorial', 'sequential'];
+
     /// Display all output states
     this.showOutputStates = false;
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    for(const property in options) {
-        if(options.hasOwnProperty(property)) {
-            if(!this.hasOwnProperty(property)) {
-                throw new Error("Invalid option " + property);
-            }
-            this[property] = options[property];
-        }
-    }
 
     /**
      * Get the API operations for a given file mode.

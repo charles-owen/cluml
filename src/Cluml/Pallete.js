@@ -25,73 +25,64 @@ export const Palette = function(main, work) {
         // We allow either an array of strings in components
         // or a string naming a specific named palette
         if(typeof main.options.components === "string") {
-            // components = main.components.getPalette(main.options.components);
-            // if(components === null) {
-            //     throw new Error('options.components invalid name ' + main.options.components);
-            // }
+            components = main.components.getPalette(main.options.components);
+            if(components === null) {
+                 throw new Error('options.components invalid name ' + main.options.components);
+            }
         } else {
             main.options.components.forEach((component) => {
                 // This can be a component name or a palette name
-                // let palette = main.components.getPalette(component);
-                // if(palette !== null) {
-                //     components = components.concat(palette);
-                // } else {
-                //     // // Some component aliases
-                //     // if(component.toLowerCase() === 'not') {
-                //     //     component = 'Inverter';
-                //     // }
-                //     //
-                //     // if(component.toLowerCase() === 'decoder') {
-                //     //     component = 'BusDecoder';
-                //     // }
-                //
-                //     components.push(component);
-                // }
+                let palette = main.components.getPalette(component);
+                if(palette !== null) {
+                    components = components.concat(palette);
+                } else {
+                    components.push(component);
+                }
             });
         }
 
-        // //
-        // // Load the circuit components into the palette
-        // //
-        // main.components.components.forEach(function(obj) {
-        //     addToPalette(obj);
-        // });
+        //
+        // Load the diagram components into the palette
+        //
+        main.components.components.forEach(function(obj) {
+            addToPalette(obj);
+        });
     }
 
-    // const addToPalette = (obj) => {
-    //     // Only some components get added to the pallet...
-    //     // A component is added if it is in the current
-    //     // list of components or main.options.always
-    //     let name = obj.type;
-    //     if(!Util.inArray(name, components) &&
-    //         !Util.inArray(name, main.options.always)) {
-    //         return;
-    //     }
-    //
-    //     this.palette.push(obj);
-    //     const pi = new PaletteItem(this, obj);
-    //     div.appendChild(pi.element);
-    // }
+    const addToPalette = (obj) => {
+        // Only some components get added to the pallet...
+        // A component is added if it is in the current
+        // list of components or main.options.always
+        let name = obj.type;
+        if(!Util.inArray(name, components) &&
+            !Util.inArray(name, main.options.always)) {
+            return;
+        }
+
+        this.palette.push(obj);
+        const pi = new PaletteItem(this, obj);
+        div.appendChild(pi.element);
+    }
 
     /**
     //  * Refresh the palette after any tab changes.
-    //  * Ensures any CircuitRef palette items are correct
+    //  * Ensures any DiagramRef palette items are correct
     //  */
-    // this.refresh = function() {
-    //     // Remove any palette items that are of class "circuitref"
-    //     for(const c of div.querySelectorAll('.cs-circuitref')) {
-    //         div.removeChild(c);
-    //     }
-    //
-    //     // Add any necessary circuitref palette items
-    //     for(let i = main.currentView().tabnum+1;  i < main.model.circuits.circuits.length;  i++) {
-    //         const circuit = main.model.circuits.circuits[i];
-    //
-    //         const pi = new PaletteItem(this, CircuitRef, circuit);
-    //         pi.element.classList.add('cs-circuitref');
-    //         div.appendChild(pi.element);
-    //     }
-    // }
+    this.refresh = function() {
+        // Remove any palette items that are of class "diagramref"
+        for(const c of div.querySelectorAll('.cs-diagramref')) {
+            div.removeChild(c);
+        }
+
+        // Add any necessary diagramref palette items
+        for(let i = main.currentView().tabnum+1;  i < main.model.diagrams.diagrams.length;  i++) {
+            const diagram = main.model.diagrams.diagrams[i];
+
+            const pi = new PaletteItem(this, DiagramRef, diagram);
+            pi.element.classList.add('cs-diagramref');
+            div.appendChild(pi.element);
+        }
+    }
 
     initialize();
 };
