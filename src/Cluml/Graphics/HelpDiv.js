@@ -1,15 +1,14 @@
-
-import {HelpPresenter} from '../Graphics/HelpPresenter';
+import {HelpPresenter} from './HelpPresenter';
 import {Tools} from '../DOM/Tools';
 
 /**
- * Help <div> that appears to the right of Cirsim
+ * Help <div> that appears to the right of Cluml
  * @constructor
  */
 export const HelpDiv = function(main) {
 
-    var helpDiv = null;
-    var presenter;
+    const helpDiv = null;
+    let presenter;
 
     const initialize = () => {
         // Page contents
@@ -19,7 +18,7 @@ export const HelpDiv = function(main) {
 	    this.element = helpDiv;
 	    main.element.appendChild(helpDiv);
 
-        let html = `<div class="header"><h1>Cirsim Help</h1>
+    helpDiv.innerHTML = `<div class="header"><h1>Cluml Help</h1>
 <button type="button" class="help-back" title="Back">
 <span class="icons-cl icons-cl-arrowthick-1-w"></span></button>
 <button type="button" class="help-home" title="Home">
@@ -28,8 +27,6 @@ export const HelpDiv = function(main) {
 <span class="icons-cl icons-cl-closethick"></span></button>
 </div>
 ${presenter.html()}`;
-
-	    helpDiv.innerHTML = html;
 
         presenter.present('');
 

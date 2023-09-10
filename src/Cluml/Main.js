@@ -1,37 +1,23 @@
 import Resizer from 'resizer-cl';
 
-// import {Menu} from './Menu';
+import {Menu} from './Menu';
 import {Palette} from './Pallete';
-// import {Model} from './Model';
-// import {Circuit} from './Circuit';
-// import {Tabs} from './Tabs';
-// import {ExportDlg} from './Dlg/ExportDlg';
-// import {ImportDlg} from './Dlg/ImportDlg';
-// import {Toast} from './Graphics/Toast';
 import {Model} from './Model';
 import {Diagram} from './Diagram';
 import {Tabs} from './Tabs';
-// import {ExportDlg} from './Dlg/ExportDlg';
-// import {ImportDlg} from './Dlg/ImportDlg';
 import {Test} from './Test/Test';
-// import {FileSaveDialog} from './Dlg/FileSaveDialog';
-// import {FileOpenDialog} from './Dlg/FileOpenDialog';
-// import {SaveDialog} from './Dlg/SaveDialog';
-// import {OpenDialog} from './Dlg/OpenDialog';
-// import {View} from './View';
-// import {HelpDiv} from './Graphics/HelpDiv';
-// import {DragAndDrop} from './UI/DragAndDrop';
+import {FileSaveDialog} from './Dlg/FileSaveDialog';
+import {FileOpenDialog} from './Dlg/FileOpenDialog';
+import {SaveDialog} from './Dlg/SaveDialog';
+import {OpenDialog} from './Dlg/OpenDialog';
 import {View} from './View';
-// import {HelpDiv} from './Graphics/HelpDiv';
+import {HelpDiv} from './Graphics/HelpDiv';
 import {DragAndDrop} from './UI/DragAndDrop';
 import {Tools} from './DOM/Tools';
 import {Ajax} from './Utility/Ajax';
 import {JsonAPI} from "./Utility/JsonAPI";
 import {Toast} from "./Graphics/Toast";
-import {FileOpenDialog} from "./Dlg/FileOpenDialog";
-import {FileSaveDialog} from "./Dlg/FileSaveDialog";
 import {ExportDlg} from "./Dlg/ExportDlg";
-import {SaveDialog} from "./Dlg/SaveDialog";
 import {ImportDlg} from "./Dlg/ImportDlg";
 
 /**
@@ -69,8 +55,23 @@ export const Main = function(cluml, element, tests) {
     /// The active editing model
     let model = null;
 
-    /// References to other model components
-    let menu=null, palette=null, tabs=null;
+    /// References to other model diagrams
+
+    /**
+     * The menu.
+     * @type {Menu}
+     */
+    let menu=null;
+    /**
+     * The palette.
+     * @type {Palette}
+     */
+    let palette=null
+    /**
+     * Tabs.
+     * @type {Tabs}
+     */
+    let tabs=null;
 
     /// div.overlay
     let divOverlay = null, divWork=null;
@@ -106,10 +107,10 @@ export const Main = function(cluml, element, tests) {
                 }
             }
 
-           this.dragAndDrop = new DragAndDrop(this);
+            this.dragAndDrop = new DragAndDrop(this);
 
             //
-            // Install a mutation observer so we can know if the
+            // Install a mutation observer, so we can know if the
             // element that contains cluml is removed from the
             // DOM.
             //
@@ -128,19 +129,19 @@ export const Main = function(cluml, element, tests) {
         //
         // Instantiate a model object
         //
-         model = new Model(this);
-         this.model = model;
-        //
-        //for(let i in this.options.tabs) {
-            //this.model.diagrams.add(new Diagram(this.options.tabs[i]));
-        //}
+        model = new Model(this);
+        this.model = model;
 
-        if(this.options.load !== null) {
-            model.fmJSON(this.options.load);
+        for(let i in this.options.tabs) {
+            this.model.diagrams.add(new Diagram(this.options.tabs[i]));
+        }
+
+        if(this.options.preloadJson !== null) {
+            model.fmJSON(this.options.preloadJson);
         }
 
         //
-        // Create and add the window components
+        // Create and add the window diagrams
         //
         if(options.display !== 'inline' && options.display !== 'none') {
             //
@@ -152,7 +153,7 @@ export const Main = function(cluml, element, tests) {
             this.div = Tools.createClassedDiv('main');
             this.element.appendChild(this.div);
 
-            // this.help = new HelpDiv(this);
+            this.help = new HelpDiv(this);
 
             tabs = new Tabs(this);
             this.tabs = tabs;
@@ -160,8 +161,8 @@ export const Main = function(cluml, element, tests) {
             //
             // Add the menu
             //
-            // menu = new Menu(this);
-            // this.menu = menu;
+            menu = new Menu(this);
+            this.menu = menu;
 
             //
             // Working area
@@ -204,8 +205,8 @@ export const Main = function(cluml, element, tests) {
             div.appendChild(canvas);
 
             let diagram = model.diagrams.getDiagram('main');
-            //let view = new View(this, canvas, diagram, 0);
-            //model.getSimulation().setView(view);
+            let view = new View(this, canvas, diagram, 0);
+            model.getSimulation().setView(view);
 
             //
             // And the overlay
@@ -222,16 +223,16 @@ export const Main = function(cluml, element, tests) {
         // If open is specified with a single name, we
         // automatically open the file when we start.
         //
-        // const open = this.options.getAPI('open');
-        // if(open !== null && open.url !== undefined && open.name !== undefined) {
-        //     this.filename = open.name;
-        //     var dlg = new OpenDialog(open.name, this.options, this.toast);
-        //     dlg.open((name, json) => {
-        //         model.fmJSON(json);
-        //         this.reload();
-        //         this.filename = name;
-        //     });
-        // }
+        const open = this.options.getAPI('open');
+        if(open !== null && open.url !== undefined && open.name !== undefined) {
+            this.filename = open.name;
+            const dlg = new OpenDialog(open.name, this.options, this.toast);
+            dlg.open((name, json) => {
+                model.fmJSON(json);
+                this.reload();
+                this.filename = name;
+            });
+        }
 
     }
 
@@ -249,9 +250,9 @@ export const Main = function(cluml, element, tests) {
      * Called whenever a new tab is selected
      */
     this.newTab = function() {
-        if(palette !== null) {
-            palette.refresh();
-        }
+        // if(palette !== null) {
+        //     palette.refresh();
+        // }
         model.newTab();
     }
 
@@ -268,7 +269,7 @@ export const Main = function(cluml, element, tests) {
     this.undo = function() {
         model.undo();
         tabs.undo();
-        palette.refresh();
+        // palette.refresh();
     };
 
     /**
@@ -373,16 +374,16 @@ export const Main = function(cluml, element, tests) {
         dlg.open();
     };
 
-    this.importTab = function() {
-        // Is the current tab in this list?
-        for(let i=0; i<this.options.imports.length; i++) {
-            const importer = this.options.imports[i];
-            if(importer.into === this.currentView().diagram.name) {
-                this.currentView().importTab(importer);
-                return;
-            }
-        }
-    }
+    // this.importTab = function() {
+    //     // Is the current tab in this list?
+    //     for(let i=0; i<this.options.imports.length; i++) {
+    //         const importer = this.options.imports[i];
+    //         if(importer.into === this.currentView().diagram.name) {
+    //             this.currentView().importTab(importer);
+    //             return;
+    //         }
+    //     }
+    // }
 
     /**
      * Complete reload after a new model is loaded
@@ -412,7 +413,7 @@ export const Main = function(cluml, element, tests) {
      * Load a model from JSON
      * @param json JSON source
      */
-    this.load = function(json) {
+    this.loadMain = function(json) {
         model.fmJSON(json);
         this.reload();
     }

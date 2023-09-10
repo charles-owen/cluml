@@ -17,9 +17,9 @@ export const ExportDlg = function(model) {
     this.open = function() {
         // Create the dialog box form
         const dlg = `<div class="control"><label for="${id}">Name</label>
-<input type="text" id="${id}" value="circuit" class="text ui-widget-content ui-corner-all">
+<input type="text" id="${id}" value="dialog" class="text ui-widget-content ui-corner-all">
 </div>
-<p>Enter a name for the exported .cirsim file.</p>`;
+<p>Enter a name for the exported .cluml file.</p>`;
 
         this.buttonOk = 'Export';
         this.contents(dlg, "Cluml Export");
@@ -29,7 +29,7 @@ export const ExportDlg = function(model) {
 
 
     /**
-     * Export the circuits as a file.
+     * Export the diagrams as a file.
      * Call by this.export below when Export pressed on the dialog box.
      */
     this.ok = function() {

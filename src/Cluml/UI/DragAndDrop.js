@@ -62,6 +62,10 @@ export const DragAndDrop = function(main) {
 		});
 	}
 
+	/**
+	 *
+	 * @param paletteItem {PaletteItem}
+	 */
 	const click = (paletteItem) => {
 		//
 		// Create a copy of the element and set it up for dragging
@@ -69,9 +73,9 @@ export const DragAndDrop = function(main) {
 		const clone = paletteItem.paletteImage();
 		main.element.appendChild(clone);
 		clone.style.position = 'absolute';
-		clone.style.top = 0;
-		clone.style.left = 0;
-		clone.style.zIndex = 100;
+		clone.style.top = '0';
+		clone.style.left = '0';
+		clone.style.zIndex = '100';
 		clone.style.cursor = 'pointer';
 
 		dragItem = paletteItem;
@@ -81,8 +85,8 @@ export const DragAndDrop = function(main) {
 	const mouseMove = (x, y) => {
 		if(dragElement !== null) {
 			const rect = main.element.getBoundingClientRect();
-			const mainX = rect.left + main.element.scrollLeft + window.pageXOffset;
-			const mainY = rect.top  + main.element.scrollTop + window.pageYOffset;
+			const mainX = rect.left + main.element.scrollLeft + window.scrollX;
+			const mainY = rect.top  + main.element.scrollTop + window.scrollY;
 
 			dragElement.style.left = (x - mainX - dragElement.clientWidth / 2) + 'px';
 			dragElement.style.top = (y - mainY - dragElement.clientHeight / 2) + 'px';
@@ -108,8 +112,8 @@ export const DragAndDrop = function(main) {
 				// Determine x,y in the canvas
 				//
 				const rect = viewElement.getBoundingClientRect();
-				const viewX = rect.left + viewElement.scrollLeft + window.pageXOffset;
-				const viewY = rect.top + viewElement.scrollTop + window.pageYOffset;
+				const viewX = rect.left + viewElement.scrollLeft + window.scrollX;
+				const viewY = rect.top + viewElement.scrollTop + window.scrollY;
 
 				if(x >= viewX &&
 					y >= viewY &&

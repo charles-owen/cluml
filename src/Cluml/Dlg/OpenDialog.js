@@ -30,8 +30,8 @@ export const OpenDialog = function(name, options, toast) {
 		        success: (data) => {
 			        const json = new JsonAPI(data);
 			        if (!toast.jsonErrors(json)) {
-				        const load = data.data[0].attributes.data;
-				        callback(name, load);
+				        const toLoad = data.data[0].attributes.data;
+				        callback(name, toLoad);
 			        }
 
 			        this.close();

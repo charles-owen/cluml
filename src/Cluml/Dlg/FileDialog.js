@@ -45,7 +45,7 @@ export const FileDialog = function(open, options, toast) {
         if(open) {
             this.contents(dlg, "File Open");
         } else {
-            dlg += '<p>Enter a name to save your circuit on the server as.</p>';
+            dlg += '<p>Enter a name to save your diagram on the server as.</p>';
             this.contents(dlg, "File Save");
         }
 
@@ -97,9 +97,9 @@ export const FileDialog = function(open, options, toast) {
             return;
         }
 
-        // Append .cirsim
-        if(this.filename.length < 8 || this.filename.substr(this.filename.length-7, 7) !== '.cirsim') {
-            this.filename += '.cirsim';
+        // Append .cluml
+        if(this.filename.length < 8 || this.filename.substr(this.filename.length-7, 7) !== '.cluml') {
+            this.filename += '.cluml';
         }
 
         if(open) {

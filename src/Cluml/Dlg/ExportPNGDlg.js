@@ -16,12 +16,12 @@ export const ExportPNGDlg = function(view) {
     this.open = function() {
         // Create the dialog box form
         var dlg = `<div class="control"><label for="${id}">Name</label>
-<input type="text" id="${id}" value="circuit" class="text ui-widget-content ui-corner-all">
+<input type="text" id="${id}" value="diagram" class="text ui-widget-content ui-corner-all">
 </div>
 <p>Enter a name for the exported .png file.</p>`;
 
         this.buttonOk = 'Export';
-        this.contents(dlg, "Cirsim Export PNG");
+        this.contents(dlg, "Cluml Export PNG");
         Dialog.prototype.open.call(this);
         document.getElementById(id).select();
     }
@@ -50,9 +50,9 @@ export const ExportPNGDlg = function(view) {
             }
 
             // Create a temporary canvas to use
-            const circuit = view.circuit;
+            const diagram = view.diagram;
             const canvas = document.createElement('canvas');
-            const bounds = circuit.bounds();
+            const bounds = diagram.bounds();
             const wid = bounds.right - bounds.left + 2;
             const hit = bounds.bottom - bounds.top + 2;
             canvas.style.width = wid + 'px';
@@ -65,7 +65,7 @@ export const ExportPNGDlg = function(view) {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.translate(1-bounds.left, 1-bounds.top);
 
-            circuit.draw(ctx, view);
+            diagram.draw(ctx, view);
 
             canvas.toBlob((blob) => {
                 saveAs(blob, name);

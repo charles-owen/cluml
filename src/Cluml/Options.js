@@ -14,7 +14,7 @@ export const Options = function(options) {
     this.display = 'window';
 
     /// Any content (JSON) to preload
-    this.load = null;
+    this.preloadJson = null;
 
     /// Menu options to load content
     /// Each item is an object with the keys name and json.
@@ -55,15 +55,15 @@ export const Options = function(options) {
 	 * test: Array of tests, each an array of input/expected
 	 * staff: true if this is staff testing (no saving)
      * result: A results selector
-     * circuit: A circuit selector
+     * diagram: A diagram selector
      * success: A value to set the results selector to on a success
      * quiet: If true, don't provide actual/expected results
      *
      * If result is set, any element that matches that selector will
      * be set to 0 or the value of 'success' depending on the test failure/success
      *
-     * If circuit is set, any element that matches that selector will
-     * have its value set to the current circuit when the test is selected.
+     * If diagram is set, any element that matches that selector will
+     * have its value set to the current diagram when the test is selected.
 	 */
     this.tests = [];
 
@@ -102,24 +102,30 @@ export const Options = function(options) {
     /// page script tag to control a Cluml instance.
     this.global = null;
 
-    /// Indication of what components are included in the palette.
+    /// Indication of what diagrams are included in the palette.
     /// This can be:
     /// A string with a palette name
-    /// [or] An array containing strings that name components
+    /// [or] An array containing strings that name diagrams
     /// or palette names.
     ///
     /// Examples:
-    /// components: 'combinatorial'
-    /// components: ['combinatorial', 'Or3', 'Or4']
-    /// components: ['sequential']
+    /// diagrams: 'combinatorial'
+    /// diagrams: ['combinatorial', 'Or3', 'Or4']
+    /// diagrams: ['sequential']
     ///
     this.components = ['combinatorial', 'sequential'];
 
     /// Display all output states
     this.showOutputStates = false;
 
-    ////////////////////////////////////////////////////////////////////////////////////
-
+    for(const property in options) {
+        if(options.hasOwnProperty(property)) {
+            if(!this.hasOwnProperty(property)) {
+                throw new Error("Invalid option " + property);
+            }
+            this[property] = options[property];
+        }
+    }
 
     /**
      * Get the API operations for a given file mode.

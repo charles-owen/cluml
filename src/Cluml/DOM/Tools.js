@@ -49,15 +49,27 @@ Tools.removeClass = function(element, className) {
 /**
  * Create a DIV with a provided class name.
  * @param className Class to add to the div
+ * @returns {Element} Created DOM Element
+ */
+Tools.createClassedDiv = function(className) {
+    let div = document.createElement('div');
+    Tools.addClass(div, className);
+    return div;
+}
+
+/**
+ * Create a DIV with a provided class name.
+ * @param className Class to add to the div
  * @param content Content to place in the div. HTML or Element
  * @returns {Element} Created DOM Element
  */
-Tools.createClassedDiv = function(className, content) {
-    let div = document.createElement('div');
-    Tools.addClass(div, className);
-    if(content !== undefined) {
-	    Tools.addContent(div, content);
+Tools.createClassedDivWithContent = function (className, content) {
+    let div = Tools.createClassedDiv(className);
+
+    if (content !== undefined){
+        Tools.addContent(div, content);
     }
+
     return div;
 }
 
@@ -99,8 +111,8 @@ Tools.isElement = function(val) {
 Tools.offset = function(element) {
 	const rect = element.getBoundingClientRect();
 	return {
-	    left: rect.left + element.scrollLeft + window.pageXOffset,
-        top: rect.top + element.scrollTop + window.pageYOffset
+	    left: rect.left + element.scrollLeft + window.scrollX,
+        top: rect.top + element.scrollTop + window.scrollY
     }
 }
 
