@@ -1,3 +1,5 @@
+import Vector from "./Vector";
+import {Line} from "./Line";
 
 /**
  * A simple rectangle representation
@@ -7,14 +9,14 @@
  * @param bottom Bottom side. If undefined, used this.top.
  * @constructor
  */
-export const Rect = function(left=0, top=0, right=0, bottom=0) {
+export const Rect = function (left = 0, top = 0, right = 0, bottom = 0) {
     this.left = left;
     this.top = top;
     this.right = right;
     this.bottom = bottom;
 };
 
-Rect.prototype.setRightBottom = function(right, bottom) {
+Rect.prototype.setRightBottom = function (right, bottom) {
     this.right = right;
     this.bottom = bottom;
 };
@@ -22,43 +24,47 @@ Rect.prototype.setRightBottom = function(right, bottom) {
 /**
  * Ensure left <= right and top <= bottom for the rectangle
  */
-Rect.prototype.normalize = function() {
-    if(this.left > this.right) {
-        let t = this.left; this.left = this.right; this.right = t;
+Rect.prototype.normalize = function () {
+    if (this.left > this.right) {
+        let t = this.left;
+        this.left = this.right;
+        this.right = t;
     }
 
-    if(this.top > this.bottom) {
-        let t = this.top; this.top = this.bottom; this.bottom = t;
+    if (this.top > this.bottom) {
+        let t = this.top;
+        this.top = this.bottom;
+        this.bottom = t;
     }
 };
 
-Rect.prototype.isEmpty = function() {
+Rect.prototype.isEmpty = function () {
     return this.left >= this.right || this.top >= this.bottom;
 };
 
-Rect.prototype.contains = function(x, y) {
+Rect.prototype.contains = function (x, y) {
     return x >= this.left && x <= this.right &&
-            y >= this.top && y <= this.bottom;
+        y >= this.top && y <= this.bottom;
 };
 
 /**
  * Expand this rect to include all of some other rect.
  * @param rect Other rect to include
  */
-Rect.prototype.expand = function(rect) {
-    if(rect.left < this.left) {
+Rect.prototype.expand = function (rect) {
+    if (rect.left < this.left) {
         this.left = rect.left;
     }
 
-    if(rect.right > this.right) {
+    if (rect.right > this.right) {
         this.right = rect.right;
     }
 
-    if(rect.top < this.top) {
+    if (rect.top < this.top) {
         this.top = rect.top;
     }
-    
-    if(rect.bottom > this.bottom) {
+
+    if (rect.bottom > this.bottom) {
         this.bottom = rect.bottom;
     }
 }
@@ -68,20 +74,88 @@ Rect.prototype.expand = function(rect) {
  * @param x
  * @param y
  */
-Rect.prototype.expandXY = function(x, y) {
-    if(x < this.left) {
+Rect.prototype.expandXY = function (x, y) {
+    if (x < this.left) {
         this.left = x;
     }
 
-    if(x > this.right) {
+    if (x > this.right) {
         this.right = x;
     }
 
-    if(y < this.top) {
+    if (y < this.top) {
         this.top = y;
     }
 
-    if(y > this.bottom) {
+    if (y > this.bottom) {
         this.bottom = y;
+    }
+}
+
+/**
+ * Returns a side of the rectangle. The points that make up each line will be
+ * ordered in a clockwise fashion.
+ * The north side is [0, 1), east is [1, 2), south is [2, 3),
+ * west is [3, 4). The decimal value determines what percent
+ * of the side we are on, with 0.0 representing the
+ * counter-clockwise most side and 1.0 representing the
+ * clockwise most side.
+ * @param side
+ * @return {Line}
+ */
+Rect.prototype.getSide = function (side) {
+    switch (side) {
+        case 0:
+            return new Line(
+                new Vector(this.left, this.top),
+                new Vector(this.right, this.top)
+            );
+        case 1:
+            return new Line(
+                new Vector(this.right, this.top),
+                new Vector(this.right, this.bottom)
+            );
+        case 2:
+            return new Line(
+                new Vector(this.right, this.bottom),
+                new Vector(this.left, this.bottom)
+            );
+        case 3:
+            return new Line(
+                new Vector(this.left, this.bottom),
+                new Vector(this.right, this.bottom)
+            );
+    }
+}
+
+/**
+ * Returns the closest side percentage to point.
+ * Each side of the rectangle is labeled with a value range.
+ * The north side is [0, 1), east is [1, 2), south is [2, 3),
+ * west is [3, 4). The decimal value determines what percent
+ * of the side we are on, with 0.0 representing the
+ * counter-clockwise most side and 1.0 representing the
+ * clockwise most side.
+ * @param point {Vector}
+ */
+Rect.prototype.getClosestSideT = function (point) {
+    let closestSide = -1;
+    let closestPoint;
+    let smallestDistance = Infinity;
+
+    for (let i = 0; i < 4; i++) {
+        const side = this.getSide(i);
+        const sideNDistance = side.pointNearest(point);
+
+        if (smallestDistance > sideNDistance.distance) {
+            smallestDistance = sideNDistance.distance;
+            closestPoint = sideNDistance.closestPoint;
+            closestSide = sideNDistance.t + i;
+        }
+    }
+
+    return {
+        side: closestSide,
+        atPoint: closestPoint
     }
 }

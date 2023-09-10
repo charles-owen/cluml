@@ -12,7 +12,7 @@ import DialogCL from 'dialog-cl';
  * @constructor
  */
 export const Dialog = function(classes) {
-    this.classes = classes !== undefined ? 'cirsim ' + classes : 'cirsim';
+    this.classes = classes !== undefined ? 'cluml ' + classes : 'cluml';
     this.buttonOk = "Ok";
     this.buttonCancel = "Cancel";
     this.resize = 'none;'
@@ -34,12 +34,11 @@ Dialog.prototype.contents = function( html, title) {
  */
 Dialog.prototype.open = function() {
     let form = document.createElement('form');
-    let div = Tools.createClassedDiv('cirsim-dlg-content');
+    let div = Tools.createClassedDiv('cluml-dlg-content');
     form.appendChild(div);
 
-    let dlg = `${this.html}<p class="error"></p>
+    div.innerHTML = `${this.html}<p class="error"></p>
 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">`;
-    div.innerHTML = dlg;
 
     this.element = div;
 

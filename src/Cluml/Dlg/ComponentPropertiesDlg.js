@@ -41,7 +41,7 @@ export const ComponentPropertiesDlg = function(component, main) {
                 // Does not have a name. Create one
                 for(let i=1; ; i++) {
                     name = component.prefix + i;
-                    let existing = component.circuit.getComponentByNaming(name);
+                    let existing = component.dialog.getComponentByNaming(name);
                     if(existing === null) {
                         break;
                     }
@@ -61,7 +61,7 @@ export const ComponentPropertiesDlg = function(component, main) {
 
         dlg += extraHTML + description;
 
-        this.contents(dlg, "Cirsim Component Properties");
+        this.contents(dlg, "Cluml Component Properties");
 
         Dialog.prototype.open.call(this);
 
@@ -92,15 +92,15 @@ export const ComponentPropertiesDlg = function(component, main) {
 
             if(name.length !== 0) {
                 // If name is not empty, we ensure it is unique
-                var existing = component.circuit.getComponentByNaming(name);
+                var existing = component.dialog.getComponentByNaming(name);
                 if(existing !== null && existing !== component) {
-                	Tools.addClass(nameElement, 'cirsim-error');
+                	Tools.addClass(nameElement, 'cluml-error');
                     this.error("Name already exists");
                     return;
                 }
             }
 
-	        Tools.removeClass(nameElement, 'cirsim-error');
+	        Tools.removeClass(nameElement, 'cluml-error');
 	        name = this.sanitize(name);
         }
 

@@ -66,7 +66,7 @@ export const Test = function(main) {
     //         // Success
     //         main.modal(false);
     //
-    //         var html = '<h1>Circuit Success</h1>' +
+    //         var html = '<h1>Diagram Success</h1>' +
     //             '<p>The test has passed.</p>'
     //         var dlg = new MessageDialog("Success", html);
     //         dlg.open();
@@ -77,7 +77,7 @@ export const Test = function(main) {
     //         // Failure
     //         main.modal(false);
     //
-    //         var html = '<h1>Circuit Failure</h1>' + msg;
+    //         var html = '<h1>Diagram Failure</h1>' + msg;
     //         var dlg = new MessageDialog("Test Failure", html, 450);
     //         dlg.open();
     //
@@ -85,7 +85,7 @@ export const Test = function(main) {
     //     });
     // }
 
-    // function setResult(test, result, circuit) {
+    // function setResult(test, result, diagram) {
 	//     if(test.result !== undefined) {
 	// 	    const elements = document.querySelectorAll(test.result);
 	// 	    for(const element of elements) {
@@ -93,10 +93,10 @@ export const Test = function(main) {
 	// 	    }
 	//     }
     //
-    //     if(test.circuit !== undefined) {
-    //         const elements = document.querySelectorAll(test.circuit);
+    //     if(test.diagram !== undefined) {
+    //         const elements = document.querySelectorAll(test.diagram);
     //         for(const element of elements) {
-    //             element.value = circuit;
+    //             element.value = diagram;
     //         }
     //     }
     //
@@ -110,7 +110,7 @@ export const Test = function(main) {
     //     let data = Object.assign({cmd: "test",
     //         name: api.name,
     //         result: result,
-    //         data: circuit,
+    //         data: diagram,
     //         type: 'application/json'
     //     }, api.extra);
     //
@@ -230,10 +230,10 @@ export const Test = function(main) {
 // //                                 } catch(msg) {
 // //                                     if(test.quiet === true) {
 // //                                         failure('<div class="cluml-test-result"><p>This test is failing. Some output is ' +
-// //                                             'not what is currently expected by the test. The circuit is left in the state it was' +
+// //                                             'not what is currently expected by the test. The diagram is left in the state it was' +
 // //                                             ' in when the test failed. No additional detail will be provided about why ' +
 // //                                             'the test is failed. It is your responsibility to create a ' +
-// //                                             'circuit that works as expected.</p></div>');
+// //                                             'diagram that works as expected.</p></div>');
 // //                                     } else {
 // //                                         failure(`<div class="cluml-test-result"><p>This test is failing. ${msg}</p>
 // // <p class="cs-info">Test ${testNum}</p></div>`);
@@ -312,14 +312,14 @@ export const Test = function(main) {
 // //                                     + expected);
 // //                                 if (test.quiet === true) {
 // //                                     failure('<div class="cluml-test-result"><p>This test is failing. Some output is not what is currently' +
-// //                                         ' expected by the test. The circuit is left in the state it was' +
+// //                                         ' expected by the test. The diagram is left in the state it was' +
 // //                                         ' in when the test failed. No additional detail will be provided about why ' +
 // //                                         'the test is failed. It is your responsibility to create a ' +
-// //                                         'circuit that works as expected.</p></div>');
+// //                                         'diagram that works as expected.</p></div>');
 // //                                 } else {
 // //
 // //                                     failure(`<div class="cluml-test-result"><p>This test is failing. An output value is
-// // not what is currently expected by the test. The circuit is left in the state it was
+// // not what is currently expected by the test. The diagram is left in the state it was
 // // in when the test failed.<p>
 // // <p class="cs-result">Output ${outputs[i].component.naming} expected: ${expected} actual: ${actual}</p>
 // // <p class="cs-info">Test ${testNum}</p></div>
@@ -382,7 +382,7 @@ export const Test = function(main) {
 //     }
 
     // /**
-    //  * Find all of the specified circuit inputs
+    //  * Find all of the specified diagram inputs
     //  * @param test The test we are running
     //  * @returns {Array} Array of input objects
     //  */
@@ -408,7 +408,7 @@ export const Test = function(main) {
     //
     //             const tabname = items[1];
     //
-    //             search = model.getCircuit(tabname);
+    //             search = model.getDiagram(tabname);
     //             if(search === null) {
     //                 throw new TestException('<p>Invalid input tab: ' + tabname + '</p>');
     //             }
@@ -423,12 +423,12 @@ export const Test = function(main) {
     //             }
     //
     //             const type = items[1];
-    //             const components = search.getComponentsByType(type);
+    //             const diagrams = search.getComponentsByType(type);
     //             if(items.length > 2) {
     //                 // We have specified a component name after the type
     //                 // Example: type:InPin:CLK
     //                 let desired = null;
-    //                 for(let component of components) {
+    //                 for(let component of diagrams) {
     //                     if(component.naming === items[2]) {
     //                         desired = component;
     //                         break;
@@ -442,16 +442,16 @@ export const Test = function(main) {
     //
     //                 inputs.push(desired);
     //             } else {
-    //                 if(components.length === 0) {
+    //                 if(diagrams.length === 0) {
     //                     throw new TestException('<p>The test is not able to pass because you do not have a' +
     //                         ' component of type ' + type + tabmsg + '.</p>');
-    //                 } else if(components.length > 1) {
+    //                 } else if(diagrams.length > 1) {
     //                     throw new TestException('<p>The test is not able to pass because you have more than' +
     //                         ' one  component of type ' + type + tabmsg + '.</p>' +
     //                         '<p>You are only allowed one component of that type ' +
-    //                         'in this circuit.</p>');
+    //                         'in this diagram.</p>');
     //                 }
-    //                 inputs.push(components[0]);
+    //                 inputs.push(diagrams[0]);
     //             }
     //
     //         } else {
@@ -464,7 +464,7 @@ export const Test = function(main) {
     //                     ' have a component named ' + items[0] + tabmsg + '.</p>' +
     //                     '<p>Typically, the tests are looking for an input' +
     //                     ' pin or a bus input pin. Input pins are labeled IN in the palette. Double-click' +
-    //                     ' on an input pin to set the name. Names in Cirsim are case sensitive.</p>');
+    //                     ' on an input pin to set the name. Names in Cluml are case sensitive.</p>');
     //             }
     //         }
     //     }
@@ -496,7 +496,7 @@ export const Test = function(main) {
     //
     //             const tabname = tab.substr(0, colon);
     //
-    //             // search = model.getCircuit(tabname);
+    //             // search = model.getDiagram(tabname);
     //             // if(search === null) {
     //             //     throw new TestException('<p>Invalid out tab: ' + tabname + '</p>');
     //             //     break;
@@ -515,12 +515,12 @@ export const Test = function(main) {
     //             }
     //
     //             const type = items[1];
-    //             const components = search.getComponentsByType(type);
+    //             const diagrams = search.getComponentsByType(type);
     //             if(items.length > 2) {
     //                 // We have specified a component name after the type
     //                 // Example: type:OutPin:CLK
     //                 let desired = null;
-    //                 for(let component of components) {
+    //                 for(let component of diagrams) {
     //                     if(component.naming === items[2]) {
     //                         desired = component;
     //                         break;
@@ -534,16 +534,16 @@ export const Test = function(main) {
     //
     //                 outputs.push(desired.ins[pin]);
     //             } else {
-    //                 if(components.length === 0) {
+    //                 if(diagrams.length === 0) {
     //                     throw new TestException('<p>The test is not able to pass because you do not have a' +
     //                         ' component of type ' + type + tabmsg + '.</p>');
-    //                 } else if(components.length > 1) {
+    //                 } else if(diagrams.length > 1) {
     //                     throw new TestException('<p>The test is not able to pass because you have more than' +
     //                         ' one  component of type ' + type + tabmsg + '.</p>' +
     //                         '<p>You are only allowed one component of that type ' +
-    //                         'in this circuit.</p>');
+    //                         'in this diagram.</p>');
     //                 }
-    //                 outputs.push(components[0].ins[pin]);
+    //                 outputs.push(diagrams[0].ins[pin]);
     //             }
     //
     //         } else {

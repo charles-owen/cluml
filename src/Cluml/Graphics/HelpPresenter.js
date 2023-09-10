@@ -43,14 +43,14 @@ export const HelpPresenter = function(main, owner) {
 	 * @param html HTML to present
 	 */
 	const install = (html) => {
-        if(html.indexOf('{{components}}') > 0) {
+        if(html.indexOf('{{diagrams}}') > 0) {
             let root = main.cluml.root;
             let links = '<ul>';
             main.palette.palette.forEach((component) => {
                 if(component.help !== undefined) {
                     //
-                    // There are a few components we rename here, so they are
-                    // easier to find in the list of components.
+                    // There are a few diagrams we rename here, so they are
+                    // easier to find in the list of diagrams.
                     //
                     let label = component.label;
                     switch(label) {
@@ -67,7 +67,7 @@ export const HelpPresenter = function(main, owner) {
             });
 
             links += '</ul>';
-            html = html.replace('{{components}}', links);
+            html = html.replace('{{diagrams}}', links);
         }
 
         let root = main.cluml.root;

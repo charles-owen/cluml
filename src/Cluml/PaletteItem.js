@@ -42,7 +42,7 @@ export const PaletteItem = function(palette, obj, diagram) {
 /**
  * Create the image for the palette, either using an existing
  * image file or creating one using PaletteImage.
- * @returns DOM element for either canvas or img
+ * @returns HTMLImageElement element for either canvas or img
  */
 PaletteItem.prototype.paletteImage = function() {
     const obj = this.obj;

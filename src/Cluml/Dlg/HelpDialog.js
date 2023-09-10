@@ -16,7 +16,7 @@ export const HelpDialog = function(main) {
         const presenter = new HelpPresenter(main, this);
 	    const dlg = presenter.html();
 
-        this.contents(dlg, "Cirsim Help");
+        this.contents(dlg, "Cluml Help");
 
         this.titleBarButtons = [
             {

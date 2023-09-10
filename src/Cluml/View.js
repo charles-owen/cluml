@@ -7,9 +7,9 @@ import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
 
 /**
  * View of a diagram
- * @param main Main object for interface
+ * @param main {Main} Main object for interface
  * @param canvas Canvas element in the view
- * @param diagram diagram we draw on that canvas
+ * @param diagram {Diagram} Diagram we draw on that canvas
  * @constructor
  */
 export const View = function(main, canvas, diagram) {
@@ -37,12 +37,12 @@ export const View = function(main, canvas, diagram) {
         },
         model: {
             get: function() {
-                return diagram.diagrams.model;
+                return diagram.components.model;
             }
         }
     });
 
-    // The selection object
+    // The selected object
     this.selection = new Selection(this);
 
     /// The tab number for this view
@@ -173,9 +173,9 @@ export const View = function(main, canvas, diagram) {
         let mouseDblClickListener = (event) => {
             event.preventDefault();
 
-            if (this.selection.selection.length === 1 &&
-                (this.selection.selection[0] instanceof Component)) {
-                let component = this.selection.selection[0];
+            if (this.selection.selected.length === 1 &&
+                (this.selection.selected[0] instanceof Component)) {
+                let component = this.selection.selected[0];
                 component.properties(main);
             }
         }
@@ -309,5 +309,13 @@ View.prototype.importTab = function(importer) {
 	        this.draw();
         }
     });
+}
+
+/**
+ * Export this view as a PNG file
+ */
+View.prototype.exportPNG = function() {
+    const dlg = new ExportPNGDlg(this);
+    dlg.open();
 }
 

@@ -1,15 +1,42 @@
+import {Sanitize} from './Utility/Sanitize';
+import {Rect} from "./Utility/Rect";
+import {Diagrams} from "./Diagrams";
+import {Component} from "./Component";
+
 /**
  * Construct a diagram
- * @param name Name of the diagram
+ * @param name {string} Name of the diagram
  * @constructor
  */
-export const Diagram = function(name) {
+export const Diagram = function (name) {
 
+    /**
+     * The diagram container.
+     * @type{Diagrams}
+     */
     this.diagrams = null;
+
+    /**
+     * The array of components.
+     * @type{Array<Component>}
+     */
     this.components = [];
+
+    /**
+     * Name of this diagram.
+     * @type {string}
+     */
     this.name = name;
 
+    /**
+     * Width of the diagram.
+     * @type {number}
+     */
     this.width = this.defWidth;
+    /**
+     * Height of the diagram.
+     * @type {number}
+     */
     this.height = this.defHeight;
 
     // Previous copy in the copy stack
@@ -17,20 +44,20 @@ export const Diagram = function(name) {
 
     /**
      * See if some object has been touched by the mouse.
-     * @param x Mouse X
-     * @param y Mouse Y
-     * @return Touched element or null if none
+     * @param x {number} Mouse X
+     * @param y {number} Mouse Y
+     * @return {Component} Touched element or null if none
      */
-    this.touch = function(x, y) {
+    this.touch = function (x, y) {
         //
         // First we try to grab a component.
-        // We do this in reverse order so we are selecting
+        // We do this in reverse order, so we are selecting
         // from top down.
         //
-        for(let i=this.components.length-1; i>= 0; i--) {
-	        let component = this.components[i];
-	        let grabbed = component.touch(x, y);
-            if(grabbed !== null) {
+        for (let i = this.components.length - 1; i >= 0; i--) {
+            let component = this.components[i];
+            let grabbed = component.touch(x, y);
+            if (grabbed !== null) {
                 return grabbed;
             }
         }
@@ -42,11 +69,11 @@ export const Diagram = function(name) {
      * Advance the animation by delta time...
      * @param delta
      */
-    this.advance = function(delta) {
-        var any = false;
-        for(var i=0; i<this.components.length; i++) {
-            var component = this.components[i];
-            if(component.advance(delta)) {
+    this.advance = function (delta) {
+        let any = false;
+        for (let i = 0; i < this.components.length; i++) {
+            const component = this.components[i];
+            if (component.advance(delta)) {
                 any = true;
             }
         }
@@ -55,44 +82,401 @@ export const Diagram = function(name) {
 
 };
 
-Diagram.prototype.defWidth = 1920;   ///< Default width
-Diagram.prototype.defHeight = 1080;  ///< Default height
+/**
+ * Default width of the diagram.
+ * @type {number}
+ */
+Diagram.prototype.defWidth = 1920;
+/**
+ * Default height of the diagram.
+ * @type {number}
+ */
+Diagram.prototype.defHeight = 1080;
 
-Diagram.prototype.draw = function(context, view) {
-    this.components.forEach(function(component, index, array) {
+/**
+ * Create a backup clone of this Diagram
+ * @returns {Diagram} The clone of the diagram.
+ */
+Diagram.prototype.clone = function () {
+    let component;
+    const copy = new Diagram(this.name);
+    copy.width = this.width;
+    copy.height = this.height;
+
+    // Add to the copy stack
+    copy.prev = this.prev;
+    this.prev = copy;
+
+    // Iterate over the diagrams, cloning each of them
+    for (let i = 0; i < this.components.length; i++) {
+        component = this.components[i];
+        const componentCopy = component.clone();
+        copy.add(componentCopy);
+    }
+
+    // // Again we iterate over the diagrams, this time
+    // // cloning the output connections.
+    // for (let i = 0; i < this.diagrams.length; i++) {
+    //     component = this.diagrams[i];
+    //     for (let j = 0; j < component.outs.length; j++) {
+    //         const out = component.outs[j];
+    //         for (let k = 0; k < out.to.length; k++) {
+    //             out.to[k].clone();
+    //         }
+    //     }
+    // }
+
+    return copy;
+};
+
+/**
+ * Update diagram after a diagram change.
+ * This is used by DiagramRef diagrams to ensure
+ * references are always correct.
+ */
+Diagram.prototype.update = function () {
+    for (let component of this.components) {
+        component.update();
+    }
+}
+
+Diagram.prototype.draw = function (context, view) {
+    this.components.forEach(function (component, index, array) {
         component.draw(context, view);
     });
 };
 
-Diagram.prototype.newTab = function() {
-    // There was code here to iterate over the components
+Diagram.prototype.newTab = function () {
+    // There was code here to iterate over the diagrams
     // in reverse order. I don't recall why that was. I think
     // it may be a holdover from the diagrams being in reverse
     // order. I'm removed it and will see if it breaks anything.
-    // for(let i=this.components.length-1; i>= 0; i--) {
+    // for(let i=this.diagrams.length-1; i>= 0; i--) {
 
 
-    for(let i=0;  i<this.components.length; i++) {
+    for (let i = 0; i < this.components.length; i++) {
         const component = this.components[i];
 
-        // Tell any components that need to know that
+        // Tell any diagrams that need to know that
         // we have selected a new tab. This is
         // important for the reference component.
         component.newTab();
     }
 }
 
-Diagram.prototype.recompute = function() {
-    for(let i=0;  i<this.components.length; i++) {
+Diagram.prototype.recompute = function () {
+    for (let i = 0; i < this.diagrams.length; i++) {
         // Ensure everything get recomputed
-        this.components[i].pending();
+        this.diagrams[i].pending();
     }
 }
 
-Diagram.prototype.getName = function() {
+/**
+ * Test if diagrams or bends are contained in a given rectangle.
+ * @param rect Rect object
+ * @returns {Array} Array of all contained diagrams
+ */
+Diagram.prototype.inRect = function (rect) {
+    const ret = [];
+    for (let i = this.components.length - 1; i >= 0; i--) {
+        this.components[i].inRect(rect, ret);
+    }
+
+    return ret;
+};
+
+Diagram.prototype.snapIt = function (item) {
+    if (this.diagrams.snap) {
+        item.x = this.diagrams.grid * Math.round(item.x / this.diagrams.grid);
+        item.y = this.diagrams.grid * Math.round(item.y / this.diagrams.grid);
+    }
+};
+
+Diagram.prototype.add = function (component) {
+    this.components.push(component);
+    Component.prototype.added.call(component, this);
+    return component;
+};
+
+/**
+ * Delete a specific item from the list of diagrams
+ * @param toDelete {Component} Item to delete
+ */
+Diagram.prototype.delete = function (toDelete) {
+    for (let i = 0; i < this.components.length; i++) {
+        if (this.components[i] === toDelete) {
+            this.components.splice(i, 1);
+            break;
+        }
+    }
+};
+
+/**
+ * Save this object into an object suitable for conversion to
+ * a JSON object for storage.
+ * @returns Object
+ */
+Diagram.prototype.save = function () {
+    // Iterate over the diagrams, saving each of them
+    const comps = [];
+
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+
+        // Set an ID on each component
+        // component.id = "c" + (i + 1001);
+
+        comps.push(component.save());
+    }
+
+    // // Then iterate over the connections, saving each of them
+    // for (let i = 0; i < this.diagrams.length; i++) {
+    //     const component = this.diagrams[i];
+    // }
+
+    return {
+        "name": this.name, "width": this.width, "height": this.height,
+        "components": comps
+    };
+};
+
+/**
+ * Load this object from an object that was converted from a
+ * JSON object for storage.
+ * @param obj
+ */
+Diagram.prototype.load = function (obj) {
+    this.name = Sanitize.sanitize(obj.name);
+    this.width = +obj.width;
+    this.height = +obj.height;
+
+    // Load the diagrams
+    const compsMap = {};  // Map from component ID to component object
+
+    for (let i = 0; i < obj.components.length; i++) {
+        const componentData = obj.components[i];
+
+
+        // let componentConstructor;
+        // if (componentObj.type === "DiagramRef") {
+        //     componentProto = DiagramRef;
+        // } else {
+        //     componentProto = this.diagrams.model.main.diagrams.get(componentObj.type);
+        // }
+
+        const componentConstructor = this.diagrams.model.main.components.get(componentData.type);
+
+        if (componentConstructor !== null) {
+            /**
+             * @type {Component}
+             */
+            const component = new componentConstructor();
+            component.diagram = this;
+            component.loadComponent(componentData);
+            compsMap[component.id] = component;
+            this.add(component);
+        } else {
+            console.log(componentData);
+        }
+    }
+
+    // // Load the connections
+    // for (let i = 0; i < obj.connections.length; i++) {
+    //     const connectionObj = obj.connections[i];
+    //     const fmComp = compsMap[connectionObj["from"]];
+    //     if (fmComp === undefined) {
+    //         console.log("From object undefined");
+    //         console.log(this);
+    //         console.log(connectionObj);
+    //         continue;
+    //     }
+    //
+    //     const toComp = compsMap[connectionObj["to"]];
+    //     if (toComp === undefined) {
+    //         console.log("To object undefined");
+    //         console.log(this);
+    //         console.log(connectionObj);
+    //         continue;
+    //     }
+    //
+    //     const outNdx = connectionObj["out"];
+    //     const inNdx = connectionObj["in"];
+    //     const connection = this.connect(fmComp, outNdx, toComp, inNdx);
+    //     if (connection !== null) {
+    //         connection.load(connectionObj);
+    //     }
+    // }
+};
+
+/**
+ * Get a component by its naming
+ * @param naming {string} Naming to search for
+ * @returns {*}
+ */
+Diagram.prototype.getComponentByNaming = function (naming) {
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        if (component.naming === naming) {
+            return component;
+        }
+    }
+
+    return null;
+};
+
+/**
+ * Get all diagrams by type
+ * @param type Naming to search for
+ * @returns Array with collection of diagrams of that type
+ */
+Diagram.prototype.getComponentsByType = function (type) {
+    const components = [];
+
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        if (component.constructor.type === type) {
+            components.push(component);
+        }
+    }
+
+    return components;
+}
+
+Diagram.prototype.mouseUp = function () {
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        component.mouseUp();
+    }
+};
+
+Diagram.prototype.getComponentsByType = function (type) {
+    const ret = [];
+
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        if (component.constructor.type === type) {
+            ret.push(component);
+        }
+    }
+
+    return ret;
+}
+
+
+/**
+ * Determine the maximum size in each dimension for this diagram.
+ * Does include an extra 16 pixel bias in each dimension to account for
+ * associations.
+ * @returns {{x: number, y: number}}
+ */
+Diagram.prototype.maxXY = function () {
+    let maxX = 1;
+    let maxY = 1;
+
+    for (let i = 0; i < this.components.length; i++) {
+        const bounds = this.components[i].bounds();
+        if (bounds.right > maxX) {
+            maxX = bounds.right;
+        }
+
+        if (bounds.bottom > maxY) {
+            maxY = bounds.bottom;
+        }
+    }
+
+    return {x: maxX + 16, y: maxY + 16};
+}
+
+/**
+ * Compute a bounding box that encloses all of this diagram.
+ * @returns {Rect}
+ */
+Diagram.prototype.bounds = function () {
+    if (this.components.length === 0) {
+        return new Rect();
+    }
+
+    const bounds = this.components[0].bounds();
+
+    for (let i = 0; i < this.components.length; i++) {
+        const b = this.components[i].bounds();
+        bounds.expand(b);
+    }
+
+    return bounds;
+}
+
+Diagram.prototype.pending = function () {
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        component.pending();
+    }
+}
+
+Diagram.prototype.getName = function () {
     return this.name;
 };
 
-Diagram.prototype.setName = function(name) {
+Diagram.prototype.setName = function (name) {
     this.name = name;
 }
+
+/**
+ * Obtain basic statistics about this diagram.
+ * @returns {{name: *, numComponents: Number, numConnections: number, width: *, height: *}}
+ */
+Diagram.prototype.stats = function () {
+    let numConnections = 0;
+    // this.diagrams.forEach((component) => {
+    //     component.outs.forEach((out) => {
+    //         numConnections += out.to.length;
+    //     });
+    // });
+
+    return {
+        name: this.name,
+        numComponents: this.components.length,
+        numConnections: numConnections,
+        width: this.width,
+        height: this.height
+    };
+}
+
+/**
+ * Moves the specified component to the front of the diagrams list.
+ * @param component {Component} the component to move.
+ */
+Diagram.prototype.moveToFront = function (component) {
+
+    for (let i = 0; i < this.components.length; i++) {
+        if (this.components[i] === component) {
+            this.components.splice(i, 1);
+            this.components.push(component);
+            break;
+        }
+    }
+}
+
+// /**
+//  * Return all DiagramRef diagrams that refer to a diagram
+//  * @param diagram {Diagram} Diagram we are testing. If omitted, all DiagramRef diagrams are returned.
+//  * @return array of DiagramRef diagrams.
+//  */
+// Diagram.prototype.references = function (diagram) {
+//     let references = [];
+//
+//     for (let component of this.diagrams) {
+//         if (component instanceof DiagramRef) {
+//             if (diagram !== undefined) {
+//                 if (component.diagramName === diagram.name) {
+//                     references.push(component);
+//                 }
+//             } else {
+//                 references.push(component);
+//             }
+//
+//         }
+//     }
+//
+//     return references;
+// }

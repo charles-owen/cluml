@@ -14,14 +14,14 @@ export const TabPropertiesDlg = function(tabs) {
 
     this.open = function() {
 
-        let circuit = tabs.currentCircuit();
-        let name = circuit.getName();
-        let stats = circuit.stats();
+        let diagram = tabs.currentDiagram();
+        let name = diagram.getName();
+        let stats = diagram.stats();
 
         // Dialog box contents
         id = this.uniqueId();
 
-        var dlg = `
+        let dlg = `
 <div class="control1 center"><label for="${id}">Tab name: </label>
 <input class="tabname" type="text" id="${id}" value="${name}" spellcheck="false" ${name === 'main' ? "disabled" : ""}></div>`;
 
@@ -48,8 +48,8 @@ export const TabPropertiesDlg = function(tabs) {
     this.ok = function() {
 
         // What is the current name?
-        let circuit = tabs.currentCircuit();
-        if(circuit.getName() === 'main') {
+        let diagram = tabs.currentDiagram();
+        if(diagram.getName() === 'main') {
             this.close();
             return;
         }
@@ -74,14 +74,14 @@ export const TabPropertiesDlg = function(tabs) {
         // Ensure name does not already exist
         //
 
-        let val = tabs.validateName(name, circuit);
+        let val = tabs.validateName(name, diagram);
         if(val !== null) {
             this.error(val);
 	        document.getElementById(id).select();
             return;
         }
 
-        if(name !== circuit.getName()) {
+        if(name !== diagram.getName()) {
             tabs.rename(name);
         }
 

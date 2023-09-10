@@ -6,7 +6,7 @@ import {Ajax} from '../Utility/Ajax';
  * File system save dialog box
  * @param data Data to save
  * @param type Data mime type
- * @param options The Cirsim options object
+ * @param options The Cluml options object
  * @param toast The Toast object
  * @constructor
  */

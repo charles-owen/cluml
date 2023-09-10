@@ -32,8 +32,8 @@ export const ImportTabDialog = function(importer, options, toast) {
 		        success: (data) => {
 			        const json = new JsonAPI(data);
 			        if (!toast.jsonErrors(json)) {
-				        const load = data.data[0].attributes.data;
-				        callback(load);
+				        const toLoad = data.data[0].attributes.data;
+				        callback(toLoad);
 			        }
 
 			        this.close();

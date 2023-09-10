@@ -18,7 +18,7 @@ export const ImportDlg = function(main, model) {
     // Create the dialog box
     const dlg = '<div class="control gap"><input class="file" type="file" id="' + id + '" />' +
         '<br><span id="import-error" class="error"></span></div>' +
-        '<p>Choose a file to import into Cirsim.</p>';
+        '<p>Choose a file to import into Cluml.</p>';
 
     this.ok = function() {
         const files = document.getElementById(id).files;
@@ -39,11 +39,11 @@ export const ImportDlg = function(main, model) {
         // };
 
         reader.onerror = function(e) {
-            that.error("Error reading circuits file");
+            that.error("Error reading diagrams file");
         };
 
         reader.onabort = function(e) {
-            that.error("Circuits file read aborted");
+            that.error("Diagrams file read aborted");
         };
 
         // Read in the file
@@ -51,7 +51,7 @@ export const ImportDlg = function(main, model) {
     }
 
     this.buttonOk = 'Import';
-    this.contents(dlg, "Cirsim Import");
+    this.contents(dlg, "Cluml Import");
 };
 
 ImportDlg.prototype = Object.create(Dialog.prototype);
