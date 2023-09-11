@@ -105,7 +105,7 @@ Diagrams.prototype.canMoveLeft = function (ndx) {
 Diagrams.prototype.canMoveRight = function (ndx) {
     // First tab cannot be moved at all. Last tab can't
     // move to the right.
-    return ndx > 0 && ndx < this.diagramList.length;
+    return ndx > 0 && ndx < this.diagramList.length-1;
 }
 
 Diagrams.prototype.moveLeft = function (ndx) {

@@ -9,11 +9,24 @@ export const Class = function () {
      * @type {number}
      */
     this.height = 10;
+
     /**
      * Component width.
      * @type {number}
      */
     this.width = 10;
+
+    /**
+     * The array of attributes.
+     * @type{Array<String>}
+     */
+    this.attributes = [];
+
+    /**
+     * The array of operations.
+     * @type{Array<String>}
+     */
+    this.operations = [];
 }
 
 Class.prototype = Object.create(Component.prototype);
@@ -61,15 +74,34 @@ Class.prototype.draw = function (context, view) {
     context.beginPath();
     context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";
+    // Name rect
     context.rect(
         this.x - this.width / 2 - 0.5,
-        this.y - this.height / 2 - 0.5,
+        this.y - this.height / 3 - 0.5,
+        this.width / 2, this.height / 3);
+    // Attributes rect
+    context.rect(
+        this.x - this.width / 2 - 0.5,
+        this.y - 2 * this.height / 3 - 0.5,
+        this.width / 2, 2 * this.height / 3);
+    // Operations rect
+    context.rect(
+        this.x - this.width / 2 - 0.5,
+        this.y - this.height - 0.5,
         this.width / 2, this.height);
     context.fill();
     context.stroke();
 
-    this.drawName(context, 0, 3);
+    // Defaults the name to NewClass if no name is given
+    if(this.naming == null) {
+        this.naming = "NewClass"
+    }
 
+    context.fillStyle = "#000000";
+
+    this.drawName(context,
+        0 - this.width / 4,
+        0 - 5 * this.height / 6);
 }
 
 Class.prototype.save = function () {
