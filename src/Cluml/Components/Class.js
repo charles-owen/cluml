@@ -1,7 +1,7 @@
 import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
 
-export const BoxedComponent = function () {
+export const Class = function () {
     Component.call(this);
 
     /**
@@ -16,14 +16,14 @@ export const BoxedComponent = function () {
     this.width = 10;
 }
 
-BoxedComponent.prototype = Object.create(Component.prototype);
-BoxedComponent.prototype.constructor = BoxedComponent;
+Class.prototype = Object.create(Component.prototype);
+Class.prototype.constructor = Class;
 
 /**
  * Copies from another component.
- * @param component {BoxedComponent}
+ * @param component {Class}
  */
-BoxedComponent.prototype.copyFrom = function (component) {
+Class.prototype.copyFrom = function (component) {
     this.height = component.height;
     this.width = component.width;
     Component.prototype.copyFrom.call(this, component);
@@ -34,9 +34,9 @@ BoxedComponent.prototype.copyFrom = function (component) {
  * the component.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
- * @return {BoxedComponent|null}
+ * @return {Class|null}
  */
-BoxedComponent.prototype.touch = function (x, y) {
+Class.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (x >= this.x - this.width / 2 &&
         x <= this.x + this.width / 2 &&
@@ -48,48 +48,38 @@ BoxedComponent.prototype.touch = function (x, y) {
     return null;
 }
 
-BoxedComponent.prototype.bounds = function () {
+Class.prototype.bounds = function () {
     return new Rect(this.x - this.width / 2,
         this.y - this.height / 2,
         this.x + this.width / 2,
         this.y + this.height / 2);
 }
 
-BoxedComponent.prototype.draw = function (context, view) {
-    this.drawBox(context, undefined);
-}
-
-/**
- * Many diagrams are just a box. This is a function to draw that box
- * @param context Context to draw on
- * @param fillStyle {string} The fill style.
- */
-BoxedComponent.prototype.drawBox = function (context, fillStyle) {
-    if(fillStyle !== 'none') {
-        let save = context.fillStyle;
-        context.fillStyle = fillStyle !== undefined ? fillStyle : '#ffffff';
-        context.fillRect(this.x - this.width / 2 - 0.5,
-            this.y - this.height / 2 - 0.5,
-            this.width, this.height);
-        context.fillStyle = save;
-    }
+Class.prototype.draw = function (context, view) {
+    this.selectStyle(context, view);
 
     context.beginPath();
+    context.fillStyle = "#e7e8b0";
+    context.strokeStyle = "#000000";
     context.rect(
         this.x - this.width / 2 - 0.5,
         this.y - this.height / 2 - 0.5,
-        this.width, this.height);
+        this.width / 2, this.height);
+    context.fill();
     context.stroke();
+
+    this.drawName(context, 0, 3);
+
 }
 
-BoxedComponent.prototype.save = function () {
+Class.prototype.save = function () {
     const obj = Component.prototype.save.call(this);
     obj.size = this.height;
     obj.bus = this.width;
     return obj;
 }
 
-BoxedComponent.prototype.loadComponent = function (obj) {
+Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 
     this.height = +obj["height"];
@@ -99,7 +89,7 @@ BoxedComponent.prototype.loadComponent = function (obj) {
 /**
  * Makes sure this component is at least partially within the bounds of screen.
  */
-BoxedComponent.prototype.drop = function () {
+Class.prototype.drop = function () {
     if (this.x < this.width / 2) {
         this.x = this.width / 2;
     }
@@ -107,4 +97,15 @@ BoxedComponent.prototype.drop = function () {
     if (this.y < this.height / 2) {
         this.y = this.height / 2;
     }
+};
+
+/**
+ * Clone this component object: AND gate.
+ * @return {Class}
+ * @instance Class
+ */
+Class.prototype.clone = function() {
+    const copy = new Class();
+    copy.copyFrom(this);
+    return copy;
 };

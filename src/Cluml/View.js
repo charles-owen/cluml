@@ -37,7 +37,7 @@ export const View = function(main, canvas, diagram) {
         },
         model: {
             get: function() {
-                return diagram.components.model;
+                return diagram.diagrams.model;
             }
         }
     });

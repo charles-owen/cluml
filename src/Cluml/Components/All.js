@@ -1,4 +1,4 @@
-import {BoxedComponent} from "./BoxedComponent";
+import {Class} from "./Class";
 
 /**
  * Adds all components into the system.
@@ -6,5 +6,5 @@ import {BoxedComponent} from "./BoxedComponent";
  * @constructor
  */
 export const All = function (components) {
-    components.add(BoxedComponent);
+    components.add(Class);
 }

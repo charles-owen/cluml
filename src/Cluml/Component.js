@@ -26,6 +26,8 @@ export const Component = function () {
        }
     });
 
+    this.height = 10;
+    this.width = 10;
     this.prev = null;
 
     /**
@@ -231,6 +233,7 @@ Component.prototype.bounds = function() {
  */
 Component.prototype.draw = function(context, view) {
     this.selectStyle(context, view);
+    this.drawBox(context);
     this.drawName(context, 0, 3);
 }
 
@@ -264,7 +267,7 @@ Component.prototype.save = function () {
 };
 
 Component.prototype.loadComponent = function (obj) {
-    this.id = this.sanitize(obj["id"]).toString();
+    this.id = this.sanitize(obj["id"]);
 
     // Determine the maximum loaded ID value as we load
     // in new diagrams.
@@ -304,6 +307,29 @@ Component.prototype.properties = function (main) {
 Component.prototype.advance = function (delta) {
     return false;
 };
+
+/**
+ * Many components are just a box. This is a function to draw that box
+ * @param context Context to draw on
+ */
+Component.prototype.drawBox = function (context, fillStyle) {
+    if(fillStyle !== 'none') {
+        let save = context.fillStyle;
+        context.fillStyle = fillStyle !== undefined ? fillStyle : '#ffffff';
+        context.fillRect(this.x - this.width / 2 - 0.5,
+            this.y - this.height / 2 - 0.5,
+            this.y - this.height / 2 - 0.5,
+            this.width, this.height);
+        context.fillStyle = save;
+    }
+
+    context.beginPath();
+    context.rect(
+        this.x - this.width / 2 - 0.5,
+        this.y - this.height / 2 - 0.5,
+        this.width, this.height);
+    context.stroke();
+}
 
 
 /**

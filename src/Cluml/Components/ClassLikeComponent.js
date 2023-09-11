@@ -1,7 +1,7 @@
-import {BoxedComponent} from "./BoxedComponent";
+import {Class} from "./Class";
 
 export const ClassLikeComponent = function () {
-    BoxedComponent.call(this);
+    Class.call(this);
 
 
 }
