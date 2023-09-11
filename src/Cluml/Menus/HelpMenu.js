@@ -1,5 +1,6 @@
 import {AboutDialog} from '../Dlg/AboutDialog';
 import {HelpDialog} from '../Dlg/HelpDialog';
+import {SanityCheckDlg} from "../Dlg/SanityCheckDlg";
 import {Tools} from "../DOM/Tools";
 
 /**
@@ -15,6 +16,7 @@ export const HelpMenu = function(menu, main) {
             '<ul class="help-menu">' +
             '<li><a class="help-help">Help</a></li>' +
             '<li><a class="help-docked-help">Docked Help<img alt="Docked Help"/></a></li>' +
+            '<li><a class="help-sanity-check">Sanity Check</a></li>' +
             '<li><a class="help-about">About...</a></li>' +
             '</ul>' +
             '</li>';
@@ -49,6 +51,11 @@ export const HelpMenu = function(menu, main) {
 	    menu.click('.help-docked-help', (event) => {
 		    main.dockedHelp(!main.isHelpDocked());
 	    });
+
+        menu.click('.help-sanity-check', (event) => {
+            const dlg = new SanityCheckDlg();
+            dlg.open();
+        });
     }
 
     this.opening = function() {

@@ -18,7 +18,7 @@ export const Menu = function(main) {
     //
     const fileMenu = new FileMenu(this, main);
 	const editMenu = new EditMenu(this, main);
-	const tabsMenu = new TabsMenu(this, main);
+	//const tabsMenu = new TabsMenu(this, main);
 	const optionsMenu = new OptionsMenu(this, main);
 	const helpMenu = new HelpMenu(this, main);
 
@@ -48,9 +48,11 @@ export const Menu = function(main) {
 	    html += fileMenu.html();
         html += editMenu.html();
 
+        /*
         if(main.options.tabsMenu) {
 	        html += tabsMenu.html();
         }
+        //*/
 
         html += optionsMenu.html();
         html += helpMenu.html();
@@ -119,7 +121,7 @@ export const Menu = function(main) {
         // Activate all the menus
         fileMenu.activate();
         editMenu.activate();
-        tabsMenu.activate();
+        //tabsMenu.activate();
         optionsMenu.activate();
         helpMenu.activate();
     }
@@ -158,7 +160,7 @@ export const Menu = function(main) {
         componentSelectionDependent(".edit-properties");
 
         fileMenu.opening();
-        tabsMenu.opening();
+        //tabsMenu.opening();
         optionsMenu.opening();
         helpMenu.opening();
 

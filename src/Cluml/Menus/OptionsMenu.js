@@ -11,7 +11,7 @@ export const OptionsMenu = function(menu, main) {
     this.html = function() {
         return `<li><a>Options</a>
 <ul class="option-menu">
-<li><a class="option-showoutputstates">Show Output States<img></a></li>
+<li><a class="option-showoutputstates">Visibility<img></a></li>
 </ul></li>`;
     }
 

@@ -41,7 +41,7 @@ export const ComponentPropertiesDlg = function(component, main) {
                 // Does not have a name. Create one
                 for(let i=1; ; i++) {
                     name = component.prefix + i;
-                    let existing = component.dialog.getComponentByNaming(name);
+                    let existing = component.diagram.getComponentByNaming(name);
                     if(existing === null) {
                         break;
                     }
@@ -92,7 +92,7 @@ export const ComponentPropertiesDlg = function(component, main) {
 
             if(name.length !== 0) {
                 // If name is not empty, we ensure it is unique
-                var existing = component.dialog.getComponentByNaming(name);
+                var existing = component.diagram.getComponentByNaming(name);
                 if(existing !== null && existing !== component) {
                 	Tools.addClass(nameElement, 'cluml-error');
                     this.error("Name already exists");
