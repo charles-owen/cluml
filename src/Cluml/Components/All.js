@@ -7,4 +7,6 @@ import {Class} from "./Class";
  */
 export const All = function (components) {
     components.add(Class);
+
+    components.addPalette('all', [Class]);
 }

@@ -1,7 +1,7 @@
 
 import {Tools} from './DOM/Tools';
-// import {Util} from './Utility/Util';
-// import {PaletteItem} from "./PaletteItem";
+import {Util} from './Utility/Util';
+import {PaletteItem} from "./PaletteItem";
 // import {Diagram} from "./Diagram";
 // import {DiagramRef} from "./Components/DiagramRef";
 
@@ -22,7 +22,7 @@ export const Palette = function(main, work) {
      */
     this.div = null;
 
-    // let components = [];
+    let components = [];
 
     const initialize = () => {
         // Create and install the div
@@ -32,53 +32,53 @@ export const Palette = function(main, work) {
         // We allow either an array of strings in diagrams
         // or a string naming a specific named palette
         if(typeof main.options.components === "string") {
-            // diagrams = main.diagrams.getPalette(main.options.diagrams);
-            // if(diagrams === null) {
-            //     throw new Error('options.diagrams invalid name ' + main.options.diagrams);
-            // }
+            components = main.components.getPalette(main.options.components);
+            if(components === null) {
+                throw new Error('options.components invalid name ' + main.options.components);
+            }
         } else {
             main.options.components.forEach((component) => {
                 // This can be a component name or a palette name
-                // let palette = main.diagrams.getPalette(component);
-                // if(palette !== null) {
-                //     diagrams = diagrams.concat(palette);
-                // } else {
-                //     // // Some component aliases
-                //     // if(component.toLowerCase() === 'not') {
-                //     //     component = 'Inverter';
-                //     // }
-                //     //
-                //     // if(component.toLowerCase() === 'decoder') {
-                //     //     component = 'BusDecoder';
-                //     // }
-                //
-                //     diagrams.push(component);
-                // }
+                let palette = main.components.getPalette(component);
+                if(palette !== null) {
+                    components = components.concat(palette);
+                } else {
+                    // Some component aliases
+                    if(component.toLowerCase() === 'not') {
+                        component = 'Inverter';
+                    }
+
+                    if(component.toLowerCase() === 'decoder') {
+                        component = 'BusDecoder';
+                    }
+
+                    components.push(component);
+                }
             });
         }
 
-        // //
-        // // Load the diagram diagrams into the palette
-        // //
-        // main.diagrams.diagrams.forEach(function(obj) {
-        //     addToPalette(obj);
-        // });
+
+        // Load the diagram diagrams into the palette
+
+        main.components.components.forEach(function(obj) {
+            addToPalette(obj);
+        });
     }
 
-    // const addToPalette = (obj) => {
-    //     // Only some diagrams get added to the pallet...
-    //     // A component is added if it is in the current
-    //     // list of diagrams or main.options.always
-    //     let name = obj.type;
-    //     if(!Util.inArray(name, diagrams) &&
-    //         !Util.inArray(name, main.options.always)) {
-    //         return;
-    //     }
-    //
-    //     this.palette.push(obj);
-    //     const pi = new PaletteItem(this, obj);
-    //     div.appendChild(pi.element);
-    // }
+    const addToPalette = (obj) => {
+        // // Only some diagrams get added to the pallet...
+        // // A component is added if it is in the current
+        // // list of diagrams or main.options.always
+        // let name = 'Class';
+        // if(!Util.inArray(name, components) &&
+        //     !Util.inArray(name, main.options.always)) {
+        //     return;
+        // }
+
+        this.palette.push(obj);
+        const pi = new PaletteItem(this, obj);
+        //div.appendChild(pi.element);
+    }
 
     initialize();
 };

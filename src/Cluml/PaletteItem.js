@@ -27,12 +27,12 @@ export const PaletteItem = function(palette, obj, diagram) {
     box.appendChild(img);
     img.appendChild(image);
 
-    const desc = Tools.createClassedDiv('cs-desc');
-    if(obj.label.length > 7) {
-        Tools.addClass(desc, 'long');
-    }
-    desc.innerText = diagram !== undefined ? diagram.name : obj.label;
-    box.appendChild(desc);
+    // const desc = Tools.createClassedDiv('cs-desc');
+    // if(obj.label.length > 7) {
+    //     Tools.addClass(desc, 'long');
+    // }
+    // desc.innerText = diagram !== undefined ? diagram.name : obj.label;
+    // box.appendChild(desc);
 
 	this.element = element;
 	palette.main.dragAndDrop.draggable(this);
@@ -47,26 +47,34 @@ export const PaletteItem = function(palette, obj, diagram) {
 PaletteItem.prototype.paletteImage = function() {
     const obj = this.obj;
 
-    if(obj.img !== null && obj.img !== undefined) {
-        let root = this.palette.cluml.root;
+    let pi = new PaletteImage(60, 60);
 
-        const element = document.createElement('img');
-        element.setAttribute('src', root + 'cluml/img/' + obj.img);
-        element.setAttribute('alt', obj.desc);
-        element.setAttribute('title', obj.desc);
-	    element.setAttribute('draggable', 'false');
-
-        return element;
-
-    } else if(obj.paletteImage !== undefined) {
-        return obj.paletteImage().element;
-    } else {
-        let pi = new PaletteImage(60, 60);
-
-        pi.box(30, 40);
-        pi.io(15, 20, 'w', 2, 20);
-        pi.io(45, 20, 'e', 2, 20);
-        pi.drawText(obj.label, 0, 0, "6px Times");
-        return pi.element;
-    }
+    pi.box(30, 40);
+    pi.io(15, 20, 'w', 2, 20);
+    pi.io(45, 20, 'e', 2, 20);
+    //pi.drawText(obj.label, 0, 0, "6px Times");
+    return pi.element;
+    //
+    // if(obj.img !== null && obj.img !== undefined) {
+    //     // let root = this.palette.cluml.root;
+    //     //
+    //     // const element = document.createElement('img');
+    //     // element.setAttribute('src', root + 'cluml/img/' + obj.img);
+    //     // element.setAttribute('alt', obj.desc);
+    //     // element.setAttribute('title', obj.desc);
+	//     // element.setAttribute('draggable', 'false');
+    //     //
+    //     // return element;
+    //
+    // } else if(obj.paletteImage !== undefined) {
+    //     // return obj.paletteImage().element;
+    // } else {
+    //     let pi = new PaletteImage(60, 60);
+    //
+    //     pi.box(30, 40);
+    //     pi.io(15, 20, 'w', 2, 20);
+    //     pi.io(45, 20, 'e', 2, 20);
+    //     pi.drawText(obj.label, 0, 0, "6px Times");
+    //     return pi.element;
+    // }
 }

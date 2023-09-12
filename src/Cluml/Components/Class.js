@@ -32,6 +32,15 @@ export const Class = function () {
 Class.prototype = Object.create(Component.prototype);
 Class.prototype.constructor = Class;
 
+// Class.prototype.prefix = null;   ///< No component naming
+//
+// Class.type = "Class";         ///< Name to use in files
+// Class.label = "Class";           ///< Label for the palette
+// Class.desc = "0 (false)";    ///< Description for the palette
+// Class.description = '<h2>Class</h2><p>A basic class.</p>';
+// Class.order = 0;             ///< Order of presentation in the palette
+// Class.help = 'class';         ///< Available online help for zero
+
 /**
  * Copies from another component.
  * @param component {Class}
@@ -53,8 +62,8 @@ Class.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (x >= this.x - this.width / 2 &&
         x <= this.x + this.width / 2 &&
-        y >= this.y - this.height / 2 &&
-        y <= this.y + this.height / 2) {
+        y >= this.y - this.height &&
+        y <= this.y) {
         return this;
     }
 
@@ -88,7 +97,7 @@ Class.prototype.draw = function (context, view) {
     context.rect(
         this.x - this.width / 2 - 0.5,
         this.y - this.height - 0.5,
-        this.width / 2, this.height);
+        this.width / 2, this.height/3);
     context.fill();
     context.stroke();
 
