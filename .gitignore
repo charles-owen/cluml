@@ -10,6 +10,7 @@ doc/js
 dist/
 .DS_Store
 
+.yarn/
 .yarn/*
 !.yarn/patches
 !.yarn/releases

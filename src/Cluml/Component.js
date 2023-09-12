@@ -99,7 +99,7 @@ Component.prototype.paletteLbl = '[UNSET]';
  * Label for the save file.
  * @type {string}
  */
-Component.prototype.fileLbl = '[UNSET}';
+Component.prototype.fileLbl = '[UNSET]';
 
 /**
  * Label used to determine which help screen to show.
