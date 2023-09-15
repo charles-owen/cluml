@@ -1,4 +1,3 @@
-
 import {Rect} from './Utility/Rect';
 
 /**
@@ -7,33 +6,42 @@ import {Rect} from './Utility/Rect';
  * @param view {View} The view this selected object is associated with
  * @constructor
  */
-export const Selection = function(view) {
+export const Selection = function (view) {
 
-    /// Maintains a list of the currently selected diagrams
+    /**
+     * Maintains a list of the currently selected components.
+     * @type {Component[]}
+     */
     this.selected = [];
 
     let down = false;
     let firstMove = false;
 
-    /// Rectangle for selected
+    /**
+     * Rectangle for selected
+     * @type {Rect}
+     */
     let rect = null;
 
-    this.mouseDown = function(x, y, event) {
+    this.mouseDown = function (x, y, event) {
         down = true;
         firstMove = true;
 
+        /**
+         * @type {Component}
+         */
         const touched = view.diagram.touch(x, y);
-        if(touched !== null) {
+        if (touched !== null) {
             // Some selectables are singles, meaning we can
             // only select one at a time.
-            if(touched.single()) {
-                this.selection = [touched];
+            if (touched.single()) {
+                this.selected = [touched];
             } else {
                 // If we touched something that was not
                 // previously selected, it becomes the selected
-                if(!this.isSelected(touched)) {
-                    if(!event.shiftKey) {
-                        this.selection = [];
+                if (!this.isSelected(touched)) {
+                    if (!event.shiftKey) {
+                        this.selected = [];
                     }
 
                     this.selected.push(touched);
@@ -43,24 +51,24 @@ export const Selection = function(view) {
         } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle
-            if(!event.shiftKey) {
-                this.selection = [];
+            if (!event.shiftKey) {
+                this.selected = [];
             }
 
             rect = new Rect(x, y, x, y);
         }
 
-        for(let i=0; i<this.selected.length; i++) {
+        for (let i = 0; i < this.selected.length; i++) {
             this.selected[i].grab();
         }
     };
 
-    this.mouseMove = function(x, y, dx, dy) {
-        if(down) {
-            if(firstMove) {
+    this.mouseMove = function (x, y, dx, dy) {
+        if (down) {
+            if (firstMove) {
                 // If we move the mouse the first time on any
                 // selected, we need to create an undo backup
-                if(rect === null && this.selected.length > 0) {
+                if (rect === null && this.selected.length > 0) {
                     view.model.backup();
                 }
 
@@ -69,20 +77,20 @@ export const Selection = function(view) {
                 // one item selected, check to see if it is
                 // something that might spawn a new child that
                 // we drag. This is how bending points are implemented.
-                if(this.selected.length === 1) {
+                if (this.selected.length === 1) {
                     const spawned = this.selected[0].spawn(x, y);
-                    if(spawned !== null) {
-                        this.selection = [spawned];
+                    if (spawned !== null) {
+                        this.selected = [spawned];
                     }
                 }
 
                 firstMove = false;
             }
 
-            if(rect !== null) {
+            if (rect !== null) {
                 rect.setRightBottom(x, y);
             } else {
-                for(let i=0; i<this.selected.length; i++) {
+                for (let i = 0; i < this.selected.length; i++) {
                     this.selected[i].move(dx, dy);
                 }
             }
@@ -91,23 +99,23 @@ export const Selection = function(view) {
         }
     };
 
-    this.mouseUp = function(x, y) {
-        if(down) {
+    this.mouseUp = function (x, y) {
+        if (down) {
             let clear = false;
-            for(let i=0; i<this.selected.length; i++) {
-                if(this.selected[i].single()) {
+            for (let i = 0; i < this.selected.length; i++) {
+                if (this.selected[i].single()) {
                     clear = true;
                 }
                 this.selected[i].drop();
             }
 
-            if(clear) {
-                this.selection = [];
+            if (clear) {
+                this.selected = [];
             }
         }
         down = false;
 
-        if(rect !== null) {
+        if (rect !== null) {
             selectRect();
             rect = null;
         }
@@ -117,9 +125,9 @@ export const Selection = function(view) {
 
     const selectRect = () => {
         rect.normalize();
-        if(!rect.isEmpty()) {
+        if (!rect.isEmpty()) {
             const inRect = view.diagram.inRect(rect);
-            if(inRect.length > 0) {
+            if (inRect.length > 0) {
                 const newSelection = this.selected.slice();
                 for (let i = 0; i < inRect.length; i++) {
                     if (!this.isSelected(inRect[i])) {
@@ -127,7 +135,7 @@ export const Selection = function(view) {
                     }
                 }
 
-                this.selection = newSelection;
+                this.selected = newSelection;
             }
         }
     }
@@ -137,9 +145,9 @@ export const Selection = function(view) {
      * @param component Component to test
      * @returns {boolean} true if selected.
      */
-    this.isSelected = function(component) {
-        for(let i=0; i<this.selected.length; i++) {
-            if(component === this.selected[i]) {
+    this.isSelected = function (component) {
+        for (let i = 0; i < this.selected.length; i++) {
+            if (component === this.selected[i]) {
                 return true;
             }
         }
@@ -147,10 +155,11 @@ export const Selection = function(view) {
         return false;
     };
 
-    this.draw = function(context) {
-        if(rect !== null) {
+    this.draw = function (context) {
+        if (rect !== null) {
             if (!context.setLineDash) {
-                context.setLineDash = function () {}
+                context.setLineDash = function () {
+                }
             }
 
             context.strokeStyle = "#888888";
@@ -163,20 +172,20 @@ export const Selection = function(view) {
 
     };
 
-    this.getSelection = function() {
+    this.getSelection = function () {
         return this.selected;
     };
 
-    this.clear = function() {
-        this.selection = [];
+    this.clear = function () {
+        this.selected = [];
     }
 };
 
 /**
  * Delete everything that is selected.
  */
-Selection.prototype.delete = function() {
-    this.selected.forEach(function(selectable) {
+Selection.prototype.delete = function () {
+    this.selected.forEach(function (selectable) {
         selectable.delete();
     });
     this.clear();
