@@ -8,13 +8,13 @@ export const Class = function () {
      * Component height.
      * @type {number}
      */
-    this.height = 10;
+    this.height = 150;
 
     /**
      * Component width.
      * @type {number}
      */
-    this.width = 10;
+    this.width = 300;
 
     /**
      * The array of attributes.
@@ -34,12 +34,12 @@ Class.prototype.constructor = Class;
 
 // Class.prototype.prefix = null;   ///< No component naming
 //
-// Class.type = "Class";         ///< Name to use in files
-// Class.label = "Class";           ///< Label for the palette
-// Class.desc = "0 (false)";    ///< Description for the palette
-// Class.description = '<h2>Class</h2><p>A basic class.</p>';
-// Class.order = 0;             ///< Order of presentation in the palette
-// Class.help = 'class';         ///< Available online help for zero
+Class.type = "Class";         ///< Name to use in files
+Class.label = "Class";           ///< Label for the palette
+Class.desc = "0 (false)";    ///< Description for the palette
+Class.description = '<h2>Class</h2><p>A basic class.</p>';
+Class.order = 0;             ///< Order of presentation in the palette
+Class.help = 'class';         ///< Available online help for zero
 
 /**
  * Copies from another component.

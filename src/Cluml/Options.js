@@ -113,7 +113,14 @@ export const Options = function(options) {
     /// diagrams: ['combinatorial', 'Or3', 'Or4']
     /// diagrams: ['sequential']
     ///
-    this.components = ['combinatorial', 'sequential'];
+
+    // changing this code doesn't cause problems
+    // will come back to code since some of the components are from cirsim not cluml
+    // this.components = ['combinatorial', 'sequential'];
+    this.components = 'all';
+
+    // this.always = ['Zero', 'One', 'InPin', 'OutPin', 'Clock', 'Button', 'LED', 'Text'];
+    this.always = ['Class'];
 
     /// Display all output states
     this.showOutputStates = false;

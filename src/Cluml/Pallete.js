@@ -69,15 +69,17 @@ export const Palette = function(main, work) {
         // // Only some diagrams get added to the pallet...
         // // A component is added if it is in the current
         // // list of diagrams or main.options.always
-        // let name = 'Class';
-        // if(!Util.inArray(name, components) &&
-        //     !Util.inArray(name, main.options.always)) {
-        //     return;
-        // }
+
+        //let name = 'Class';
+        let name = obj.type;
+        if(!Util.inArray(name, components) &&
+            !Util.inArray(name, main.options.always)) {
+            return;
+        }
 
         this.palette.push(obj);
         const pi = new PaletteItem(this, obj);
-        //div.appendChild(pi.element);
+        this.div.appendChild(pi.element);
     }
 
     initialize();
