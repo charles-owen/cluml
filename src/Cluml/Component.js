@@ -237,7 +237,7 @@ Component.prototype.draw = function (context, view) {
  *
  * @returns {{id: string, x: number, y: number, name: string, type: *}}
  */
-Component.prototype.save = function () {
+Component.prototype.saveComponent = function () {
     let naming = this.naming;
     if (naming !== null) {
         naming = naming.replace(/'/g, '`');
@@ -296,6 +296,25 @@ Component.prototype.properties = function (main) {
 Component.prototype.advance = function (delta) {
     return false;
 };
+
+/**
+ * Clone this component.
+ * @return {Component} or inherited.
+ * @instance Component or inherited.
+ */
+Component.prototype.clone = function () {
+    const copy = new this.constructor();
+    copy.copyFrom(this);
+    return copy;
+}
+
+/**
+ * Create a PaletteImage object for the component
+ * @returns {PaletteImage}
+ */
+Component.prototype.paletteImage = function() {
+    return null;
+}
 
 /**
  * Many components are just a box. This is a function to draw that box

@@ -1,6 +1,7 @@
 import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
+import {Class} from "../Class";
 
 export const Association = function () {
     Component.call(this);
@@ -36,6 +37,9 @@ export const Association = function () {
 
     //endregion
 }
+
+Association.prototype = Object.create(Component.prototype);
+Association.prototype.constructor = Association;
 
 //region Type
 Association.fileLbl = "Association";
@@ -117,14 +121,14 @@ Association.prototype.draw = function (context, view) {
 
     while (node !== this.nodes.end) {
         path.lineTo(node.x, node.y);
-        node = node.next;
+        node = node.next();
         path.moveTo(node.x, node.y);
     }
 }
 
-Association.prototype.save = function () {
-    const obj = Component.prototype.save.call(this);
-    obj.nodes = this.nodes.save();
+Association.prototype.saveComponent = function () {
+    const obj = Component.prototype.saveComponent.call(this);
+    obj.nodes = this.nodes.saveComponent();
     return obj;
 }
 

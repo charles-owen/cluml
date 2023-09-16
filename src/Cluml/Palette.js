@@ -1,4 +1,3 @@
-
 import {Tools} from './DOM/Tools';
 import {Util} from './Utility/Util';
 import {PaletteItem} from "./PaletteItem";
@@ -9,7 +8,7 @@ import {PaletteItem} from "./PaletteItem";
  * @param work div.work
  * @constructor
  */
-export const Palette = function(main, work) {
+export const Palette = function (main, work) {
     this.main = main;
     this.cluml = main.cluml;
     this.palette = [];
@@ -18,27 +17,24 @@ export const Palette = function(main, work) {
      * The DIV element associated with this palette.
      * @type {Element}
      */
-    this.div = null;
+    this.div = Tools.createClassedDiv('cs-palette');
+    work.appendChild(this.div);
 
     let components = [];
 
     const initialize = () => {
-        // Create and install the div
-        this.div = Tools.createClassedDiv('cs-palette');
-        work.appendChild(this.div);
-
         // We allow either an array of strings in diagrams
         // or a string naming a specific named palette
-        if(typeof main.options.components === "string") {
+        if (typeof main.options.components === "string") {
             components = main.components.getPalette(main.options.components);
-            if(components === null) {
+            if (components === null) {
                 throw new Error('options.components invalid name ' + main.options.components);
             }
         } else {
             main.options.components.forEach((component) => {
                 // This can be a component name or a palette name
                 let palette = main.components.getPalette(component);
-                if(palette !== null) {
+                if (palette !== null) {
                     components = components.concat(palette);
                 } else {
                     components.push(component);
@@ -49,7 +45,7 @@ export const Palette = function(main, work) {
 
         // Load the diagram components into the palette
 
-        main.components.components.forEach(function(obj) {
+        main.components.componentList.forEach(function (obj) {
             addToPalette(obj);
         });
     }
@@ -71,7 +67,7 @@ export const Palette = function(main, work) {
         }
 
         this.palette.push(obj);
-        const pi = new PaletteItem(this, obj);
+        const pi = new PaletteItem(this, obj, undefined);
         this.div.appendChild(pi.element);
     }
 
@@ -83,17 +79,17 @@ export const Palette = function(main, work) {
  * applicable to us, I'll just remove this function for now.
  */
 // Palette.prototype.refresh = function() {
-    // // Remove any palette items that are of class "diagramref"
-    // for(const c of this.div.querySelectorAll('.cs-diagramref')) {
-    //     this.div.removeChild(c);
-    // }
-    //
-    // // Add any necessary diagramref palette items
-    // for(let i = this.main.currentView().tabnum+1;  i < this.main.model.diagrams.diagrams.length;  i++) {
-    //     const diagram = this.main.model.diagrams.diagrams[i];
-    //
-    //     const pi = new PaletteItem(this, DiagramRef, diagram);
-    //     pi.element.classList.add('cs-diagramref');
-    //     this.div.appendChild(pi.element);
-    // }
+// // Remove any palette items that are of class "diagramref"
+// for(const c of this.div.querySelectorAll('.cs-diagramref')) {
+//     this.div.removeChild(c);
+// }
+//
+// // Add any necessary diagramref palette items
+// for(let i = this.main.currentView().tabnum+1;  i < this.main.model.diagrams.diagrams.length;  i++) {
+//     const diagram = this.main.model.diagrams.diagrams[i];
+//
+//     const pi = new PaletteItem(this, DiagramRef, diagram);
+//     pi.element.classList.add('cs-diagramref');
+//     this.div.appendChild(pi.element);
+// }
 // }

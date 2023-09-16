@@ -1,5 +1,5 @@
 /**
- * The diagrams collection for Cluml.
+ * The components collection for Cluml.
  * @constructor
  */
 export const Components = function () {
@@ -8,17 +8,17 @@ export const Components = function () {
      * Components.
      * @type {Component[]}
      */
-    this.components = [];
+    this.componentList = [];
 
     this.palettes = {};
 
     /**
      * Add a component to the collection of available component objects
-     * @param component Component object
+     * @param component {Component} Component object
      */
     this.add = function (component) {
-        this.components.push(component);
-        this.components.sort(function (a, b) {
+        this.componentList.push(component);
+        this.componentList.sort(function (a, b) {
             return a.paletteOrder - b.paletteOrder;
         });
     };
@@ -29,9 +29,9 @@ export const Components = function () {
      * @returns any constructor of the component.
      */
     this.get = function (type) {
-        for (let i = 0; i < this.components.length; i++) {
-            if (this.components[i].fileLbl === type) {
-                return this.components[i];
+        for (let i = 0; i < this.componentList.length; i++) {
+            if (this.componentList[i].fileLbl === type) {
+                return this.componentList[i];
             }
         }
 

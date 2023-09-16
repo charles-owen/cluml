@@ -66,7 +66,7 @@ export const View = function(main, canvas, diagram) {
             }
 
             this.model.backup();
-            const component = new componentObject(paletteItem);
+            const component = new componentObject.constructor(paletteItem);
             component.brand();
 
             component.x = x;

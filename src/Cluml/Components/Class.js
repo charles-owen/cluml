@@ -34,12 +34,12 @@ Class.prototype = Object.create(Component.prototype);
 Class.prototype.constructor = Class;
 
 
-Class.fileLbl = "Class";
-Class.helpLbl = 'class';
-Class.paletteLbl = "Class";
-Class.paletteDesc = "Class component.";
-Class.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
-Class.paletteOrder = 0;
+Class.prototype.fileLbl = "Class";
+Class.prototype.helpLbl = 'class';
+Class.prototype.paletteLbl = "Class";
+Class.prototype.paletteDesc = "Class component.";
+Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
+Class.prototype.paletteOrder = 0;
 
 /**
  * Copies from another component.
@@ -69,7 +69,11 @@ Class.prototype.touch = function (x, y) {
 
     return null;
 }
-
+/**
+ * Returns the bounds of the Class, used to ensure the
+ * object remains on screen.
+ * @return {Rect}
+ */
 Class.prototype.bounds = function () {
     return new Rect(this.x - this.width / 2,
         this.y - this.height / 2,
@@ -119,8 +123,8 @@ Class.prototype.draw = function (context, view) {
         0 - this.height * (5 / 6));
 }
 
-Class.prototype.save = function () {
-    const obj = Component.prototype.save.call(this);
+Class.prototype.saveComponent = function () {
+    const obj = Component.prototype.saveComponent.call(this);
     obj.size = this.height;
     obj.bus = this.width;
     return obj;
@@ -147,25 +151,15 @@ Class.prototype.drop = function () {
 };
 
 /**
- * Clone this component object: AND gate.
- * @return {Class}
- * @instance Class
- */
-Class.prototype.clone = function () {
-    const copy = new Class();
-    copy.copyFrom(this);
-    return copy;
-};
-
-/**
  * Create a PaletteImage object for the component
+ * @returns {PaletteImage}
  */
-Class.paletteImage = function() {
+Class.prototype.paletteImage = function() {
     let size=16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
 
-    var pi = new PaletteImage(width, height);
+    const pi = new PaletteImage(width, height);
 
     pi.box(40, 30);
     pi.fillStroke("#e7e8b0");

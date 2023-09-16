@@ -1,7 +1,10 @@
 import {Selectable} from "../../Selectable";
 import {Component} from "../../Component";
-import vector, {Vector} from "../../Utility/Vector";
+import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
+import {Rect} from "../../Utility/Rect";
+import Components from "../../Components";
+import {Diagram} from "../../Diagram";
 
 /**
  * Determines the radius around the node at which
@@ -23,17 +26,25 @@ export const LineNode = function () {
     this.touched = false;
 
     /**
-     * The next LineNode.
-     * @type {LineNode}
+     * The id of the next LineNode.
+     * @type {string|null}
      */
-    this.next = null;
+    this.nextID = null;
 
     /**
-     * The previous LineNode.
-     * @type {LineNode}
+     * The id of the previous LineNode.
+     * @type {string|null}
      */
-    this.previous = null;
+    this.previousID = null;
     //endregion
+
+    this.next = function () {
+        return Diagram.prototype.getComponentByID(this.nextID);
+    }
+
+    this.previous = function () {
+        return Diagram.prototype.getComponentByID(this.previousID);
+    }
 }
 
 /**
@@ -42,8 +53,8 @@ export const LineNode = function () {
  */
 LineNode.prototype.copyFrom = function (component) {
     this.touched = component.touched;
-    this.next = component.next;
-    this.previous = component.previous;
+    this.nextID = component.nextID;
+    this.previousID = component.previousID;
     Component.prototype.copyFrom.call(this);
 }
 
@@ -67,8 +78,36 @@ LineNode.prototype.touch = function (x, y) {
     return null;
 }
 
+/**
+ * Returns the bounds of the LineNode, used to ensure the
+ * object remains on screen.
+ * @return {Rect}
+ */
 LineNode.prototype.bounds = function () {
-    return new Rect
+    return Rect.fromCenterAndExtents(
+        new Vector(this.x, this.y),
+        new Vector(NODE_TOUCH_RADIUS, NODE_TOUCH_RADIUS)
+    )
+}
+
+/**
+ * Draws the LineNode object.
+ *
+ * @param context {CanvasRenderingContext2D} Display context
+ * @param view {View} View object
+ */
+LineNode.prototype.draw = function (context, view) {
+    this.selectStyle(context, view);
+
+    // TODO: Implement.
+}
+
+LineNode.prototype.saveComponent = function () {
+    const obj = Component.prototype.saveComponent.call(this);
+    obj.touched = this.touched;
+    obj.nextID = this.nextID;
+    obj.previousID = this.previousID;
+    return obj;
 }
 
 //region LineNode Methods
@@ -77,8 +116,8 @@ LineNode.prototype.bounds = function () {
  * @param next {LineNode} The next line node.
  */
 LineNode.prototype.linkTo = function (next) {
-    this.next = next;
-    next.previous = this;
+    this.nextID = next;
+    next.previousID = this;
 }
 
 /**
@@ -86,11 +125,11 @@ LineNode.prototype.linkTo = function (next) {
  * @return {boolean} True if next exists and is removed, false otherwise.
  */
 LineNode.prototype.tryUnlinkFromNext = function () {
-    if (this.next === null)
+    if (this.nextID === null)
         return false;
     else {
-        this.next.previous = null;
-        this.next = null;
+        this.nextID.previous = null;
+        this.nextID = null;
         return true;
     }
 }

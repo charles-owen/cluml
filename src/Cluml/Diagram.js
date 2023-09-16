@@ -107,7 +107,7 @@ Diagram.prototype.clone = function () {
     copy.prev = this.prev;
     this.prev = copy;
 
-    // Iterate over the diagrams, cloning each of them
+    // Iterate over the components, cloning each of them.
     for (let i = 0; i < this.components.length; i++) {
         component = this.components[i];
         const componentCopy = component.clone();
@@ -226,7 +226,7 @@ Diagram.prototype.save = function () {
         // Set an ID on each component
         // component.id = "c" + (i + 1001);
 
-        comps.push(component.save());
+        comps.push(component.saveComponent());
     }
 
     // // Then iterate over the connections, saving each of them
@@ -306,7 +306,7 @@ Diagram.prototype.load = function (obj) {
 /**
  * Get a component by its naming
  * @param naming {string} Naming to search for
- * @returns {*}
+ * @returns {Component|null}
  */
 Diagram.prototype.getComponentByNaming = function (naming) {
     for (let i = 0; i < this.components.length; i++) {
@@ -318,6 +318,23 @@ Diagram.prototype.getComponentByNaming = function (naming) {
 
     return null;
 };
+
+/**
+ * Get a component by its id.
+ * @param id {string} ID to search for.
+ * @returns {Component|null}
+ */
+Diagram.prototype.getComponentByID = function (id) {
+    for (let i = 0; i < this.components.length; i++) {
+        const component = this.components[i];
+        if (component.id.length > 0 && component.id === id) {
+            return component;
+        }
+    }
+
+    return null;
+};
+
 
 /**
  * Get all diagrams by type

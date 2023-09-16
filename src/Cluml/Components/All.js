@@ -6,7 +6,7 @@ import {Class} from "./Class";
  * @constructor
  */
 export const All = function (components) {
-    components.add(Class);
+    components.add(new Class());
 
-    components.addPalette('all', [Class]);
+    components.addPalette('all', [new Class()]);
 }

@@ -1,7 +1,7 @@
 import Resizer from 'resizer-cl';
 
 import {Menu} from './Menu';
-import {Palette} from './Pallete';
+import {Palette} from './Palette';
 import {Model} from './Model';
 import {Diagram} from './Diagram';
 import {Tabs} from './Tabs';
@@ -27,7 +27,7 @@ import {ImportDlg} from "./Dlg/ImportDlg";
  * @param tests Array of tests added to cluml using addTest
  * @constructor
  */
-export const Main = function(cluml, element, tests) {
+export const Main = function (cluml, element, tests) {
     this.cluml = cluml;
     this.element = element;
     this.options = cluml.options;
@@ -40,11 +40,11 @@ export const Main = function(cluml, element, tests) {
     //
     // Tests can come from add_test or from options
     //
-    for(const test of tests) {
+    for (const test of tests) {
         this.test.addTest(test);
     }
 
-    for(const test of this.options.tests) {
+    for (const test of this.options.tests) {
         this.test.addTest(test);
     }
 
@@ -61,27 +61,27 @@ export const Main = function(cluml, element, tests) {
      * The menu.
      * @type {Menu}
      */
-    let menu=null;
+    let menu = null;
     /**
      * The palette.
      * @type {Palette}
      */
-    let palette=null
+    let palette = null
     /**
      * Tabs.
      * @type {Tabs}
      */
-    let tabs=null;
+    let tabs = null;
 
     /// div.overlay
-    let divOverlay = null, divWork=null;
+    let divOverlay = null, divWork = null;
 
-    this.initialize = function() {
-        if(options.display !== 'none') {
+    this.initialize = function () {
+        if (options.display !== 'none') {
             Tools.addClass(element, 'cluml');
             element.innerHTML = '';
 
-            switch(options.display) {
+            switch (options.display) {
                 case 'full':
                     Tools.addClass(element, 'cluml-full');
                     break;
@@ -95,12 +95,12 @@ export const Main = function(cluml, element, tests) {
                     break;
             }
 
-            if(options.display === 'window') {
+            if (options.display === 'window') {
                 //
                 // Add resizer to the window if in window mode,
                 // and it has not already been added
                 //
-                if(!element.classList.contains("resizer")) {
+                if (!element.classList.contains("resizer")) {
                     new Resizer(element, {
                         handle: '10px solid #18453B'
                     });
@@ -132,18 +132,18 @@ export const Main = function(cluml, element, tests) {
         model = new Model(this);
         this.model = model;
 
-        for(let i in this.options.tabs) {
+        for (let i in this.options.tabs) {
             this.model.diagrams.add(new Diagram(this.options.tabs[i]));
         }
 
-        if(this.options.preloadJson !== null) {
+        if (this.options.preloadJson !== null) {
             model.fmJSON(this.options.preloadJson);
         }
 
         //
         // Create and add the window diagrams
         //
-        if(options.display !== 'inline' && options.display !== 'none') {
+        if (options.display !== 'inline' && options.display !== 'none') {
             //
             // All window-based versions other than inline get the
             // full user interface
@@ -193,7 +193,7 @@ export const Main = function(cluml, element, tests) {
             this.toast.create(this.div);
         }
 
-        if(options.display === 'inline') {
+        if (options.display === 'inline') {
             //
             // The minimal inline version
             // <div><canvas></canvas></div>
@@ -224,7 +224,7 @@ export const Main = function(cluml, element, tests) {
         // automatically open the file when we start.
         //
         const open = this.options.getAPI('open');
-        if(open !== null && open.url !== undefined && open.name !== undefined) {
+        if (open !== null && open.url !== undefined && open.name !== undefined) {
             this.filename = open.name;
             const dlg = new OpenDialog(open.name, this.options, this.toast);
             dlg.open((name, json) => {
@@ -237,19 +237,23 @@ export const Main = function(cluml, element, tests) {
     }
 
 
-    this.addTest= function(test) {
+    this.addTest = function (test) {
         this.test.addTest(test);
     }
 
 
-    this.currentView = function() {
+    /**
+     * Returns the current view.
+     * @returns {View}
+     */
+    this.currentView = function () {
         return tabs.currentView();
     };
 
     /**
      * Called whenever a new tab is selected
      */
-    this.newTab = function() {
+    this.newTab = function () {
         // if(palette !== null) {
         //     palette.refresh();
         // }
@@ -259,14 +263,14 @@ export const Main = function(cluml, element, tests) {
     /**
      * Backup the current diagrams object in support of an Undo operation
      */
-    this.backup = function() {
+    this.backup = function () {
         model.backup();
     };
 
     /**
      * Undo operation
      */
-    this.undo = function() {
+    this.undo = function () {
         model.undo();
         tabs.undo();
         // palette.refresh();
@@ -277,15 +281,15 @@ export const Main = function(cluml, element, tests) {
      * @param modal True sets interface to modal state.
      *
      */
-    this.modal = function(modal) {
-        if(modal) {
+    this.modal = function (modal) {
+        if (modal) {
             divOverlay.style.display = 'block';
         } else {
             divOverlay.style.display = 'none';
         }
     }
 
-    this.open = function() {
+    this.open = function () {
         const dlg = new FileOpenDialog(this.options, this.toast);
         dlg.open((name, data) => {
             model.fmJSON(data);
@@ -302,14 +306,15 @@ export const Main = function(cluml, element, tests) {
     this.save = (singleOnly, silent) => {
         const api = this.options.getAPI('save');
 
-        if(api === null) {
+        if (api === null) {
             // Save is not supported
             return;
         }
 
-        if(api.name !== undefined) {
+        if (api.name !== undefined) {
             const json = model.toJSON();
-            let data = Object.assign({cmd: "save",
+            let data = Object.assign({
+                cmd: "save",
                 name: api.name,
                 data: json,
                 type: 'application/json'
@@ -323,8 +328,8 @@ export const Main = function(cluml, element, tests) {
                 contentType: api.contentType,
                 success: (data) => {
                     const json = new JsonAPI(data);
-                    if(!this.toast.jsonErrors(json)) {
-                        if(silent !== true) {
+                    if (!this.toast.jsonErrors(json)) {
+                        if (silent !== true) {
                             this.toast.message('Successfully saved to server');
                         }
                     }
@@ -338,11 +343,11 @@ export const Main = function(cluml, element, tests) {
             return;
         }
 
-        if(singleOnly === true) {
+        if (singleOnly === true) {
             return;
         }
 
-        if(this.filename === null) {
+        if (this.filename === null) {
             this.saveAs();
         } else {
             const json = model.toJSON();
@@ -351,10 +356,10 @@ export const Main = function(cluml, element, tests) {
         }
     }
 
-    this.saveAs = function() {
+    this.saveAs = function () {
         const json = model.toJSON();
         const dlg = new FileSaveDialog(json, "application/json", this.options, this.toast);
-        if(this.filename !== null) {
+        if (this.filename !== null) {
             dlg.filename = this.filename;
         }
 
@@ -364,12 +369,12 @@ export const Main = function(cluml, element, tests) {
     }
 
 
-    this.export = function() {
+    this.export = function () {
         const dlg = new ExportDlg(model);
         dlg.open();
     };
 
-    this.import = function() {
+    this.import = function () {
         const dlg = new ImportDlg(this, model);
         dlg.open();
     };
@@ -388,7 +393,7 @@ export const Main = function(cluml, element, tests) {
     /**
      * Complete reload after a new model is loaded
      */
-    this.reload = function() {
+    this.reload = function () {
         tabs.destroy();
         tabs.create(divWork, model);
     }
@@ -396,13 +401,13 @@ export const Main = function(cluml, element, tests) {
     let dockedHelp = false;
 
 
-    this.isHelpDocked = function() {
+    this.isHelpDocked = function () {
         return dockedHelp;
     }
 
-    this.dockedHelp = function(dock) {
+    this.dockedHelp = function (dock) {
         dockedHelp = dock;
-        if(dockedHelp) {
+        if (dockedHelp) {
             Tools.addClass(this.element, 'docked-help');
         } else {
             Tools.removeClass(this.element, 'docked-help');
@@ -413,7 +418,7 @@ export const Main = function(cluml, element, tests) {
      * Load a model from JSON
      * @param json JSON source
      */
-    this.loadMain = function(json) {
+    this.loadMain = function (json) {
         model.fmJSON(json);
         this.reload();
     }
@@ -422,7 +427,6 @@ export const Main = function(cluml, element, tests) {
 }
 
 
-
-Main.prototype.runTest = function(test) {
+Main.prototype.runTest = function (test) {
     return this.test.runTest(test);
 }
