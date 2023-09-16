@@ -43,22 +43,13 @@ export const Palette = function(main, work) {
                 if(palette !== null) {
                     components = components.concat(palette);
                 } else {
-                    // Some component aliases
-                    if(component.toLowerCase() === 'not') {
-                        component = 'Inverter';
-                    }
-
-                    if(component.toLowerCase() === 'decoder') {
-                        component = 'BusDecoder';
-                    }
-
                     components.push(component);
                 }
             });
         }
 
 
-        // Load the diagram diagrams into the palette
+        // Load the diagram components into the palette
 
         main.components.components.forEach(function(obj) {
             addToPalette(obj);
@@ -70,7 +61,6 @@ export const Palette = function(main, work) {
         // // A component is added if it is in the current
         // // list of diagrams or main.options.always
 
-        //let name = 'Class';
         let name = obj.type;
         if(!Util.inArray(name, components) &&
             !Util.inArray(name, main.options.always)) {

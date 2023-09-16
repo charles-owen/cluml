@@ -1,5 +1,6 @@
 import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
+import {PaletteImage} from "../Graphics/PaletteImage";
 
 export const Class = function () {
     Component.call(this);
@@ -150,3 +151,21 @@ Class.prototype.clone = function() {
     copy.copyFrom(this);
     return copy;
 };
+
+/**
+ * Create a PaletteImage object for the component
+ */
+Class.paletteImage = function() {
+    let size=16;  // Box size
+    let width = 60;       // Image width
+    let height = 40;      // Image height
+
+    var pi = new PaletteImage(width, height);
+
+    pi.box(40, 30);
+    pi.fillStroke("#e7e8b0");
+    pi.box(40, 15);
+    pi.fillStroke("#e7e8b0");
+
+    return pi;
+}
