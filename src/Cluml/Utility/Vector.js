@@ -13,18 +13,67 @@ export const Vector = function (x, y) {
 }
 
 /**
+ * Returns the magnitude of this vector.
+ * @return {number} The magnitude.
+ */
+Vector.prototype.magnitude = function () {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+
+/**
  * Normalize a vector
  */
 Vector.prototype.normalize = function () {
-    var len = Math.sqrt(this.x * this.x + this.y * this.y);
-    this.x /= len;
-    this.y /= len;
+    this.divide(this.magnitude());
 };
 
+/**
+ * Returns a normalized vector.
+ * @param vector {Vector}
+ * @return {Vector}
+ */
 Vector.normalize = function (vector) {
-    var len = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    const len = vector.magnitude();
     return new Vector(vector.x / len, vector.y / len);
 };
+
+/**
+ * Multiplies each component.
+ * @param multiplier {number}
+ */
+Vector.prototype.multiply = function (multiplier) {
+    this.x *= multiplier;
+    this.y *= multiplier;
+}
+
+/**
+ * Returns a new vector whose components are multiplied.
+ * @param vector {Vector}
+ * @param multiplier {number}
+ * @return {Vector}
+ */
+Vector.multiplyBy = function (vector, multiplier) {
+    return new Vector(vector.x * multiplier, vector.y * multiplier);
+}
+
+/**
+ * Divides each component.
+ * @param divisor {number}
+ */
+Vector.prototype.divide = function (divisor) {
+    this.x *= divisor;
+    this.y *= divisor;
+}
+
+/**
+ * Returns a new vector whose components are divided.
+ * @param vector {Vector}
+ * @param divisor {number}
+ * @return {Vector}
+ */
+Vector.divideBy = function (vector, divisor) {
+    return new Vector(vector.x / divisor, vector.y / divisor);
+}
 
 /**
  * Rotate a vector by some angle
@@ -33,8 +82,8 @@ Vector.normalize = function (vector) {
  * @returns {Vector} New vector result
  */
 Vector.rotate = function (vector, angle) {
-    var s = Math.sin(angle);
-    var c = Math.cos(angle);
+    const s = Math.sin(angle);
+    const c = Math.cos(angle);
     return new Vector(c * vector.x - s * vector.y,
         s * vector.x + c * vector.y);
 };

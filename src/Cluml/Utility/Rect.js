@@ -159,3 +159,24 @@ Rect.prototype.getClosestSideT = function (point) {
         atPoint: closestPoint
     }
 }
+
+// region Static Constructors
+/**
+ * Creates a new rectangle from a center and a size (width, height).
+ * @param center {Vector}
+ * @param size {Vector}
+ * @return {Rect}
+ */
+Rect.fromCenterAndSize = function (center, size) {
+    return Rect.fromCenterAndExtents(center, Vector.divideBy(size, 2));
+}
+
+Rect.fromCenterAndExtents = function (center, extents) {
+    return new Rect(
+        center.x - extents.x,
+        center.x + extents.x,
+        center.y - extents.y,
+        center.y + extents.y,
+    )
+}
+// endregion

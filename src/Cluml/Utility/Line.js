@@ -20,6 +20,14 @@ Line.prototype.displacement = function () {
 }
 
 /**
+ * Returns the length of the line.
+ * @return {number}
+ */
+Line.prototype.length = function () {
+    return Vector.distance(this.to, this.from);
+}
+
+/**
  * Returns a point that lies on the line.
  * @param t {number} A value ranging [0, 1] where 0 corresponds with from and
  * 1 corresponds with to.
