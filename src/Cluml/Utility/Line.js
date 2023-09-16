@@ -43,6 +43,7 @@ Line.prototype.pointOnLine = function (t) {
  * Returns the point on the line that is nearest to the specified point.
  * Adapted from https://stackoverflow.com/a/74134734.
  * @param point {Vector}
+ * @returns {{t: number, distance: number, pointOnLine: Vector}}
  */
 Line.prototype.pointNearest = function (point) {
     const disp = this.displacement();
@@ -55,7 +56,7 @@ Line.prototype.pointNearest = function (point) {
     const distance = Vector.distance(output, point);
 
     return {
-        closestPoint: output,
+        pointOnLine: output,
         t: t,
         distance: distance
     };

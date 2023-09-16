@@ -78,7 +78,7 @@ export const LineNode = function () {
     });
     //endregion
 
-    this.setIDs = function (idNext, iDPrevious) {
+    this.loadIDs = function (idNext, iDPrevious) {
         nextID = idNext;
         previousID = iDPrevious;
     }
@@ -151,7 +151,7 @@ LineNode.prototype.saveComponent = function () {
 LineNode.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 
-    this.setIDs(obj.nextID, obj.previousID);
+    this.loadIDs(obj.nextID, obj.previousID);
 }
 
 LineNode.prototype.paletteImage = function () {
@@ -164,9 +164,45 @@ LineNode.prototype.paletteImage = function () {
  * Links this node with another node.
  * @param next {LineNode} The next line node.
  */
-LineNode.prototype.linkTo = function (next) {
+LineNode.prototype.linkToNext = function (next) {
     this.nextNode = next;
     next.previousNode = this;
+}
+
+/**
+ * Links this node with another node.
+ * @param previous {LineNode} The previous line node.
+ */
+LineNode.prototype.linkToPrevious = function (previous) {
+    this.previousNode = previous;
+    previous.nextNode = this;
+}
+
+/**
+ * Inserts this node between two other nodes.
+ * @param previous {LineNode} The previous line node.
+ * @param next {LineNode} The next line node.
+ */
+LineNode.prototype.insertBetween = function (previous, next) {
+
+    if (next !== undefined && next !== null)
+        this.linkToNext(next);
+
+    if (previous !== undefined && previous != null)
+        this.linkToPrevious(previous);
+}
+
+/**
+ * Removes this node from the linked list.
+ */
+LineNode.prototype.remove = function () {
+    if (this.nextNode !== null) {
+        this.nextNode.previousNode = this.previousNode;
+    }
+
+    if (this.previousNode !== null) {
+        this.previousNode.nextNode = this.nextNode;
+    }
 }
 
 /**

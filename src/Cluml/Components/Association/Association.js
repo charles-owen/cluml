@@ -1,7 +1,9 @@
 import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
-import {Class} from "../Class";
+import Selectable from "../../Selectable";
+import Vector from "../../Utility/Vector";
+import {LineNode} from "./LineNode";
 
 export const Association = function () {
     Component.call(this);
@@ -21,7 +23,7 @@ export const Association = function () {
         /**
          * Saves the start and end nodes.
          */
-        save : function () {
+        save: function () {
             let obj = {
                 start: this.start.saveComponent(),
                 end: this.end.saveComponent()
@@ -32,7 +34,7 @@ export const Association = function () {
     // Create the two termination associations
     this.nodes.start = new TerminationNode();
     this.nodes.end = new TerminationNode();
-    this.nodes.start.linkTo(this.nodes.end);
+    this.nodes.start.linkToNext(this.nodes.end);
     //endregion
 
     //endregion
@@ -50,7 +52,7 @@ Association.htmlDesc = '<h2>Association</h2><p>A basic association between 2 cla
 Association.paletteOrder = 1;
 //endregion
 
-//region Functions
+//region Component Methods
 /**
  * Copies from another Association.
  * @param component {Association}
@@ -68,13 +70,10 @@ Association.prototype.copyFrom = function (component) {
  * @return {Association|null}
  */
 Association.prototype.touch = function (x, y) {
-    // // Have we touched the component itself?
-    // if (x >= this.x - this.width / 2 &&
-    //     x <= this.x + this.width / 2 &&
-    //     y >= this.y - this.height &&
-    //     y <= this.y) {
-    //     return this;
-    // }
+    // Have we touched the component itself?
+    if (this.bounds().contains(x, y)) {
+        return this;
+    }
 
     return null;
 }
@@ -96,6 +95,8 @@ Association.prototype.bounds = function () {
         minY = Math.min(minY, node.y);
         maxX = Math.max(maxX, node.x);
         maxY = Math.max(maxY, node.y);
+
+        node = node.nextNode;
     }
 
     return new Rect(
@@ -133,14 +134,40 @@ Association.prototype.saveComponent = function () {
     return obj;
 }
 
+//endregion
+
+//region Association Methods.
 /**
- * Creates a node line node near the point defined by (x, y).
- * @param x {Number}
- * @param y {Number}
+ * Creates a node line node near the point "near".
+ * @param near {Vector}
  */
-Association.prototype.createNodeNear = function (x, y) {
+Association.prototype.createNodeNear = function (near) {
+    let node = this.nodes.start;
+    /**
+     * @type {{t: number, distance: number, pointOnLine: Vector}}
+     */
+    let min = undefined;
+    let minNodes = undefined;
 
+    while (node !== this.nodes.end) {
+        const line = Selectable.lineBetween(node, node.nextNode);
+        const pn = line.pointNearest(near);
+
+        if (min === undefined || min.distance > pn.distance) {
+            min = pn;
+            minNodes = {
+                from: node,
+                to: node.nextNode
+            }
+        }
+
+        node = node.nextNode;
+    }
+
+
+    // Now have the nearest point on the line.
+    let newNode = new LineNode();
+    newNode.position = min.pointOnLine;
+    newNode.insertBetween(minNodes.from, minNodes.to);
 }
-
-
 //endregion

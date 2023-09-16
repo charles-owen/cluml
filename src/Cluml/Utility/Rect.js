@@ -149,7 +149,7 @@ Rect.prototype.getClosestSideT = function (point) {
 
         if (smallestDistance > sideNDistance.distance) {
             smallestDistance = sideNDistance.distance;
-            closestPoint = sideNDistance.closestPoint;
+            closestPoint = sideNDistance.pointOnLine;
             closestSide = sideNDistance.t + i;
         }
     }

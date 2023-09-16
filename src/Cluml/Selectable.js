@@ -1,3 +1,6 @@
+import vector from "./Utility/Vector";
+import {Line} from "./Utility/Line";
+
 /**
  * Base object for anything that is draggable
  * using the mouse.
@@ -7,6 +10,16 @@ export const Selectable = function() {
     this.diagram = null;        // Diagram this selectable is associated with
     this.x = 0;                 // Position of the selectable
     this.y = 0;
+
+    Object.defineProperty(this, 'position', {
+        get: function () {
+            return new vector(this.x, this.y);
+        },
+        set: function (point) {
+            this.x = point.x;
+            this.y = point.y;
+        }
+    });
 
     this.moveX = 0;             // Position of the selectable while moving
     this.moveY = 0;
@@ -85,5 +98,15 @@ Selectable.prototype.drop = function() {};
 Selectable.prototype.spawn = function(x, y) {
     return null;
 };
+
+/**
+ * Returns the line that traces between the specified selectables.
+ * @param from {Selectable}
+ * @param to {Selectable}
+ * @returns {Line}
+ */
+Selectable.lineBetween = function (from, to) {
+    return new Line(from.position, to.position);
+}
 
 export default Selectable;
