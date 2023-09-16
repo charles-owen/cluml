@@ -21,7 +21,10 @@ export const Association = function () {
          * Saves the start and end nodes.
          */
         save : function () {
-
+            let obj = {
+                start: this.start.save(),
+                end: this.end.save()
+            }
         },
     }
 
