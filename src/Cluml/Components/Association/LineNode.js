@@ -3,8 +3,6 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
-import Components from "../../Components";
-import {Diagram} from "../../Diagram";
 
 /**
  * Determines the radius around the node at which
@@ -26,24 +24,63 @@ export const LineNode = function () {
     this.touched = false;
 
     /**
+     * The next LineNode.
+     * @type {LineNode}
+     */
+    let next = null;
+
+    /**
      * The id of the next LineNode.
      * @type {string|null}
      */
-    this.nextID = null;
+    let nextID = null;
+
+    /**
+     * The previous LineNode.
+     * @type {LineNode}
+     */
+    let previous = null;
 
     /**
      * The id of the previous LineNode.
      * @type {string|null}
      */
-    this.previousID = null;
+    let previousID = null;
     //endregion
 
-    this.next = function () {
-        return Diagram.prototype.getComponentByID(this.nextID);
-    }
+    //region Properties
+    Object.defineProperty(this, 'nextNode', {
+        get: function () {
+            if (next !== null) {
+                return next;
+            } else {
+                return this.diagram.getComponentByID(nextID);
+            }
+        },
+        set: function (node) {
+            nextID = node.id;
+            next = node;
+        }
+    });
 
-    this.previous = function () {
-        return Diagram.prototype.getComponentByID(this.previousID);
+    Object.defineProperty(this, 'previousNode', {
+        get: function () {
+            if (previous !== null) {
+                return previous;
+            } else {
+                return this.diagram.getComponentByID(previousID);
+            }
+        },
+        set: function (node) {
+            previousID = node.id;
+            previous = node;
+        }
+    });
+    //endregion
+
+    this.setIDs = function (idNext, iDPrevious) {
+        nextID = idNext;
+        previousID = iDPrevious;
     }
 }
 
@@ -53,8 +90,8 @@ export const LineNode = function () {
  */
 LineNode.prototype.copyFrom = function (component) {
     this.touched = component.touched;
-    this.nextID = component.nextID;
-    this.previousID = component.previousID;
+    this.nextNode = component.nextNode;
+    this.previousNode = component.previousNode;
     Component.prototype.copyFrom.call(this);
 }
 
@@ -102,12 +139,24 @@ LineNode.prototype.draw = function (context, view) {
     // TODO: Implement.
 }
 
+
 LineNode.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
     obj.touched = this.touched;
-    obj.nextID = this.nextID;
-    obj.previousID = this.previousID;
+    obj.nextID = this.nextNode.id;
+    obj.previousID = this.previousNode.id;
     return obj;
+}
+
+LineNode.prototype.loadComponent = function (obj) {
+    Component.prototype.loadComponent.call(this, obj);
+
+    this.setIDs(obj.nextID, obj.previousID);
+}
+
+LineNode.prototype.paletteImage = function () {
+    // TODO: Implement.
+    return null;
 }
 
 //region LineNode Methods
@@ -116,8 +165,8 @@ LineNode.prototype.saveComponent = function () {
  * @param next {LineNode} The next line node.
  */
 LineNode.prototype.linkTo = function (next) {
-    this.nextID = next;
-    next.previousID = this;
+    this.nextNode = next;
+    next.previousNode = this;
 }
 
 /**
@@ -125,11 +174,11 @@ LineNode.prototype.linkTo = function (next) {
  * @return {boolean} True if next exists and is removed, false otherwise.
  */
 LineNode.prototype.tryUnlinkFromNext = function () {
-    if (this.nextID === null)
+    if (this.nextNode === null)
         return false;
     else {
-        this.nextID.previous = null;
-        this.nextID = null;
+        this.nextNode.previousNode = null;
+        this.nextNode = null;
         return true;
     }
 }

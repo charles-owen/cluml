@@ -23,8 +23,8 @@ export const Association = function () {
          */
         save : function () {
             let obj = {
-                start: this.start.save(),
-                end: this.end.save()
+                start: this.start.saveComponent(),
+                end: this.end.saveComponent()
             }
         },
     }
@@ -57,6 +57,7 @@ Association.paletteOrder = 1;
  */
 Association.prototype.copyFrom = function (component) {
     this.nodes = component.nodes;
+    Component.prototype.copyFrom.call(this, component);
 }
 
 /**
@@ -121,7 +122,7 @@ Association.prototype.draw = function (context, view) {
 
     while (node !== this.nodes.end) {
         path.lineTo(node.x, node.y);
-        node = node.next();
+        node = node.nextNode();
         path.moveTo(node.x, node.y);
     }
 }
