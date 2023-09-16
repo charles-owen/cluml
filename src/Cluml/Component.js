@@ -18,16 +18,14 @@ export const Component = function () {
     let diagram = null;
 
     Object.defineProperty(this, 'diagram', {
-       get: function() {
-           return diagram;
-       },
-       set: function(value) {
-           diagram = value;
-       }
+        get: function () {
+            return diagram;
+        },
+        set: function (value) {
+            diagram = value;
+        }
     });
 
-    this.height = 10;
-    this.width = 10;
     this.prev = null;
 
     /**
@@ -72,9 +70,9 @@ Component.prototype.delay = 11;
  * Assign this component a unique ID. This is done when a
  * component is created by the view.
  */
-Component.prototype.brand = function() {
-	// Every component get a unique ID when it is created
-	this.id = 'd' + (++Component.maxId);
+Component.prototype.brand = function () {
+    // Every component get a unique ID when it is created
+    this.id = 'd' + (++Component.maxId);
 }
 
 /**
@@ -108,6 +106,12 @@ Component.prototype.fileLbl = '[UNSET]';
 Component.prototype.helpLbl = '[UNSET]';
 
 /**
+ * Order of which the component will appear in the palette.
+ * @type {number}
+ */
+Component.prototype.paletteOrder = -1;
+
+/**
  * Maximum ID integer value for any component
  * @type {number}
  */
@@ -123,20 +127,9 @@ Component.prototype.copyFrom = function (component) {
     this.id = component.id;
     component.prev = this;
     Selectable.prototype.copyFrom.call(this, component);
-
-    // //
-    // // Copy input and output states
-    // //
-    // for (let i = 0; i < this.ins.length; i++) {
-    //     this.ins[i].copyFrom(component.ins[i]);
-    // }
-    //
-    // for (let i = 0; i < this.outs.length; i++) {
-    //     this.outs[i].copyFrom(component.outs[i]);
-    // }
 };
 
-Component.prototype.grab = function() {
+Component.prototype.grab = function () {
     Selectable.prototype.grab.call(this);
 
     this.diagram.moveToFront(this);
@@ -220,7 +213,7 @@ Component.prototype.delete = function () {
  * Compute a bounding box that completely contains the component
  * @returns {Rect}
  */
-Component.prototype.bounds = function() {
+Component.prototype.bounds = function () {
     throw new Error('No implementation');
 }
 
@@ -231,10 +224,8 @@ Component.prototype.bounds = function() {
  * @param context Display context
  * @param view View object
  */
-Component.prototype.draw = function(context, view) {
-    this.selectStyle(context, view);
-    this.drawBox(context);
-    this.drawName(context, 0, 3);
+Component.prototype.draw = function (context, view) {
+    throw Error("Not implemented");
 }
 
 /**
@@ -247,7 +238,6 @@ Component.prototype.draw = function(context, view) {
  * @returns {{id: string, x: number, y: number, name: string, type: *}}
  */
 Component.prototype.save = function () {
-    const type = this.constructor.type;
     let naming = this.naming;
     if (naming !== null) {
         naming = naming.replace(/'/g, '`');
@@ -257,7 +247,6 @@ Component.prototype.save = function () {
         "x": this.x,
         "y": this.y,
         "name": naming,
-        "type": type,
         "paletteDesc": this.paletteDesc,
         "htmlDesc": this.htmlDesc,
         "paletteLbl": this.paletteLbl,
@@ -267,12 +256,12 @@ Component.prototype.save = function () {
 };
 
 Component.prototype.loadComponent = function (obj) {
-    this.id = this.sanitize(obj["id"]);
+    this.id = this.sanitize(obj["id"]).toString();
 
     // Determine the maximum loaded ID value as we load
     // in new diagrams.
     const idValue = +this.id.substring(1);
-    if(idValue > Component.maxId) {
+    if (idValue > Component.maxId) {
         Component.maxId = idValue;
     }
 
@@ -311,23 +300,25 @@ Component.prototype.advance = function (delta) {
 /**
  * Many components are just a box. This is a function to draw that box
  * @param context Context to draw on
+ * @param fillStyle
+ * @param width {number} Width of the box.
+ * @param height {number} Height of the box.
  */
-Component.prototype.drawBox = function (context, fillStyle) {
-    if(fillStyle !== 'none') {
+Component.prototype.drawBox = function (context, fillStyle, width, height) {
+    if (fillStyle !== 'none') {
         let save = context.fillStyle;
         context.fillStyle = fillStyle !== undefined ? fillStyle : '#ffffff';
-        context.fillRect(this.x - this.width / 2 - 0.5,
-            this.y - this.height / 2 - 0.5,
-            this.y - this.height / 2 - 0.5,
-            this.width, this.height);
+        context.fillRect(this.x - width / 2 - 0.5,
+            this.y - height / 2 - 0.5,
+            width, height);
         context.fillStyle = save;
     }
 
     context.beginPath();
     context.rect(
-        this.x - this.width / 2 - 0.5,
-        this.y - this.height / 2 - 0.5,
-        this.width, this.height);
+        this.x - width / 2 - 0.5,
+        this.y - height / 2 - 0.5,
+        width, height);
     context.stroke();
 }
 
@@ -349,8 +340,8 @@ Component.prototype.pending = function () {
     }
 };
 
-Component.prototype.getSimulation = function() {
-    if(this.diagram !== null) {
+Component.prototype.getSimulation = function () {
+    if (this.diagram !== null) {
         return this.diagram.diagrams.simulation;
     }
 
@@ -407,10 +398,12 @@ Component.prototype.drawText = function (context, text, x, y, font) {
 /**
  * Many diagrams are a trapezoid. This is a function to draw that trapezoid
  * @param context Context to draw on
- * @param indentL Top/bottom indent size for left side (default = 0)
- * @param indentR Top/bottom indent size for right size (default = 20)
+ * @param indentL {number} Top/bottom indent size for left side (default = 0)
+ * @param indentR {number} Top/bottom indent size for right size (default = 20)
+ * @param width {number} Width of the trapezoid.
+ * @param height {number} Height of the trapezoid.
  */
-Component.prototype.drawTrapezoid = function (context, indentL, indentR) {
+Component.prototype.drawTrapezoid = function (context, width, height, indentL, indentR) {
     if (indentL === undefined) {
         indentL = 0;
     }
@@ -419,10 +412,10 @@ Component.prototype.drawTrapezoid = function (context, indentL, indentR) {
         indentR = 20;
     }
 
-    const leftX = this.x - this.width / 2 - 0.5;
-    const rightX = this.x + this.width / 2 + 0.5;
-    const topY = this.y - this.height / 2 - 0.5;
-    const botY = this.y + this.height / 2 + 0.5;
+    const leftX = this.x - width / 2 - 0.5;
+    const rightX = this.x + width / 2 + 0.5;
+    const topY = this.y - height / 2 - 0.5;
+    const botY = this.y + height / 2 + 0.5;
 
     context.fillStyle = '#ffffff';
     // Left side
@@ -441,20 +434,6 @@ Component.prototype.drawTrapezoid = function (context, indentL, indentR) {
 
     context.fill();
 
-    // // Left side
-    // context.beginPath();
-    // context.moveTo(leftX, topY + indentL);
-    // context.lineTo(leftX, botY - indentL);
-    //
-    // // Bottom
-    // context.lineTo(rightX, botY - indentR);
-    //
-    // // Right side
-    // context.lineTo(rightX, topY + indentR);
-    //
-    // // Top
-    // context.lineTo(leftX, topY + indentL);
-
     context.stroke();
 }
 
@@ -472,7 +451,7 @@ Component.prototype.drawTrapezoid = function (context, indentL, indentR) {
 //     if ((typeof value === 'string' || value instanceof String) &&
 //         value.substr(0, 5) === "type:") {
 //         const expected = value.substr(5);
-//         if (expected !== this.constructor.type) {
+//         if (expected !== this.constructor.fileLbl) {
 //
 //             let expectedType = this.diagram.diagrams.model.main.diagrams.get(expected);
 //             if (expectedType !== null) {
@@ -495,23 +474,22 @@ Component.prototype.drawTrapezoid = function (context, indentL, indentR) {
 //     return {ok: true};
 // }
 
-/**
- * Override in the settable types, such as InPin and InPinBus
- * @param value Value to set
- */
-Component.prototype.setAsString = function (value) {
-}
-
-
-
-/**
- * Override in the string testable types, such as InPin and InPinBus
- * @param value Value to set
- * @param input In object
- */
-Component.prototype.testAsString = function (value, input) {
-    console.log(value);
-}
+// /**
+//  * Override in the settable types, such as InPin and InPinBus
+//  * @param value Value to set
+//  */
+// Component.prototype.setAsString = function (value) {
+// }
+//
+//
+// /**
+//  * Override in the string testable types, such as InPin and InPinBus
+//  * @param value Value to set
+//  * @param input In object
+//  */
+// Component.prototype.testAsString = function (value, input) {
+//     console.log(value);
+// }
 
 /**
  * Draw a jagged (stair-step) line from x1,y1 to x2,y2
@@ -540,7 +518,7 @@ Component.prototype.jaggedLine = function (context, x1, y1, x2, y2, t) {
  * @param text Text to sanitize
  * @returns Sanitized version
  */
-Component.prototype.sanitize = function(text) {
+Component.prototype.sanitize = function (text) {
     return DOMPurify.sanitize(text);
 }
 
@@ -549,6 +527,6 @@ Component.prototype.sanitize = function(text) {
  * This is used by DiagramRef diagrams to ensure
  * references are always correct.
  */
-Component.prototype.update = function() {
+Component.prototype.update = function () {
 
 }

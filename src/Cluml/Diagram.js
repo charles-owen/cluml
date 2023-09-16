@@ -254,17 +254,12 @@ Diagram.prototype.load = function (obj) {
     const compsMap = {};  // Map from component ID to component object
 
     for (let i = 0; i < obj.components.length; i++) {
+        /**
+         * @type {Component}
+         */
         const componentData = obj.components[i];
 
-
-        // let componentConstructor;
-        // if (componentObj.type === "DiagramRef") {
-        //     componentProto = DiagramRef;
-        // } else {
-        //     componentProto = this.diagrams.model.main.diagrams.get(componentObj.type);
-        // }
-
-        const componentConstructor = this.diagrams.model.main.components.get(componentData.type);
+        const componentConstructor = this.diagrams.model.main.components.get(componentData.fileLbl);
 
         if (componentConstructor !== null) {
             /**
@@ -326,15 +321,18 @@ Diagram.prototype.getComponentByNaming = function (naming) {
 
 /**
  * Get all diagrams by type
- * @param type Naming to search for
- * @returns Array with collection of diagrams of that type
+ * @param fileLbl {string} Naming to search for
+ * @returns {Component[]} with collection of components of that type
  */
-Diagram.prototype.getComponentsByType = function (type) {
+Diagram.prototype.getComponentsByType = function (fileLbl) {
+    /**
+     * @type {Component[]}
+     */
     const components = [];
 
     for (let i = 0; i < this.components.length; i++) {
         const component = this.components[i];
-        if (component.constructor.type === type) {
+        if (component.constructor.fileLbl === fileLbl) {
             components.push(component);
         }
     }
@@ -348,20 +346,6 @@ Diagram.prototype.mouseUp = function () {
         component.mouseUp();
     }
 };
-
-Diagram.prototype.getComponentsByType = function (type) {
-    const ret = [];
-
-    for (let i = 0; i < this.components.length; i++) {
-        const component = this.components[i];
-        if (component.constructor.type === type) {
-            ret.push(component);
-        }
-    }
-
-    return ret;
-}
-
 
 /**
  * Determine the maximum size in each dimension for this diagram.

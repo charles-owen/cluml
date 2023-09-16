@@ -4,7 +4,12 @@
  */
 export const Components = function () {
 
+    /**
+     * Components.
+     * @type {Component[]}
+     */
     this.components = [];
+
     this.palettes = {};
 
     /**
@@ -14,18 +19,18 @@ export const Components = function () {
     this.add = function (component) {
         this.components.push(component);
         this.components.sort(function (a, b) {
-            return a.order - b.order;
+            return a.paletteOrder - b.paletteOrder;
         });
     };
 
     /**
      * Get a component prototype by type
-     * @param type Type name to find
+     * @param type {string} Type name to find (aka fileLbl).
      * @returns any constructor of the component.
      */
     this.get = function (type) {
         for (let i = 0; i < this.components.length; i++) {
-            if (this.components[i].type === type) {
+            if (this.components[i].fileLbl === type) {
                 return this.components[i];
             }
         }
@@ -35,13 +40,13 @@ export const Components = function () {
 
     /**
      * Add a palette of diagrams by name.
-     * @param name Name to refer to the palette
-     * @param components Array of component objects.
+     * @param name {string} Name to refer to the palette
+     * @param components {Component[]} Array of component objects.
      */
     this.addPalette = function (name, components) {
         const names = [];
         for (let i = 0; i < components.length; i++) {
-            names.push(components[i].type);
+            names.push(components[i].fileLbl);
         }
 
         this.palettes[name] = names;

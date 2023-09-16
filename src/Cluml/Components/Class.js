@@ -15,7 +15,7 @@ export const Class = function () {
      * Component width.
      * @type {number}
      */
-    this.width = 300;
+    this.width = 200;
 
     /**
      * The array of attributes.
@@ -33,14 +33,13 @@ export const Class = function () {
 Class.prototype = Object.create(Component.prototype);
 Class.prototype.constructor = Class;
 
-// Class.prototype.prefix = null;   ///< No component naming
-//
-Class.type = "Class";         ///< Name to use in files
-Class.label = "Class";           ///< Label for the palette
-Class.desc = "0 (false)";    ///< Description for the palette
-Class.description = '<h2>Class</h2><p>A basic class.</p>';
-Class.order = 0;             ///< Order of presentation in the palette
-Class.help = 'class';         ///< Available online help for zero
+
+Class.fileLbl = "Class";
+Class.helpLbl = 'class';
+Class.paletteLbl = "Class";
+Class.paletteDesc = "Class component.";
+Class.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
+Class.paletteOrder = 0;
 
 /**
  * Copies from another component.
@@ -78,6 +77,12 @@ Class.prototype.bounds = function () {
         this.y + this.height / 2);
 }
 
+/**
+ * Draws the class object.
+ *
+ * @param context {CanvasRenderingContext2D} Display context
+ * @param view {View} View object
+ */
 Class.prototype.draw = function (context, view) {
     this.selectStyle(context, view);
 
@@ -88,30 +93,30 @@ Class.prototype.draw = function (context, view) {
     context.rect(
         this.x - this.width / 2 - 0.5,
         this.y - this.height / 3 - 0.5,
-        this.width / 2, this.height / 3);
+        this.width, this.height / 3);
     // Attributes rect
     context.rect(
         this.x - this.width / 2 - 0.5,
         this.y - 2 * this.height / 3 - 0.5,
-        this.width / 2, 2 * this.height / 3);
+        this.width, 2 * this.height / 3);
     // Operations rect
     context.rect(
         this.x - this.width / 2 - 0.5,
         this.y - this.height - 0.5,
-        this.width / 2, this.height/3);
+        this.width, this.height / 3);
     context.fill();
     context.stroke();
 
     // Defaults the name to NewClass if no name is given
-    if(this.naming == null) {
+    if (this.naming == null) {
         this.naming = "NewClass"
     }
 
     context.fillStyle = "#000000";
 
     this.drawName(context,
-        0 - this.width / 4,
-        0 - 5 * this.height / 6);
+        0,
+        0 - this.height * (5 / 6));
 }
 
 Class.prototype.save = function () {
@@ -146,7 +151,7 @@ Class.prototype.drop = function () {
  * @return {Class}
  * @instance Class
  */
-Class.prototype.clone = function() {
+Class.prototype.clone = function () {
     const copy = new Class();
     copy.copyFrom(this);
     return copy;

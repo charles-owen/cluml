@@ -2,8 +2,6 @@
 import {Tools} from './DOM/Tools';
 import {Util} from './Utility/Util';
 import {PaletteItem} from "./PaletteItem";
-// import {Diagram} from "./Diagram";
-// import {DiagramRef} from "./Components/DiagramRef";
 
 /**
  * The pallet div where we select parts to add to the UML diagram
@@ -56,13 +54,18 @@ export const Palette = function(main, work) {
         });
     }
 
+    /**
+     * Adds a component type to the palette.
+     * @param obj {Component}
+     */
     const addToPalette = (obj) => {
         // // Only some diagrams get added to the pallet...
         // // A component is added if it is in the current
         // // list of diagrams or main.options.always
 
-        let name = obj.type;
-        if(!Util.inArray(name, components) &&
+        //let name = 'Class';
+        let name = obj.fileLbl;
+        if (!Util.inArray(name, components) &&
             !Util.inArray(name, main.options.always)) {
             return;
         }
