@@ -74,49 +74,49 @@ Association.prototype.copyFrom = function (component) {
  * the component.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
- * @return {Association|null}
+ * @return {LineNode}
  */
 Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         // TODO: Return a node instead.
-        // let node = this.nodes.start;
-        //
-        // do {
-        //     const localize = Vector.sub(
-        //         node.position,
-        //         this.position
-        //     );
-        //     node = node.nextNode;
-        // } while (node !== null)
+        let node = this.nodes.start;
 
-
-        return this;
+        do {
+            if (node.touch(x, y) !== null) {
+                return node;
+            }
+            node = node.nextNode;
+        } while (node !== null)
     }
 
     return null;
 }
 
-Association.prototype.move = function (dx, dy) {
-    Selectable.prototype.move.call(this, dx, dy);
-
-    let node = this.nodes.start;
-
-    do {
-        node.x += dx;
-        node.y += dy;
-        node = node.nextNode;
-    } while (node !== null);
-}
+// Association.prototype.move = function (dx, dy) {
+//     Selectable.prototype.move.call(this, dx, dy);
+//
+//     let node = this.nodes.start;
+//
+//     do {
+//         node.x += dx;
+//         node.y += dy;
+//         node = node.nextNode;
+//     } while (node !== null);
+// }
 
 Association.prototype.drop = function () {
     if (!this.placedOnCanvas) {
         // Instantiate placements.
         const pos = this.position;
         this.nodes.start.x = pos.x - 50;
+        this.nodes.start.moveX = pos.x - 50;
         this.nodes.start.y = pos.y;
+        this.nodes.start.moveY = pos.y;
         this.nodes.end.x = pos.x + 50;
+        this.nodes.end.moveX = pos.x + 50;
         this.nodes.end.y = pos.y;
+        this.nodes.end.moveY = pos.y;
     }
 }
 

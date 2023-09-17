@@ -3,6 +3,7 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
+import {Association} from "./Association";
 
 /**
  * Determines the radius around the node at which
@@ -87,6 +88,9 @@ export const LineNode = function () {
         previousID = iDPrevious;
     }
 }
+
+LineNode.prototype = Object.create(Component.prototype);
+LineNode.prototype.constructor = LineNode;
 
 //region Selectable Functions
 /**
