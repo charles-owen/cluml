@@ -9,7 +9,7 @@ import {Rect} from "../../Utility/Rect";
  * it is considered to be touched.
  * @type {number}
  */
-const NODE_TOUCH_RADIUS = 15;
+export const NODE_TOUCH_RADIUS = 15;
 
 export const LineNode = function () {
     Component.call(this);
@@ -31,9 +31,9 @@ export const LineNode = function () {
 
     /**
      * The id of the next LineNode.
-     * @type {string|null}
+     * @type {string}
      */
-    let nextID = null;
+    let nextID = undefined;
 
     /**
      * The previous LineNode.
@@ -43,9 +43,9 @@ export const LineNode = function () {
 
     /**
      * The id of the previous LineNode.
-     * @type {string|null}
+     * @type {string}
      */
-    let previousID = null;
+    let previousID = undefined;
     //endregion
 
     //region Properties
@@ -53,8 +53,10 @@ export const LineNode = function () {
         get: function () {
             if (next !== null) {
                 return next;
-            } else {
+            } else if (nextID !== undefined) {
                 return this.diagram.getComponentByID(nextID);
+            } else {
+                return null;
             }
         },
         set: function (node) {
@@ -67,8 +69,10 @@ export const LineNode = function () {
         get: function () {
             if (previous !== null) {
                 return previous;
-            } else {
+            } else if (previousID !== undefined) {
                 return this.diagram.getComponentByID(previousID);
+            } else {
+                return  null;
             }
         },
         set: function (node) {

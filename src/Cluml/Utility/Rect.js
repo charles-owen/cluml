@@ -180,6 +180,18 @@ Rect.prototype.getClosestSideT = function (point) {
     }
 }
 
+/**
+ * Draws this rectangle in context.
+ * @param context {CanvasRenderingContext2D} Display context
+ */
+Rect.prototype.drawRect = function (context) {
+    context.fillRect(
+        this.left, this.top,
+        this.right - this.left,
+        this.bottom - this.top
+    );
+}
+
 // region Static Constructors
 /**
  * Creates a new rectangle from a center and a size (width, height).

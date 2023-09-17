@@ -24,19 +24,10 @@ export const Selectable = function () {
     this.moveX = 0;             // Position of the selectable while moving
     this.moveY = 0;
 
+    this.placedOnCanvas = false;
+
     this.selectedStyle = '#ff0000';
     this.unselectedStyle = '#000000';
-
-    /**
-     * Gets the relative position of this Selectable, relative to some other
-     * Selectable.
-     * @param relativeTo {Selectable}
-     * @returns {Vector}
-     */
-    this.positionRelativeTo = function(relativeTo)
-    {
-        return Vector.add(relativeTo.position, this.position);
-    }
 };
 
 Selectable.prototype.copyFrom = function (selectable) {
@@ -74,6 +65,11 @@ Selectable.prototype.grab = function () {
     this.moveY = this.y;
 };
 
+/**
+ * Moves this selectable.
+ * @param dx {number}
+ * @param dy {number}
+ */
 Selectable.prototype.move = function (dx, dy) {
     this.moveX += dx;
     this.moveY += dy;
@@ -86,19 +82,22 @@ Selectable.prototype.move = function (dx, dy) {
     }
 };
 
-Selectable.prototype.place = function (x, y) {
-    this.moveX = x;
-    this.moveY = y;
-    this.x = this.moveX;
-    this.y = this.moveY;
-
-    if (this.diagram !== null) {
-        this.diagram.snapIt(this);
-    }
-};
+// Selectable.prototype.place = function (x, y) {
+//     this.moveX = x;
+//     this.moveY = y;
+//     this.x = this.moveX;
+//     this.y = this.moveY;
+//
+//     if (this.diagram !== null) {
+//         this.diagram.snapIt(this);
+//     }
+// };
 
 Selectable.prototype.delete = function () {
 };
+/**
+ * Called when this selectable is dropped.
+ */
 Selectable.prototype.drop = function () {
 };
 

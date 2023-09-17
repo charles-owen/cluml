@@ -172,8 +172,9 @@ Component.prototype.added = function (diagram) {
 /**
  * Try to touch this component or some part of
  * the component.
- * @param x Mouse X
- * @param y Mouse Y
+ * @param x {number} Mouse X
+ * @param y {number} Mouse Y
+ * @return {Component}
  */
 Component.prototype.touch = function (x, y) {
     throw new Error("Not implemented");

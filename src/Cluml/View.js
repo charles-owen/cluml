@@ -74,6 +74,8 @@ export const View = function(main, canvas, diagram) {
 
 	        this.diagram.add(component);
 	        this.diagram.snapIt(component);
+            component.drop();
+            component.placedOnCanvas = true;
 	        this.ensureSize();
 	        this.draw();
         });

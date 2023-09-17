@@ -2,7 +2,7 @@ import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
 import Selectable from "../../Selectable";
-import {LineNode} from "./LineNode";
+import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
 
 export const Association = function () {
@@ -40,9 +40,7 @@ export const Association = function () {
 
     // Create the two termination associations
     this.nodes.start = new TerminationNode();
-    this.nodes.start.x = -5;
     this.nodes.end = new TerminationNode();
-    this.nodes.end.x = 5;
     this.nodes.start.linkToNext(this.nodes.end); //this line caused crashes, had to comment out
     //endregion
 
@@ -81,10 +79,45 @@ Association.prototype.copyFrom = function (component) {
 Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
+        // TODO: Return a node instead.
+        // let node = this.nodes.start;
+        //
+        // do {
+        //     const localize = Vector.sub(
+        //         node.position,
+        //         this.position
+        //     );
+        //     node = node.nextNode;
+        // } while (node !== null)
+
+
         return this;
     }
 
     return null;
+}
+
+Association.prototype.move = function (dx, dy) {
+    Selectable.prototype.move.call(this, dx, dy);
+
+    let node = this.nodes.start;
+
+    do {
+        node.x += dx;
+        node.y += dy;
+        node = node.nextNode;
+    } while (node !== null);
+}
+
+Association.prototype.drop = function () {
+    if (!this.placedOnCanvas) {
+        // Instantiate placements.
+        const pos = this.position;
+        this.nodes.start.x = pos.x - 50;
+        this.nodes.start.y = pos.y;
+        this.nodes.end.x = pos.x + 50;
+        this.nodes.end.y = pos.y;
+    }
 }
 
 /**
@@ -93,23 +126,21 @@ Association.prototype.touch = function (x, y) {
  */
 Association.prototype.bounds = function () {
     let node = this.nodes.start;
-    const pos = node.positionRelativeTo(this);
 
-    let min = pos;
-    let max = pos;
+    let min = node.bounds().max;
+    let max = node.bounds().min;
 
-    while (node !== this.nodes.end) {
-        node = node.nextNode;
-
+    do {
         max = Vector.maxComponents(
             max,
-            Vector.add(node.bounds().max, this.position)
+            node.bounds().max
         );
         min = Vector.minComponents(
             min,
-            Vector.add(node.bounds().min, this.position)
+            node.bounds().min
         )
-    }
+        node = node.nextNode;
+    } while (node !== null);
 
     return Rect.fromMinAndMax(
         min, max
@@ -127,19 +158,44 @@ Association.prototype.draw = function (context, view) {
 
     // Draw the line.
     context.beginPath();
-    context.fillStyle = "#e7e8b0";
+    // context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";
 
     let node = this.nodes.start;
 
+    // region DEBUG
+    const startPos = node.position;
+    context.fillStyle = 'rgba(255,0,0,0.5)';
+    context.fillRect(
+        startPos.x - NODE_TOUCH_RADIUS,
+        startPos.y - NODE_TOUCH_RADIUS,
+        NODE_TOUCH_RADIUS * 2,
+        NODE_TOUCH_RADIUS * 2
+    );
+
+    context.fillStyle = 'rgba(255,156,0,0.3)';
+    const bnds = this.bounds();
+    bnds.drawRect(context);
+    // endregion
+
     while (node !== this.nodes.end) {
-        let pos = node.positionRelativeTo(this);
+        let pos = node.position;
         context.moveTo(pos.x, pos.y);
 
         node = node.nextNode;
 
-        pos = node.positionRelativeTo(this)
+        pos = node.position;
         context.lineTo(pos.x, pos.y);
+
+        // region DEBUG
+        context.fillStyle = 'rgba(255,0,0,0.5)';
+        context.fillRect(
+            pos.x - NODE_TOUCH_RADIUS,
+            pos.y - NODE_TOUCH_RADIUS,
+            NODE_TOUCH_RADIUS * 2,
+            NODE_TOUCH_RADIUS * 2
+        );
+        // endregion
     }
 
     // context.rect(
