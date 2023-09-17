@@ -48,11 +48,12 @@ export const PaletteItem = function(palette, obj, diagram) {
     img.appendChild(image);
 
 	this.element = element;
-    //if the object is a component, it should be a draggable
-    //if it's an association, it shouldn't be
-    if(obj.fileLbl !== 'Association'){
-        palette.main.dragAndDrop.draggable(this);
-    }
+    // //if the object is a component, it should be a draggable
+    // //if it's an association, it shouldn't be
+    // if(obj.fileLbl !== 'Association'){
+    //     palette.main.dragAndDrop.draggable(this);
+    // }
+    palette.main.dragAndDrop.draggable(this);
     palette.main.toggleManager.toggleable(this);
 
 };

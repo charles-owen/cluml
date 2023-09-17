@@ -255,6 +255,10 @@ Component.prototype.saveComponent = function () {
     };
 };
 
+/**
+ * Loads the specified component
+ * @param obj {*}
+ */
 Component.prototype.loadComponent = function (obj) {
     this.id = this.sanitize(obj["id"]).toString();
 

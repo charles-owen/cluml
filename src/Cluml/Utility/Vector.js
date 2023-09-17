@@ -219,7 +219,7 @@ Vector.distanceToLineSegment = function (p, p1, p2) {
  * @param v2 {Vector} second vector;
  */
 Vector.add = function (v1, v2) {
-    return new Vector(v1.x + v2.x, v1.x + v2.y);
+    return new Vector(v1.x + v2.x, v1.y + v2.y);
 }
 
 /**
@@ -228,7 +228,7 @@ Vector.add = function (v1, v2) {
  * @param v2 {Vector} second vector;
  */
 Vector.sub = function (v1, v2) {
-    return new Vector(v1.x - v2.x, v1.x - v2.y);
+    return new Vector(v1.x - v2.x, v1.y - v2.y);
 }
 
 /**

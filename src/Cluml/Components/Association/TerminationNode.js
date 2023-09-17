@@ -1,7 +1,9 @@
 import {LineNode} from "./LineNode.js"
 import {PaletteImage} from "../../Graphics/PaletteImage";
+import {Component} from "../../Component";
+import {Association} from "./Association";
 
-export const TerminationNode = function() {
+export const TerminationNode = function () {
     LineNode.call(this);
 
     //region Fields
@@ -27,9 +29,12 @@ export const TerminationNode = function() {
     //endregion
 }
 
+TerminationNode.prototype = Object.create(LineNode.prototype);
+TerminationNode.prototype.constructor = TerminationNode;
+
 //draw the association to the palette
 TerminationNode.prototype.paletteImage = function () {
-    let size=16;  // Box size
+    let size = 16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
 

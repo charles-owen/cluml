@@ -84,6 +84,7 @@ export const LineNode = function () {
     }
 }
 
+//region Selectable Functions
 /**
  * Copies from another component.
  * @param component {LineNode}
@@ -159,6 +160,15 @@ LineNode.prototype.paletteImage = function () {
     return null;
 }
 
+/**
+ * Start of the dragging process
+ */
+LineNode.prototype.grab = function () {
+    Selectable.prototype.grab();
+    this.touched = true;
+}
+//endregion
+
 //region LineNode Methods
 /**
  * Links this node with another node.
@@ -217,10 +227,5 @@ LineNode.prototype.tryUnlinkFromNext = function () {
         this.nextNode = null;
         return true;
     }
-}
-
-LineNode.prototype.grab = function () {
-    Selectable.prototype.grab();
-    this.touched = true;
 }
 //endregion

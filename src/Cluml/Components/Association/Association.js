@@ -2,10 +2,8 @@ import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
 import Selectable from "../../Selectable";
-import Vector from "../../Utility/Vector";
 import {LineNode} from "./LineNode";
-import {PaletteImage} from "../../Graphics/PaletteImage";
-import {Class} from "../Class";
+import Vector from "../../Utility/Vector";
 
 export const Association = function () {
     Component.call(this);
@@ -25,18 +23,27 @@ export const Association = function () {
         /**
          * Saves the start and end nodes.
          */
-        save: function () {
+        saveNodes: function () {
             let obj = {
                 start: this.start.saveComponent(),
                 end: this.end.saveComponent()
             }
         },
+        /**
+         * Loads the start/end nodes.
+         */
+        loadNodes: function (obj) {
+            this.start = obj.nodes.start;
+            this.end = obj.nodes.end;
+        },
     }
 
     // Create the two termination associations
     this.nodes.start = new TerminationNode();
+    this.nodes.start.x = -5;
     this.nodes.end = new TerminationNode();
-    //this.nodes.start.linkToNext(this.nodes.end); //this line caused crashes, had to comment out
+    this.nodes.end.x = 5;
+    this.nodes.start.linkToNext(this.nodes.end); //this line caused crashes, had to comment out
     //endregion
 
     //endregion
@@ -87,10 +94,10 @@ Association.prototype.touch = function (x, y) {
 Association.prototype.bounds = function () {
     let node = this.nodes.start;
 
-    let minX = node.start.x;
-    let minY = node.start.y;
-    let maxX = node.start.x;
-    let maxY = node.start.y;
+    let minX = node.x;
+    let minY = node.y;
+    let maxX = node.x;
+    let maxY = node.y;
 
     while (node !== this.nodes.end) {
         minX = Math.min(minX, node.x);
@@ -118,22 +125,50 @@ Association.prototype.draw = function (context, view) {
 
     // Draw the line.
     context.beginPath();
+    context.fillStyle = "#e7e8b0";
+    context.strokeStyle = "#000000";
 
-    let path = new Path2D();
     let node = this.nodes.start;
-    path.moveTo(node.start.x, node.start.y);
 
     while (node !== this.nodes.end) {
-        path.lineTo(node.x, node.y);
-        node = node.nextNode();
-        path.moveTo(node.x, node.y);
+        let pos = node.positionRelativeTo(this);
+        context.moveTo(pos.x, pos.y);
+
+        node = node.nextNode;
+
+        pos = node.positionRelativeTo(this)
+        context.lineTo(pos.x, pos.y);
     }
+
+    // context.rect(
+    //     this.x, this.y,
+    //     100, 100
+    // );
+
+    // context.moveTo(this.nodes.start.x, this.nodes.start.y);
+    // context.lineTo(this.nodes.end.x, this.nodes.end.y);
+    context.fill();
+    context.stroke();
 }
 
 Association.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
-    obj.nodes = this.nodes.saveComponent();
+    obj.nodes = this.nodes.saveNodes();
     return obj;
+}
+
+Association.prototype.loadComponent = function (obj) {
+    Component.prototype.loadComponent(obj);
+
+    obj.nodes.loadNodes(obj);
+}
+
+/**
+ * Call the termination node to draw the PaletteItem to the palette
+ * @returns {PaletteImage}
+ */
+Association.prototype.paletteImage = function () {
+    return this.nodes.end.paletteImage();
 }
 
 //endregion
@@ -172,18 +207,4 @@ Association.prototype.createNodeNear = function (near) {
     newNode.position = min.pointOnLine;
     newNode.insertBetween(minNodes.from, minNodes.to);
 }
-
-//call the termination node to draw the PaletteItem to the palette
-Association.prototype.paletteImage = function() {
-    // let size=16;  // Box size
-    // let width = 60;       // Image width
-    // let height = 40;      // Image height
-    //
-    // const pi = new PaletteImage(width, height);
-    // pi.drawLine(10, 20, 50, 20);
-    // return pi;
-    const pi = this.nodes.end.paletteImage();
-    return pi;
-}
-
 //endregion

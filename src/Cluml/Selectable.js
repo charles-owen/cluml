@@ -1,4 +1,4 @@
-import vector from "./Utility/Vector";
+import vector, {Vector} from "./Utility/Vector";
 import {Line} from "./Utility/Line";
 
 /**
@@ -6,7 +6,7 @@ import {Line} from "./Utility/Line";
  * using the mouse.
  * @constructor
  */
-export const Selectable = function() {
+export const Selectable = function () {
     this.diagram = null;        // Diagram this selectable is associated with
     this.x = 0;                 // Position of the selectable
     this.y = 0;
@@ -26,9 +26,20 @@ export const Selectable = function() {
 
     this.selectedStyle = '#ff0000';
     this.unselectedStyle = '#000000';
+
+    /**
+     * Gets the relative position of this Selectable, relative to some other
+     * Selectable.
+     * @param relativeTo {Selectable}
+     * @returns {Vector}
+     */
+    this.positionRelativeTo = function(relativeTo)
+    {
+        return Vector.add(relativeTo.position, this.position);
+    }
 };
 
-Selectable.prototype.copyFrom = function(selectable) {
+Selectable.prototype.copyFrom = function (selectable) {
     this.x = selectable.x;
     this.y = selectable.y;
     this.moveX = selectable.moveX;
@@ -39,12 +50,12 @@ Selectable.prototype.copyFrom = function(selectable) {
  * Is this something that is always selected alone (no multiple selected)
  * @returns {boolean}
  */
-Selectable.prototype.single = function() {
+Selectable.prototype.single = function () {
     return false;
 };
 
-Selectable.prototype.selectStyle = function(context, view) {
-    if(view.selection.isSelected(this)) {
+Selectable.prototype.selectStyle = function (context, view) {
+    if (view.selection.isSelected(this)) {
         context.strokeStyle = this.selectedStyle;
         context.fillStyle = this.selectedStyle;
         return true;
@@ -58,36 +69,38 @@ Selectable.prototype.selectStyle = function(context, view) {
 /**
  * Start of the dragging process
  */
-Selectable.prototype.grab = function() {
+Selectable.prototype.grab = function () {
     this.moveX = this.x;
     this.moveY = this.y;
 };
 
-Selectable.prototype.move = function(dx, dy) {
+Selectable.prototype.move = function (dx, dy) {
     this.moveX += dx;
     this.moveY += dy;
 
     this.x = this.moveX;
     this.y = this.moveY;
 
-    if(this.diagram !== null) {
+    if (this.diagram !== null) {
         this.diagram.snapIt(this);
     }
 };
 
-Selectable.prototype.place = function(x, y) {
+Selectable.prototype.place = function (x, y) {
     this.moveX = x;
     this.moveY = y;
     this.x = this.moveX;
     this.y = this.moveY;
 
-    if(this.diagram !== null) {
+    if (this.diagram !== null) {
         this.diagram.snapIt(this);
     }
 };
 
-Selectable.prototype.delete = function() {};
-Selectable.prototype.drop = function() {};
+Selectable.prototype.delete = function () {
+};
+Selectable.prototype.drop = function () {
+};
 
 /**
  * A selected connection that we try to drag will create
@@ -95,7 +108,7 @@ Selectable.prototype.drop = function() {};
  * object.
  * @returns null
  */
-Selectable.prototype.spawn = function(x, y) {
+Selectable.prototype.spawn = function (x, y) {
     return null;
 };
 
