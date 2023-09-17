@@ -93,24 +93,26 @@ Association.prototype.touch = function (x, y) {
  */
 Association.prototype.bounds = function () {
     let node = this.nodes.start;
+    const pos = node.positionRelativeTo(this);
 
-    let minX = node.x;
-    let minY = node.y;
-    let maxX = node.x;
-    let maxY = node.y;
+    let min = pos;
+    let max = pos;
 
     while (node !== this.nodes.end) {
-        minX = Math.min(minX, node.x);
-        minY = Math.min(minY, node.y);
-        maxX = Math.max(maxX, node.x);
-        maxY = Math.max(maxY, node.y);
-
         node = node.nextNode;
+
+        max = Vector.maxComponents(
+            max,
+            Vector.add(node.bounds().max, this.position)
+        );
+        min = Vector.minComponents(
+            min,
+            Vector.add(node.bounds().min, this.position)
+        )
     }
 
-    return new Rect(
-        minX, maxX,
-        minY, maxY
+    return Rect.fromMinAndMax(
+        min, max
     );
 }
 

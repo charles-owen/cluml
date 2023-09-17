@@ -14,6 +14,26 @@ export const Rect = function (left = 0, top = 0, right = 0, bottom = 0) {
     this.top = top;
     this.right = right;
     this.bottom = bottom;
+
+    Object.defineProperty(this, 'max', {
+        /**
+         * The maximum corner of this rectangle.
+         * @returns {Vector}
+         */
+        get: function () {
+            return new Vector(this.right, this.top);
+        }
+    })
+
+    Object.defineProperty(this, 'min', {
+        /**
+         * The minimum corner of this rectangle.
+         * @returns {Vector}
+         */
+        get: function () {
+            return new Vector(this.left, this.bottom);
+        }
+    })
 };
 
 Rect.prototype.setRightBottom = function (right, bottom) {
@@ -44,7 +64,7 @@ Rect.prototype.isEmpty = function () {
 
 Rect.prototype.contains = function (x, y) {
     return x >= this.left && x <= this.right &&
-        y >= this.top && y <= this.bottom;
+        y >= this.bottom && y <= this.top;
 };
 
 /**
@@ -171,12 +191,32 @@ Rect.fromCenterAndSize = function (center, size) {
     return Rect.fromCenterAndExtents(center, Vector.divideBy(size, 2));
 }
 
+/**
+ * Creates a new rectangle from a center and an extents (which is half
+ * of its size).
+ * @param center {Vector}
+ * @param extents {Vector}
+ * @returns {Rect}
+ */
 Rect.fromCenterAndExtents = function (center, extents) {
     return new Rect(
         center.x - extents.x,
+        center.y + extents.y,
         center.x + extents.x,
         center.y - extents.y,
-        center.y + extents.y,
+    )
+}
+
+/**
+ * Creates a new rectangle from the minimum and maximum corners.
+ * @param min {Vector}
+ * @param max {Vector}
+ * @returns {Rect}
+ */
+Rect.fromMinAndMax = function (min, max) {
+    return new Rect(
+        min.x, max.y,
+        max.x, min.y
     )
 }
 // endregion

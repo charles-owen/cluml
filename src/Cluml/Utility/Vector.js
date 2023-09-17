@@ -3,12 +3,21 @@
  *
  * Points are represented with x,y properties:
  * var p = {x: 23, y: -7.3};
- * @param x
- * @param y
+ * @param x {number}
+ * @param y {number}
  * @constructor
  */
 export const Vector = function (x, y) {
+    /**
+     * The x component.
+     * @type {number}
+     */
     this.x = x;
+
+    /**
+     * The y component.
+     * @type {number}
+     */
     this.y = y;
 }
 
@@ -247,6 +256,34 @@ Vector.neg = function (v) {
  */
 Vector.scale = function (v, s) {
     return new Vector(v.x * s, v.y * s);
+}
+
+/**
+ *
+ * @param vectors {Vector}
+ * @returns {Vector}
+ */
+Vector.minComponents = function (...vectors) {
+    const x = vectors.map((v) => v.x);
+    const y = vectors.map((v) => v.y);
+    return new Vector(
+        Math.min(...x),
+        Math.min(...y)
+    );
+}
+
+/**
+ *
+ * @param vectors {Vector}
+ * @returns {Vector}
+ */
+Vector.maxComponents = function (...vectors) {
+    const x = vectors.map((v) => v.x);
+    const y = vectors.map((v) => v.y);
+    return new Vector(
+        Math.max(...x),
+        Math.max(...y)
+    );
 }
 
 export default Vector;
