@@ -1,4 +1,5 @@
 import {LineNode} from "./LineNode.js"
+import {PaletteImage} from "../../Graphics/PaletteImage";
 
 export const TerminationNode = function() {
     LineNode.call(this);
@@ -24,4 +25,15 @@ export const TerminationNode = function() {
     //endregion
 
     //endregion
+}
+
+//draw the association to the palette
+TerminationNode.prototype.paletteImage = function () {
+    let size=16;  // Box size
+    let width = 60;       // Image width
+    let height = 40;      // Image height
+
+    const pi = new PaletteImage(width, height);
+    pi.drawLine(10, 20, 50, 20);
+    return pi;
 }

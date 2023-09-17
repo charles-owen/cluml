@@ -1,4 +1,5 @@
 import {Class} from "./Class";
+import {Association} from "./Association/Association";
 
 /**
  * Adds all components into the system.
@@ -7,6 +8,7 @@ import {Class} from "./Class";
  */
 export const All = function (components) {
     components.add(new Class());
+    components.add(new Association());
 
-    components.addPalette('all', [new Class()]);
+    components.addPalette('all', [new Class(), new Association()]);
 }

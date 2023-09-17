@@ -13,6 +13,7 @@ import {OpenDialog} from './Dlg/OpenDialog';
 import {View} from './View';
 import {HelpDiv} from './Graphics/HelpDiv';
 import {DragAndDrop} from './UI/DragAndDrop';
+import {ToggleManager} from "./UI/ToggleManager";
 import {Tools} from './DOM/Tools';
 import {Ajax} from './Utility/Ajax';
 import {JsonAPI} from "./Utility/JsonAPI";
@@ -107,7 +108,9 @@ export const Main = function (cluml, element, tests) {
                 }
             }
 
+            //instantiate DragAndDrop and Toggle support
             this.dragAndDrop = new DragAndDrop(this);
+            this.toggleManager = new ToggleManager(this);
 
             //
             // Install a mutation observer, so we can know if the

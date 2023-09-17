@@ -1,5 +1,6 @@
 import {PaletteImage} from './Graphics/PaletteImage';
 import {Tools} from './DOM/Tools';
+import {Association} from "./Components/Association/Association";
 
 /**
  * Items that appear in the palette
@@ -47,8 +48,12 @@ export const PaletteItem = function(palette, obj, diagram) {
     img.appendChild(image);
 
 	this.element = element;
-	palette.main.dragAndDrop.draggable(this);
-    //paletteItem should only add itself to draggable if it's a component, not if it's an association
+    //if the object is a component, it should be a draggable
+    //if it's an association, it shouldn't be
+    if(obj.fileLbl !== 'Association'){
+        palette.main.dragAndDrop.draggable(this);
+    }
+    palette.main.toggleManager.toggleable(this);
 
 };
 

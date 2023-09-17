@@ -53,6 +53,15 @@ PaletteImage.prototype.box = function(wid, hit) {
     this.fillStroke();
 }
 
+
+//draws a line from one point to the other
+PaletteImage.prototype.drawLine = function(x1, y1, x2, y2){
+    this.context.beginPath();
+    this.context.moveTo(x1, y1);
+    this.context.lineTo(x2, y2);
+    this.fillStroke();
+}
+
 /**
  * Draw a circle
  * @param x Center of circle

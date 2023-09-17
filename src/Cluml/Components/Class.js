@@ -39,7 +39,7 @@ Class.prototype.helpLbl = 'class';
 Class.prototype.paletteLbl = "Class";
 Class.prototype.paletteDesc = "Class component.";
 Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
-Class.prototype.paletteOrder = 0;
+Class.prototype.paletteOrder = 1;
 
 /**
  * Copies from another component.

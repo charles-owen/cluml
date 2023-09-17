@@ -4,6 +4,8 @@ import {Rect} from "../../Utility/Rect";
 import Selectable from "../../Selectable";
 import Vector from "../../Utility/Vector";
 import {LineNode} from "./LineNode";
+import {PaletteImage} from "../../Graphics/PaletteImage";
+import {Class} from "../Class";
 
 export const Association = function () {
     Component.call(this);
@@ -34,7 +36,7 @@ export const Association = function () {
     // Create the two termination associations
     this.nodes.start = new TerminationNode();
     this.nodes.end = new TerminationNode();
-    this.nodes.start.linkToNext(this.nodes.end);
+    //this.nodes.start.linkToNext(this.nodes.end); //this line caused crashes, had to comment out
     //endregion
 
     //endregion
@@ -44,12 +46,12 @@ Association.prototype = Object.create(Component.prototype);
 Association.prototype.constructor = Association;
 
 //region Type
-Association.fileLbl = "Association";
-Association.helpLbl = 'association';
-Association.paletteLbl = "Association";
-Association.paletteDesc = "Association component.";
-Association.htmlDesc = '<h2>Association</h2><p>A basic association between 2 classes.</p>';
-Association.paletteOrder = 1;
+Association.prototype.fileLbl = "Association";
+Association.prototype.helpLbl = 'association';
+Association.prototype.paletteLbl = "Association";
+Association.prototype.paletteDesc = "Association component.";
+Association.prototype.htmlDesc = '<h2>Association</h2><p>A basic association between 2 classes.</p>';
+Association.prototype.paletteOrder = 20;
 //endregion
 
 //region Component Methods
@@ -170,4 +172,18 @@ Association.prototype.createNodeNear = function (near) {
     newNode.position = min.pointOnLine;
     newNode.insertBetween(minNodes.from, minNodes.to);
 }
+
+//call the termination node to draw the PaletteItem to the palette
+Association.prototype.paletteImage = function() {
+    // let size=16;  // Box size
+    // let width = 60;       // Image width
+    // let height = 40;      // Image height
+    //
+    // const pi = new PaletteImage(width, height);
+    // pi.drawLine(10, 20, 50, 20);
+    // return pi;
+    const pi = this.nodes.end.paletteImage();
+    return pi;
+}
+
 //endregion
