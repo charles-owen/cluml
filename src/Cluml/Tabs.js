@@ -1,5 +1,7 @@
 import {View} from './View';
 import {Tools} from './DOM/Tools';
+import {TextInput} from "./Input/TextInput";
+import {Rect} from "./Utility/Rect";
 
 
 /**
@@ -12,7 +14,7 @@ export const Tabs = function (main) {
         /**
          * Creates a new TabData.
          * @param li {HTMLLIElement} The list element.
-         * @param pane
+         * @param pane {HTMLElement}
          * @param diagram {Diagram}
          * @param view {View}
          */
@@ -105,9 +107,9 @@ export const Tabs = function (main) {
 
             ul.appendChild(li);
 
-            // Does the pane already exist in tabs?
             /**
-             * @type {Element}
+             * Does the pane already exist in tabs?
+             * @type {HTMLElement}
              */
             let pane = null;
             /**
@@ -338,4 +340,16 @@ export const Tabs = function (main) {
         this.sync();
     }
 
+    /**
+     * Creates a text field at the specified location.
+     * @param callback {function} A function with a single parameter. Will be called once value is set.
+     * @param dimensions {Rect} Dimensions of this text input.
+     * @param font {string} Font to use with the input.
+     */
+    this.createTextInput = function (callback, dimensions, font = "14px Times") {
+        const textInputTesting = new TextInput(
+            callback, dimensions, font
+        );
+        tabs[this.active].pane.appendChild(textInputTesting.inputElement);
+    }
 };

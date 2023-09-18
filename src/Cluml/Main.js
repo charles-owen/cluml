@@ -20,6 +20,8 @@ import {JsonAPI} from "./Utility/JsonAPI";
 import {Toast} from "./Graphics/Toast";
 import {ExportDlg} from "./Dlg/ExportDlg";
 import {ImportDlg} from "./Dlg/ImportDlg";
+import {TextInput} from "./Input/TextInput";
+import {Rect} from "./Utility/Rect";
 
 /**
  * Actual instance of cluml for a single element.
@@ -173,6 +175,7 @@ export const Main = function (cluml, element, tests) {
             //
             divWork = Tools.createClassedDiv('work');
             this.div.appendChild(divWork);
+
 
             //
             // And the palette

@@ -8,7 +8,7 @@ import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
 /**
  * View of a diagram
  * @param main {Main} Main object for interface
- * @param canvas Canvas element in the view
+ * @param canvas {HTMLCanvasElement} Canvas element in the view
  * @param diagram {Diagram} Diagram we draw on that canvas
  * @constructor
  */
