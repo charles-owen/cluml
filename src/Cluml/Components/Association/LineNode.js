@@ -174,6 +174,12 @@ LineNode.prototype.copyFrom = function (component) {
     this.touched = component.touched;
     this.nextNode = component.nextNode;
     this.previousNode = component.previousNode;
+    this.association = component.association;
+
+    // if (this.hasNext) {
+    //     // Propagate.
+    //     this.nextNode.copyFrom(component.nextNode);
+    // }
     Component.prototype.copyFrom.call(this, component);
 }
 

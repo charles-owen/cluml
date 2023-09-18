@@ -31,6 +31,16 @@ export const Association = function () {
             this.end.association = association;
 
             this.start.linkToNext(this.end);
+        },
+        /**
+         * Copies the nodes.
+         * @param association {Association}
+         */
+        copyFrom: function (association) {
+            // Don't need to save end. The saving will propagate through the
+            // path.
+            // this.start.copyFrom(association.nodes.start);
+            // this.end = association.nodes.end;
         }
         // /**
         //  * Saves the start and end nodes.
@@ -76,6 +86,7 @@ Association.prototype.paletteOrder = 20;
  */
 Association.prototype.copyFrom = function (component) {
     this.nodes = component.nodes;
+    this.nodes.copyFrom(component);
     Component.prototype.copyFrom.call(this, component);
 }
 
@@ -161,6 +172,24 @@ Association.prototype.bounds = function () {
  * @param view {View} View object
  */
 Association.prototype.draw = function (context, view) {
+    // // Delete line nodes that may have been undoned.
+    // for (const selfNode of this.nodeGenerator()) {
+    //     if (selfNode.fileLbl === "LineNode") {
+    //         let contains = false;
+    //
+    //         for (const component of view.diagram.components) {
+    //             if (selfNode === component) {
+    //                 contains = true;
+    //                 break;
+    //             }
+    //         }
+    //
+    //         if (contains) {
+    //             selfNode.remove();
+    //         }
+    //     }
+    // }
+
     this.selectStyle(context, view);
 
     // Draw the line.
@@ -249,8 +278,9 @@ Association.prototype.nodeGenerator = function* () {
     let node = this.nodes.start;
 
     while (node !== null) {
+        const next = node.nextNode;
         yield node;
-        node = node.nextNode;
+        node = next;
     }
 }
 
