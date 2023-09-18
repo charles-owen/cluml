@@ -82,6 +82,12 @@ export const View = function(main, canvas, diagram) {
             downListener(event.pageX, event.pageY, false, event);
         }
 
+        let contextMenuListener = (event) => {
+            event.preventDefault();
+
+            // TODO: Handle event.
+        }
+
         let touchStartListener = (event) => {
             event.preventDefault();
 
@@ -200,6 +206,7 @@ export const View = function(main, canvas, diagram) {
         }
 
         // Install mouse handlers
+        canvas.addEventListener('contextmenu', contextMenuListener);
         canvas.addEventListener('mousedown', mouseDownListener);
         canvas.addEventListener('dblclick', mouseDblClickListener);
 
