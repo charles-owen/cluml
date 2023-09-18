@@ -157,6 +157,7 @@ Rect.prototype.getSide = function (side) {
  * counter-clockwise most side and 1.0 representing the
  * clockwise most side.
  * @param point {Vector}
+ * @return {{side: number, atPoint: Vector, distance: number}}
  */
 Rect.prototype.getClosestSideT = function (point) {
     let closestSide = -1;
@@ -176,7 +177,8 @@ Rect.prototype.getClosestSideT = function (point) {
 
     return {
         side: closestSide,
-        atPoint: closestPoint
+        atPoint: closestPoint,
+        distance: smallestDistance
     }
 }
 

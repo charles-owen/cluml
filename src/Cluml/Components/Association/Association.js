@@ -20,6 +20,18 @@ export const Association = function () {
          * @type {TerminationNode}
          */
         end: null,
+        /**
+         * Instantiates the start and end nodes.
+         * @param association {Association}
+         */
+        instantiate: function (association) {
+            this.start = new TerminationNode();
+            this.start.association = association;
+            this.end = new TerminationNode();
+            this.end.association = association;
+
+            this.start.linkToNext(this.end);
+        }
         // /**
         //  * Saves the start and end nodes.
         //  */
@@ -39,9 +51,7 @@ export const Association = function () {
     }
 
     // Create the two termination associations
-    this.nodes.start = new TerminationNode();
-    this.nodes.end = new TerminationNode();
-    this.nodes.start.linkToNext(this.nodes.end); //this line caused crashes, had to comment out
+    this.nodes.instantiate(this);
     //endregion
 
     //endregion
@@ -232,6 +242,35 @@ Association.prototype.paletteImage = function () {
 
 //region Association Methods.
 /**
+ * A generator that generates all the nodes of the association.
+ * @return {Generator<LineNode, void, *>}
+ */
+Association.prototype.nodeGenerator = function* () {
+    let node = this.nodes.start;
+
+    while (node !== null) {
+        yield node;
+        node = node.nextNode;
+    }
+}
+
+/**
+ * A generator that generates all the edges of the association.
+ * @return {Generator<{from: LineNode, to: LineNode}, void, *>}
+ */
+Association.prototype.edgeGenerator = function* () {
+    let node = this.nodes.start;
+
+    while (node !== this.nodes.end) {
+        yield {
+            from: node,
+            to: node.nextNode
+        };
+        node = node.nextNode;
+    }
+}
+
+/**
  * Creates a node line node near the point "near".
  * @param near {Vector}
  * @return {LineNode}
@@ -262,6 +301,7 @@ Association.prototype.createNodeNear = function (near) {
 
     // Now have the nearest point on the line.
     let newNode = new LineNode();
+    newNode.association = this;
     this.addChild(newNode, min.pointOnLine);
     newNode.insertBetween(minNodes.from, minNodes.to);
 

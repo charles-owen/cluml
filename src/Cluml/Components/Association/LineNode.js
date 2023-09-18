@@ -3,6 +3,7 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
+import {TerminationNode} from "./TerminationNode";
 
 /**
  * Determines the radius around the node at which
@@ -46,6 +47,18 @@ export const LineNode = function () {
      * @type {string}
      */
     let previousID = undefined;
+
+    /**
+     * The association of this node.
+     * @type {Association}
+     */
+    let associate = null;
+
+    /**
+     * The ID of the association of this node.
+     * @type {undefined}
+     */
+    let associateID = undefined;
     //endregion
 
     //region Properties
@@ -54,7 +67,8 @@ export const LineNode = function () {
             if (next !== null) {
                 return next;
             } else if (this.hasNext) {
-                return this.diagram.getComponentByID(nextID);
+                next = this.diagram.getComponentByID(nextID);
+                return next;
             } else {
                 return null;
             }
@@ -81,9 +95,10 @@ export const LineNode = function () {
             if (previous !== null) {
                 return previous;
             } else if (this.hasPrevious) {
-                return this.diagram.getComponentByID(previousID);
+                previous = this.diagram.getComponentByID(previousID);
+                return previous;
             } else {
-                return  null;
+                return null;
             }
         },
         set: function (node) {
@@ -102,6 +117,28 @@ export const LineNode = function () {
             return previousID !== undefined;
         }
     })
+
+    Object.defineProperty(this, 'association', {
+        get: function () {
+            if (associate !== null) {
+                return associate;
+            } else if (associateID !== undefined) {
+                associate = this.diagram.getComponentByID(associateID);
+                return associate;
+            } else {
+                return null;
+            }
+        },
+        set: function (newAssociation) {
+            if (newAssociation !== null) {
+                associate = newAssociation;
+                associateID = associate.id;
+            } else {
+                associate = null;
+                associateID = undefined;
+            }
+        }
+    });
     //endregion
 
     this.loadIDs = function (idNext, iDPrevious) {
@@ -112,6 +149,14 @@ export const LineNode = function () {
 
 LineNode.prototype = Object.create(Component.prototype);
 LineNode.prototype.constructor = LineNode;
+
+
+LineNode.prototype.fileLbl = "LineNode";
+LineNode.prototype.helpLbl = 'lineNode';
+LineNode.prototype.paletteLbl = "Line Node";
+LineNode.prototype.paletteDesc = "The intermediate nodes of an association.";
+LineNode.prototype.htmlDesc = '<h2>Line Node</h2><p>The intermediate nodes of an association.</p>';
+LineNode.prototype.paletteOrder = -1;
 
 //region Selectable Functions
 /**
@@ -143,6 +188,21 @@ LineNode.prototype.touch = function (x, y) {
     }
 
     return null;
+}
+
+LineNode.prototype.drop = function () {
+    Selectable.prototype.drop.call(this);
+
+    if (this.association != null) {
+        for (const node of this.association.nodeGenerator()) {
+            if (node !== this && Vector.distance(this.position, node.position) < 5) {
+                // Delete this node.
+                this.remove();
+                this.delete();
+                return;
+            }
+        }
+    }
 }
 
 /**
@@ -185,7 +245,7 @@ LineNode.prototype.loadComponent = function (obj) {
 }
 
 LineNode.prototype.paletteImage = function () {
-    // TODO: Implement.
+    // TODO: Implement (not needed lol).
     return null;
 }
 
@@ -198,7 +258,7 @@ LineNode.prototype.grab = function () {
 }
 //endregion
 
-//region LineNode Methods
+//region LineNode Specific Methods
 /**
  * Links this node with another node.
  * @param next {LineNode} The next line node.
