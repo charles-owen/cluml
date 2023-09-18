@@ -21,13 +21,13 @@ export const Class = function () {
      * The array of attributes.
      * @type{Array<String>}
      */
-    this.attributes = [];
+    this.attributes = ["-attribute1 :", "-attribute2 :"];
 
     /**
      * The array of operations.
      * @type{Array<String>}
      */
-    this.operations = [];
+    this.operations = ["+operation1() :", "+operation2() :"];
 }
 
 Class.prototype = Object.create(Component.prototype);
@@ -113,7 +113,7 @@ Class.prototype.draw = function (context, view) {
 
     // Defaults the name to NewClass if no name is given
     if (this.naming == null) {
-        this.naming = "NewClass"
+        this.naming = "ClassName"
     }
 
     context.fillStyle = "#000000";
@@ -121,6 +121,23 @@ Class.prototype.draw = function (context, view) {
     this.drawName(context,
         0,
         0 - this.height * (5 / 6));
+
+    context.textAlign = "left"
+    // Attributes text
+    for(let i = 0; i < this.attributes.length; i++) {
+        context.fillText(this.attributes[i],
+            this.x - this.width / 2 + 5,
+            this.y - this.height / 2 + (i * 16),
+            this.width)
+    }
+
+    // Operations text
+    for(let j = 0; j < this.operations.length; j++) {
+        context.fillText(this.operations[j],
+            this.x - this.width / 2 + 5,
+            this.y - this.height / 6 + (j * 16),
+            this.width)
+    }
 }
 
 Class.prototype.saveComponent = function () {
