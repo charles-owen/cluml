@@ -26,12 +26,22 @@ export const SanityCheckDlg = function(main) {
                 errors += `<li>Class ${element.naming} not capitalized</li>`;
                 errorCount++;
             }
+
+            if (!isAlphaNumeric(element.naming))
+            {
+                errors += `<li>Class ${element.naming} is not alphanumeric</li>`;
+            }
         }
         content += `<h2>(${errorCount}) errors have been detected</h2>`;
         content += `<ul>${errors}</ul>`;
 
         this.contents(content, "Cluml Sanity Check");
         Dialog.prototype.open.call(this);
+    }
+
+    const isAlphaNumeric = function(s) {
+        let array = s.match(/\w/g);
+        return array !== null && array.length === s.length;
     }
 }
 
