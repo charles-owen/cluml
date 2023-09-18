@@ -172,7 +172,7 @@ Class.prototype.drop = function () {
  * @returns {PaletteImage}
  */
 Class.prototype.paletteImage = function() {
-    let size=16;  // Box size
+    // let size=16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
 
@@ -184,4 +184,18 @@ Class.prototype.paletteImage = function() {
     pi.fillStroke("#e7e8b0");
 
     return pi;
+}
+
+/**
+ * Add an attribute to this Class
+ */
+Class.prototype.addAttribute = function(attribute) {
+    this.attributes.push(attribute)
+}
+
+/**
+ * Add an operation to this Class
+ */
+Class.prototype.addOperation = function(operation) {
+    this.operations.push(operation)
 }
