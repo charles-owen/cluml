@@ -122,7 +122,7 @@ export const LineNode = function () {
         get: function () {
             if (associate !== null) {
                 return associate;
-            } else if (associateID !== undefined) {
+            } else if (this.hasAssocation) {
                 associate = this.diagram.getComponentByID(associateID);
                 return associate;
             } else {
@@ -139,11 +139,18 @@ export const LineNode = function () {
             }
         }
     });
+
+    Object.defineProperty(this, 'hasAssocation', {
+        get: function () {
+            return associateID !== undefined;
+        }
+    })
     //endregion
 
-    this.loadIDs = function (idNext, iDPrevious) {
+    this.loadIDs = function (idNext, idPrevious, idAssociation) {
         nextID = idNext;
-        previousID = iDPrevious;
+        previousID = idPrevious;
+        associateID = idAssociation;
     }
 }
 
@@ -193,16 +200,23 @@ LineNode.prototype.touch = function (x, y) {
 LineNode.prototype.drop = function () {
     Selectable.prototype.drop.call(this);
 
-    if (this.association != null) {
-        for (const node of this.association.nodeGenerator()) {
-            if (node !== this && Vector.distance(this.position, node.position) < 5) {
-                // Delete this node.
-                this.remove();
-                this.delete();
-                return;
-            }
-        }
+    if ((this.hasNext && Vector.distance(this.position, this.nextNode.position) < 5) ||
+        (this.hasPrevious && Vector.distance(this.position, this.previousNode.position) < 5)) {
+        // Delete this node.
+        this.remove();
+        this.delete();
     }
+
+    // if (this.association != null) {
+    //     for (const node of this.association.nodeGenerator()) {
+    //         if (node !== this && Vector.distance(this.position, node.position) < 5) {
+    //             // Delete this node.
+    //             this.remove();
+    //             this.delete();
+    //             return;
+    //         }
+    //     }
+    // }
 }
 
 /**
@@ -235,13 +249,14 @@ LineNode.prototype.saveComponent = function () {
     obj.touched = this.touched;
     obj.nextID = this.hasNext ? this.nextNode.id : null;
     obj.previousID = this.hasPrevious ? this.previousNode.id : null;
+    obj.associationID = this.hasAssocation ? this.association : null;
     return obj;
 }
 
 LineNode.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 
-    this.loadIDs(obj.nextID, obj.previousID);
+    this.loadIDs(obj.nextID, obj.previousID, obj.associationID);
 }
 
 LineNode.prototype.paletteImage = function () {
