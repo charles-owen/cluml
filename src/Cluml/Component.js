@@ -560,10 +560,6 @@ Component.prototype.update = function () {
  * @param child {Component}
  * @param position {Vector}
  */
-Component.prototype.addChild = function (child, position = undefined) {
-    if (position !== undefined)
-        child.position = position;
-
-    child.grab();
-    this.diagram.add(child);
+Component.prototype.addChild = function (child, position) {
+    this.diagram.diagrams.simulation.view.initializeComponent(child, position.x, position.y);
 }

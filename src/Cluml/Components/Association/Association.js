@@ -20,22 +20,22 @@ export const Association = function () {
          * @type {TerminationNode}
          */
         end: null,
-        /**
-         * Saves the start and end nodes.
-         */
-        saveNodes: function () {
-            let obj = {
-                start: this.start.saveComponent(),
-                end: this.end.saveComponent()
-            }
-        },
-        /**
-         * Loads the start/end nodes.
-         */
-        loadNodes: function (obj) {
-            this.start = obj.nodes.start;
-            this.end = obj.nodes.end;
-        },
+        // /**
+        //  * Saves the start and end nodes.
+        //  */
+        // saveNodes: function () {
+        //     let obj = {
+        //         start: this.start.saveComponent(),
+        //         end: this.end.saveComponent()
+        //     }
+        // },
+        // /**
+        //  * Loads the start/end nodes.
+        //  */
+        // loadNodes: function (obj) {
+        //     this.start = obj.nodes.start;
+        //     this.end = obj.nodes.end;
+        // },
     }
 
     // Create the two termination associations
@@ -112,18 +112,8 @@ Association.prototype.drop = function () {
     if (!this.placedOnCanvas) {
         // Instantiate placements.
         const pos = this.position;
-        this.nodes.start.x = pos.x - 50;
-        // this.nodes.start.moveX = pos.x - 50;
-        this.nodes.start.y = pos.y;
-        // this.nodes.start.moveY = pos.y;
-        this.nodes.end.x = pos.x + 50;
-        // this.nodes.end.moveX = pos.x + 50;
-        this.nodes.end.y = pos.y;
-        // this.nodes.end.moveY = pos.y;
-
-        // Make sure the moveX/Y values are properly set.
-        this.nodes.start.grab();
-        this.nodes.end.grab();
+        this.addChild(this.nodes.start, new Vector(pos.x - 50, pos.y));
+        this.addChild(this.nodes.end, new Vector(pos.x + 50, pos.y));
     }
 }
 
@@ -218,14 +208,16 @@ Association.prototype.draw = function (context, view) {
 
 Association.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
-    obj.nodes = this.nodes.saveNodes();
+    obj.startNodeID = this.nodes.start.id;
+    obj.endNodeID = this.nodes.end.id;
     return obj;
 }
 
 Association.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent(obj);
 
-    obj.nodes.loadNodes(obj);
+    this.nodes.start = this.diagram.getComponentByID(obj.startNodeID);
+    this.nodes.end = this.diagram.getComponentByID(obj.endNodeID);
 }
 
 /**

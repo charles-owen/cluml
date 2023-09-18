@@ -53,33 +53,55 @@ export const LineNode = function () {
         get: function () {
             if (next !== null) {
                 return next;
-            } else if (nextID !== undefined) {
+            } else if (this.hasNext) {
                 return this.diagram.getComponentByID(nextID);
             } else {
                 return null;
             }
         },
         set: function (node) {
-            nextID = node.id;
-            next = node;
+            if (node !== null) {
+                nextID = node.id;
+                next = node;
+            } else {
+                nextID = undefined;
+                next = null;
+            }
         }
     });
+
+    Object.defineProperty(this, 'hasNext', {
+        get: function () {
+            return nextID !== undefined;
+        }
+    })
 
     Object.defineProperty(this, 'previousNode', {
         get: function () {
             if (previous !== null) {
                 return previous;
-            } else if (previousID !== undefined) {
+            } else if (this.hasPrevious) {
                 return this.diagram.getComponentByID(previousID);
             } else {
                 return  null;
             }
         },
         set: function (node) {
-            previousID = node.id;
-            previous = node;
+            if (node !== null) {
+                previousID = node.id;
+                previous = node;
+            } else {
+                previousID = undefined;
+                previous = null;
+            }
         }
     });
+
+    Object.defineProperty(this, 'hasPrevious', {
+        get: function () {
+            return previousID !== undefined;
+        }
+    })
     //endregion
 
     this.loadIDs = function (idNext, iDPrevious) {
@@ -151,8 +173,8 @@ LineNode.prototype.draw = function (context, view) {
 LineNode.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
     obj.touched = this.touched;
-    obj.nextID = this.nextNode.id;
-    obj.previousID = this.previousNode.id;
+    obj.nextID = this.hasNext ? this.nextNode.id : null;
+    obj.previousID = this.hasPrevious ? this.previousNode.id : null;
     return obj;
 }
 

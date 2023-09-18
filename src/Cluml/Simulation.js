@@ -8,18 +8,37 @@ let instance = 0;
  */
 export const Simulation = function() {
 
-    // Current animation time in seconds, we start at time 1 to avoid 0 issues
+    /**
+     * Current animation time in seconds, we start at time 1 to avoid 0 issues
+     * @type {number}
+     */
     this.time = 1;
+    /**
+     * The view object.
+     * @type {View}
+     */
     this.view = null;
-    this.speed = 0.000001;      ///< Animation speed (1 million'th of real time)
+    /**
+     * Animation speed (1 millionth of real time)
+     * @type {number}
+     */
+    this.speed = 0.000001;
+    /**
+     * The instance of this simulation.
+     * @type {number}
+     */
     this.instance = ++instance;
 
-    //
-    // If the same component request multiple times during
-    // the same time, this ensures the identical time events
-    // will occur in the order they arrived.
-    //
-    this.order = 1;             ///< Extra sorting order to ensure stable sort
+    /**
+     * Extra sorting order to ensure stable sort.
+     *
+     *
+     * If the same component request multiple times during
+     * the same time, this ensures the identical time events
+     * will occur in the order they arrived.
+     * @type {number}
+     */
+    this.order = 1;
 
     this.priorityQueue = new buckets.PriorityQueue(function(a, b) {
         if(a.time === b.time) {
@@ -32,7 +51,7 @@ export const Simulation = function() {
     /**
      * Set the simulation view. If set, we create a timing loop for
      * the simulation.
-     * @param view
+     * @param view {View}
      */
     this.setView = function(view) {
         this.view = view;

@@ -65,19 +65,8 @@ export const View = function(main, canvas, diagram) {
                 return;
             }
 
-            this.model.backup();
             const component = new componentObject.constructor(paletteItem);
-            component.brand();
-
-            component.x = x;
-            component.y = y;
-
-	        this.diagram.add(component);
-	        this.diagram.snapIt(component);
-            component.drop();
-            component.placedOnCanvas = true;
-	        this.ensureSize();
-	        this.draw();
+            this.initializeComponent(component, x, y);
         });
 
         //
@@ -311,6 +300,28 @@ View.prototype.importTab = function(importer) {
 	        this.draw();
         }
     });
+}
+
+/**
+ * Initializes the component within the view.
+ * @param component {Component}
+ * @param x {number}
+ * @param y {number}
+ */
+View.prototype.initializeComponent = function (component, x, y) {
+    this.model.backup();
+
+    component.brand();
+
+    component.x = x;
+    component.y = y;
+
+    this.diagram.add(component);
+    this.diagram.snapIt(component);
+    component.drop();
+    component.placedOnCanvas = true;
+    this.ensureSize();
+    this.draw();
 }
 
 /**
