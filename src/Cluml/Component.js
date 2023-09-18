@@ -554,3 +554,16 @@ Component.prototype.sanitize = function (text) {
 Component.prototype.update = function () {
 
 }
+
+/**
+ * Adds a "child" component that shares the diagram with the parent.
+ * @param child {Component}
+ * @param position {Vector}
+ */
+Component.prototype.addChild = function (child, position = undefined) {
+    if (position !== undefined)
+        child.position = position;
+
+    child.grab();
+    this.diagram.add(child);
+}

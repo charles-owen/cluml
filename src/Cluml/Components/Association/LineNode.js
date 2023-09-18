@@ -3,7 +3,6 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
-import {Association} from "./Association";
 
 /**
  * Determines the radius around the node at which
@@ -101,7 +100,7 @@ LineNode.prototype.copyFrom = function (component) {
     this.touched = component.touched;
     this.nextNode = component.nextNode;
     this.previousNode = component.previousNode;
-    Component.prototype.copyFrom.call(this);
+    Component.prototype.copyFrom.call(this, component);
 }
 
 /**
@@ -172,7 +171,7 @@ LineNode.prototype.paletteImage = function () {
  * Start of the dragging process
  */
 LineNode.prototype.grab = function () {
-    Selectable.prototype.grab();
+    Selectable.prototype.grab.call(this);
     this.touched = true;
 }
 //endregion

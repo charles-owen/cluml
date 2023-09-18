@@ -79,7 +79,7 @@ Association.prototype.copyFrom = function (component) {
 Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
-        // TODO: Return a node instead.
+        // Return a node instead of the association itself.
         let node = this.nodes.start;
 
         do {
@@ -88,6 +88,9 @@ Association.prototype.touch = function (x, y) {
             }
             node = node.nextNode;
         } while (node !== null)
+
+        // No node found. Create a new node.
+        return this.createNodeNear(new Vector(x, y));
     }
 
     return null;
@@ -110,13 +113,17 @@ Association.prototype.drop = function () {
         // Instantiate placements.
         const pos = this.position;
         this.nodes.start.x = pos.x - 50;
-        this.nodes.start.moveX = pos.x - 50;
+        // this.nodes.start.moveX = pos.x - 50;
         this.nodes.start.y = pos.y;
-        this.nodes.start.moveY = pos.y;
+        // this.nodes.start.moveY = pos.y;
         this.nodes.end.x = pos.x + 50;
-        this.nodes.end.moveX = pos.x + 50;
+        // this.nodes.end.moveX = pos.x + 50;
         this.nodes.end.y = pos.y;
-        this.nodes.end.moveY = pos.y;
+        // this.nodes.end.moveY = pos.y;
+
+        // Make sure the moveX/Y values are properly set.
+        this.nodes.start.grab();
+        this.nodes.end.grab();
     }
 }
 
@@ -235,6 +242,7 @@ Association.prototype.paletteImage = function () {
 /**
  * Creates a node line node near the point "near".
  * @param near {Vector}
+ * @return {LineNode}
  */
 Association.prototype.createNodeNear = function (near) {
     let node = this.nodes.start;
@@ -262,7 +270,9 @@ Association.prototype.createNodeNear = function (near) {
 
     // Now have the nearest point on the line.
     let newNode = new LineNode();
-    newNode.position = min.pointOnLine;
+    this.addChild(newNode, min.pointOnLine);
     newNode.insertBetween(minNodes.from, minNodes.to);
+
+    return newNode;
 }
 //endregion

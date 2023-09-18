@@ -31,6 +31,7 @@ Line.prototype.length = function () {
  * Returns a point that lies on the line.
  * @param t {number} A value ranging [0, 1] where 0 corresponds with from and
  * 1 corresponds with to.
+ * @return {Vector}
  */
 Line.prototype.pointOnLine = function (t) {
     const disp = this.displacement();
@@ -46,18 +47,31 @@ Line.prototype.pointOnLine = function (t) {
  * @returns {{t: number, distance: number, pointOnLine: Vector}}
  */
 Line.prototype.pointNearest = function (point) {
-    const disp = this.displacement();
-    const lineToPoint = new Line(this.from, point);
-    const len = (disp.x * disp.x) + (disp.y + disp.y);
-    const dot = (lineToPoint.x * disp.x) + (lineToPoint.y + disp.y);
-    const t = Math.min(1, Math.max(0, dot / len));
-    const dispT = Vector.scale(disp, t);
-    const output = Vector.add(this.from, dispT);
-    const distance = Vector.distance(output, point);
+    const vec_ap = Vector.sub(point, this.from);
+    const vec_bp = Vector.sub(point, this.to);
+    const vec_ab = this.displacement();
 
+    const dist_ap = vec_ap.magnitude();     // D1
+    const dist_bp = vec_bp.magnitude();     // D2
+    const dist_ab = vec_ab.magnitude();     // D3
+
+    const dist_ac = (dist_bp * dist_bp - (dist_ap * dist_ap) - (dist_ab * dist_ab)) /
+        (-2 * dist_ab);
+    const t = dist_ac / dist_ab;
+    const pointOnLine = this.pointOnLine(t);
+
+    const line_cp = new Line(pointOnLine, point);
+    // const lineToPoint = new Line(this.from, point);
+    // const len = (disp.x * disp.x) + (disp.y + disp.y);
+    // const dot = (lineToPoint.x * disp.x) + (lineToPoint.y + disp.y);
+    // const t = Math.min(1, Math.max(0, dot / len));
+    // const dispT = Vector.scale(disp, t);
+    // const output = Vector.add(this.from, dispT);
+    // const distance = Vector.distance(output, point);
+    //
     return {
-        pointOnLine: output,
+        pointOnLine: pointOnLine,
         t: t,
-        distance: distance
+        distance: line_cp.length(),
     };
 }
