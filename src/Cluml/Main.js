@@ -20,7 +20,6 @@ import {JsonAPI} from "./Utility/JsonAPI";
 import {Toast} from "./Graphics/Toast";
 import {ExportDlg} from "./Dlg/ExportDlg";
 import {ImportDlg} from "./Dlg/ImportDlg";
-import {TextInput} from "./Input/TextInput";
 import {Rect} from "./Utility/Rect";
 
 /**
@@ -194,6 +193,14 @@ export const Main = function (cluml, element, tests) {
             //
             divOverlay = Tools.createClassedDiv('cluml-overlay');
             this.div.appendChild(divOverlay);
+
+            // Testing.
+            tabs.createTextInput(
+                function (value) {
+
+                },
+                new Rect(50, 50, 150, 100)
+            )
 
             this.toast = new Toast(this);
             this.toast.create(this.div);
