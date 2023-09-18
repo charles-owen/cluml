@@ -4,15 +4,33 @@ import {Dialog} from './Dialog';
  * Sanity Check dialog box.
  * @constructor
  */
-export const SanityCheckDlg = function() {
+export const SanityCheckDlg = function(main) {
     Dialog.call(this);
 
     this.open = function() {
         this.buttonCancel = null;
 
         let content = '<h1>Sanity Check</h1>';
-        this.contents(content, "Cluml Sanity Check");
 
+        let errorCount = 0;
+        let errors = '';
+
+        // error check the diagram in view
+        const diagram = main.currentView().diagram;
+        const classes = diagram.getComponentsByType("Class");
+        for (const element of classes)
+        {
+            // check if the class names are capitalized properly
+            if (element.naming[0].toUpperCase() !== element.naming[0])
+            {
+                errors += `<li>Class ${element.naming} not capitalized</li>`;
+                errorCount++;
+            }
+        }
+        content += `<h2>(${errorCount}) errors have been detected</h2>`;
+        content += `<ul>${errors}</ul>`;
+
+        this.contents(content, "Cluml Sanity Check");
         Dialog.prototype.open.call(this);
     }
 }

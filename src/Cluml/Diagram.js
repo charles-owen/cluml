@@ -349,7 +349,7 @@ Diagram.prototype.getComponentsByType = function (fileLbl) {
 
     for (let i = 0; i < this.components.length; i++) {
         const component = this.components[i];
-        if (component.constructor.fileLbl === fileLbl) {
+        if (component.fileLbl === fileLbl) {
             components.push(component);
         }
     }

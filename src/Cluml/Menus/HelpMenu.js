@@ -53,7 +53,7 @@ export const HelpMenu = function(menu, main) {
 	    });
 
         menu.click('.help-sanity-check', (event) => {
-            const dlg = new SanityCheckDlg();
+            const dlg = new SanityCheckDlg(main);
             dlg.open();
         });
     }
