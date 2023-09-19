@@ -3,7 +3,6 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
-import {TerminationNode} from "./TerminationNode";
 
 /**
  * Determines the radius around the node at which

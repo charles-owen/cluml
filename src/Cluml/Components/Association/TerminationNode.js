@@ -1,7 +1,5 @@
 import {LineNode} from "./LineNode.js"
 import {PaletteImage} from "../../Graphics/PaletteImage";
-import {Component} from "../../Component";
-import {Association} from "./Association";
 import Selectable from "../../Selectable";
 import {Class} from "../Class";
 
@@ -9,7 +7,7 @@ import {Class} from "../Class";
  * Determines how far away to snap nodes to classes.
  * @type {number}
  */
-export const NODE_CLASS_SNAP_DIST = 15;
+export const NODE_CLASS_SNAP_DIST = 25;
 
 export const TerminationNode = function () {
     LineNode.call(this);
@@ -94,7 +92,8 @@ TerminationNode.prototype.drop = function () {
     const classes = this.diagram.getComponentsByType("Class");
 
     for (const cl of classes) {
-        this.tryAttachToClass(cl);
+        if (this.tryAttachToClass(cl))
+            break;
     }
 }
 //endregion
@@ -104,12 +103,21 @@ TerminationNode.prototype.drop = function () {
  * Tries to attach the termination node to the specified class,
  * if the class is close enough.
  * @param attachTo {Class}
+ * @return {Boolean}
  */
 TerminationNode.prototype.tryAttachToClass = function (attachTo) {
-    this.attachedTo = attachTo;
     const clBounds = attachTo.bounds();
     const someGoodTea = clBounds.getClosestSideT(this.position);
-    this.position = someGoodTea.atPoint;
-    this.side = someGoodTea.side;
+
+    if (someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
+        // Actually attach the class.
+        this.attachedTo = attachTo;
+        this.position = someGoodTea.atPoint;
+        this.side = someGoodTea.side;
+
+        return true;
+    }
+
+    return false;
 }
 // endregion
