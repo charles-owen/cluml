@@ -23,9 +23,38 @@ export const Selection = function (view) {
      */
     let rect = null;
 
+    this.rightClick = function(x, y,  event) {
+        const touched = view.diagram.touch(x, y);
+        if (touched !== null) {
+            if (touched.paletteLbl == "Class")
+            {
+                event.preventDefault();
+                this.selected = [touched];
+                this.selected[0].enableAddPopup(true);
+            }
+        }
+        else {
+            // If we touch outside, we are clearing the selected if
+            // shift is not selected, and we start a selected rectangle
+            if (!event.shiftKey) {
+                this.selected = [];
+            }
+
+            rect = new Rect(x, y, x, y);
+        }
+    }
+
     this.mouseDown = function (x, y, event) {
         down = true;
         firstMove = true;
+
+        if (this.selected[0] != null)
+        {
+            if (this.selected[0].paletteLbl == "Class")
+            {
+                this.selected[0].enableAddPopup(false);
+            }
+        }
 
         /**
          * @type {Component}

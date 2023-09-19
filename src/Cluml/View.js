@@ -83,9 +83,8 @@ export const View = function(main, canvas, diagram) {
         }
 
         let contextMenuListener = (event) => {
-            event.preventDefault();
-
-            // TODO: Handle event.
+            this.selection.rightClick(mouse.x, mouse.y, event);
+            this.draw();
         }
 
         let touchStartListener = (event) => {

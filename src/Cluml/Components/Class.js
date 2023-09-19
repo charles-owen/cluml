@@ -1,6 +1,7 @@
 import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
 import {PaletteImage} from "../Graphics/PaletteImage";
+import {AddPopup} from "../UI/AddPopup";
 
 export const Class = function () {
     Component.call(this);
@@ -28,6 +29,8 @@ export const Class = function () {
      * @type{Array<String>}
      */
     this.operations = ["+operation1() :", "+operation2() :"];
+
+    this.addPopup = null;
 }
 
 Class.prototype = Object.create(Component.prototype);
@@ -79,6 +82,17 @@ Class.prototype.bounds = function () {
         this.y - this.height / 2,
         this.x + this.width / 2,
         this.y + this.height / 2);
+}
+
+Class.prototype.enableAddPopup = function (enable) {
+    if (enable)
+    {
+        this.addPopup = new AddPopup(this);
+    }
+    else
+    {
+        this.addPopup = null;
+    }
 }
 
 /**
@@ -137,6 +151,11 @@ Class.prototype.draw = function (context, view) {
             this.x - this.width / 2 + 5,
             this.y - this.height / 6 + (j * 16),
             this.width)
+    }
+
+    if (this.addPopup != null)
+    {
+        this.addPopup.draw(context, view, this.x, this.y);
     }
 }
 

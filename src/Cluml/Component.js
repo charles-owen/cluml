@@ -139,6 +139,8 @@ Component.prototype.mouseUp = function () {
 
 };
 
+
+
 /**
  * Called when a component is added to a diagram
  * @param diagram
@@ -195,6 +197,10 @@ Component.prototype.inRect = function (rect, collect) {
     //     out.selectRect(rect, collect);
     // });
 };
+
+Component.prototype.enableAddPopup = function(enable) {
+
+}
 
 Component.prototype.delete = function () {
     // let i;
