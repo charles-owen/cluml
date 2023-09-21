@@ -1,9 +1,11 @@
 import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
-import Selectable from "../../Selectable";
 import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
+import {Line} from "../../Utility/Line";
+
+export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
 export const Association = function () {
     Component.call(this);
@@ -95,7 +97,7 @@ Association.prototype.copyFrom = function (component) {
  * the component.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
- * @return {LineNode}
+ * @return {LineNode|null}
  */
 Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
@@ -271,7 +273,7 @@ Association.prototype.paletteImage = function () {
 
 //region Association Methods.
 /**
- * A generator that generates all the nodes of the association.
+ * A generator that generates (iterates) all the nodes of the association.
  * @return {Generator<LineNode, void, *>}
  */
 Association.prototype.nodeGenerator = function* () {
@@ -285,7 +287,7 @@ Association.prototype.nodeGenerator = function* () {
 }
 
 /**
- * A generator that generates all the edges of the association.
+ * A generator that generates (iterates) all the edges of the association.
  * @return {Generator<{from: LineNode, to: LineNode}, void, *>}
  */
 Association.prototype.edgeGenerator = function* () {
@@ -303,38 +305,69 @@ Association.prototype.edgeGenerator = function* () {
 /**
  * Creates a node line node near the point "near".
  * @param near {Vector}
- * @return {LineNode}
+ * @return {LineNode|null}
  */
 Association.prototype.createNodeNear = function (near) {
-    let node = this.nodes.start;
     /**
      * @type {{t: number, distance: number, pointOnLine: Vector}}
      */
-    let min = undefined;
-    let minNodes = undefined;
+    let minTDP = undefined;
+    let minEdge = undefined;
 
-    while (node !== this.nodes.end) {
-        const line = Selectable.lineBetween(node, node.nextNode);
-        const pn = line.pointNearest(near);
+    for (const edge of this.edgeGenerator()) {
+        const line = new Line(edge.from.position, edge.to.position);
+        const tdp = line.pointNearest(near);
 
-        if (min === undefined || min.distance > pn.distance) {
-            min = pn;
-            minNodes = {
-                from: node,
-                to: node.nextNode
+        if (tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
+            if (minTDP === undefined || tdp.distance < minTDP.distance) {
+                minTDP = tdp;
+                minEdge = edge;
             }
         }
+    }
 
-        node = node.nextNode;
+    if (minTDP !== undefined) {
+        // Now have the nearest point on the line.
+        let newNode = new LineNode();
+        newNode.association = this;
+        this.addChild(newNode, minTDP.pointOnLine);
+        newNode.insertBetween(minEdge.from, minEdge.to);
+
+        return newNode;
+    } else {
+        return null;
     }
 
 
-    // Now have the nearest point on the line.
-    let newNode = new LineNode();
-    newNode.association = this;
-    this.addChild(newNode, min.pointOnLine);
-    newNode.insertBetween(minNodes.from, minNodes.to);
-
-    return newNode;
+    // let node = this.nodes.start;
+    // /**
+    //  * @type {{t: number, distance: number, pointOnLine: Vector}}
+    //  */
+    // let min = undefined;
+    // let minNodes = undefined;
+    //
+    // while (node !== this.nodes.end) {
+    //     const line = Selectable.lineBetween(node, node.nextNode);
+    //     const pn = line.pointNearest(near);
+    //
+    //     if (min === undefined || min.distance > pn.distance) {
+    //         min = pn;
+    //         minNodes = {
+    //             from: node,
+    //             to: node.nextNode
+    //         }
+    //     }
+    //
+    //     node = node.nextNode;
+    // }
+    //
+    //
+    // // Now have the nearest point on the line.
+    // let newNode = new LineNode();
+    // newNode.association = this;
+    // this.addChild(newNode, min.pointOnLine);
+    // newNode.insertBetween(minNodes.from, minNodes.to);
+    //
+    // return newNode;
 }
 //endregion
