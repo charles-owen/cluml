@@ -120,7 +120,7 @@ export const Selection = function (view) {
                 rect.setRightBottom(x, y);
             } else {
                 for (let i = 0; i < this.selected.length; i++) {
-                    this.selected[i].move(dx, dy);
+                    this.selected[i].move(dx, dy, x, y);
                 }
             }
 

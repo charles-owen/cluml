@@ -61,21 +61,24 @@ Selectable.prototype.selectStyle = function (context, view) {
  * Start of the dragging process
  */
 Selectable.prototype.grab = function () {
-    this.moveX = this.x;
-    this.moveY = this.y;
+    this.movedFrom = new Vector(this.x, this.y);
+    this.moveX = 0;
+    this.moveY = 0;
 };
 
 /**
  * Moves this selectable.
- * @param dx {number}
- * @param dy {number}
+ * @param dx {number} The cursor delta x position.
+ * @param dy {number} The cursor delta y position.
+ * @param x {number} The cursor x position.
+ * @param y {number} The cursor y position.
  */
-Selectable.prototype.move = function (dx, dy) {
+Selectable.prototype.move = function (dx, dy, x, y) {
     this.moveX += dx;
     this.moveY += dy;
 
-    this.x = this.moveX;
-    this.y = this.moveY;
+    this.x += dx;
+    this.y += dy;
 
     if (this.diagram !== null) {
         this.diagram.snapIt(this);
@@ -99,6 +102,7 @@ Selectable.prototype.delete = function () {
  * Called when this selectable is dropped.
  */
 Selectable.prototype.drop = function () {
+
 };
 
 /**

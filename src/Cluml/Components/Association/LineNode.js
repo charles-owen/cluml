@@ -202,6 +202,29 @@ LineNode.prototype.touch = function (x, y) {
     return null;
 }
 
+/**
+ * Start of the dragging process
+ */
+LineNode.prototype.grab = function () {
+    Selectable.prototype.grab.call(this);
+    this.touched = true;
+}
+
+LineNode.prototype.move = function (dx, dy, x, y) {
+    this.moveX += dx;
+    this.moveY += dy;
+    this.x += dx;
+    // const delta = Vector.sub(this.position, this.movedFrom);
+    //
+    // if (Math.abs(delta.x) > Math.abs(delta.y)) {
+    //     this.x = this.moveX;
+    //     this.y = this.movedFrom.y;
+    // } else {
+    //     this.x = this.movedFrom.x;
+    //     this.y = this.moveY;
+    // }
+}
+
 LineNode.prototype.drop = function () {
     Selectable.prototype.drop.call(this);
 
@@ -267,14 +290,6 @@ LineNode.prototype.loadComponent = function (obj) {
 LineNode.prototype.paletteImage = function () {
     // TODO: Implement (not needed lol).
     return null;
-}
-
-/**
- * Start of the dragging process
- */
-LineNode.prototype.grab = function () {
-    Selectable.prototype.grab.call(this);
-    this.touched = true;
 }
 //endregion
 

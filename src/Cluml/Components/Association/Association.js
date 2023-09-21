@@ -4,6 +4,7 @@ import {Rect} from "../../Utility/Rect";
 import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
+import Selectable from "../../Selectable";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -132,6 +133,8 @@ Association.prototype.touch = function (x, y) {
 // }
 
 Association.prototype.drop = function () {
+    Selectable.prototype.drop.call(this);
+
     if (!this.placedOnCanvas) {
         // Instantiate placements.
         const pos = this.position;
