@@ -50,8 +50,10 @@ export const Selection = function (view) {
 
         if (this.selected[0] != null)
         {
+            // Last mouse down (right-click) was on a class
             if (this.selected[0].paletteLbl == "Class")
             {
+                this.selected[0].tryTouchAddPopup(x,y);
                 this.selected[0].enableAddPopup(false);
             }
         }

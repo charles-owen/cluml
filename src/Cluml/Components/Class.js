@@ -10,7 +10,7 @@ export const Class = function () {
      * Component height.
      * @type {number}
      */
-    this.height = 150;
+    this.height = 100;
 
     /**
      * Component width.
@@ -31,6 +31,13 @@ export const Class = function () {
     this.operations = ["+operation1() :", "+operation2() :"];
 
     this.addPopup = null;
+
+    this.nameHeight = 30;
+    this.attributesHeight = 40;
+    this.operationsHeight = 40;
+
+    //this doesn't actually control font its just what it seemed to be hardcoded into
+    this.fontHeight = 16;
 }
 
 Class.prototype = Object.create(Component.prototype);
@@ -72,6 +79,14 @@ Class.prototype.touch = function (x, y) {
 
     return null;
 }
+
+Class.prototype.tryTouchAddPopup = function(x,y) {
+    if (this.addPopup != null)
+    {
+        return this.addPopup.touch(x,y);
+    }
+    return null;
+}
 /**
  * Returns the bounds of the Class, used to ensure the
  * object remains on screen.
@@ -102,26 +117,31 @@ Class.prototype.enableAddPopup = function (enable) {
  * @param view {View} View object
  */
 Class.prototype.draw = function (context, view) {
+    this.height = this.nameHeight + this.attributesHeight + this.operationsHeight;
     this.selectStyle(context, view);
 
     context.beginPath();
     context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";
-    // Name rect
+
+    // Class Name rect
     context.rect(
-        this.x - this.width / 2 - 0.5,
-        this.y - this.height / 3 - 0.5,
-        this.width, this.height / 3);
-    // Attributes rect
+        this.x - this.width / 2,
+        this.y - this.height,
+        this.width, this.nameHeight);
+
+    // Attribute rect
     context.rect(
-        this.x - this.width / 2 - 0.5,
-        this.y - 2 * this.height / 3 - 0.5,
-        this.width, 2 * this.height / 3);
+        this.x - this.width / 2,
+        this.y - this.height + this.nameHeight,
+        this.width, this.attributesHeight);
+
     // Operations rect
     context.rect(
-        this.x - this.width / 2 - 0.5,
-        this.y - this.height - 0.5,
-        this.width, this.height / 3);
+        this.x - this.width / 2,
+        this.y - this.height + this.nameHeight + this.attributesHeight,
+        this.width, this.operationsHeight);
+
     context.fill();
     context.stroke();
 
@@ -134,14 +154,14 @@ Class.prototype.draw = function (context, view) {
 
     this.drawName(context,
         0,
-        0 - this.height * (5 / 6));
+        0 - this.height + 20);
 
     context.textAlign = "left"
     // Attributes text
     for(let i = 0; i < this.attributes.length; i++) {
         context.fillText(this.attributes[i],
             this.x - this.width / 2 + 5,
-            this.y - this.height / 2 + (i * 16),
+            this.y - this.height + this.nameHeight + (i * this.fontHeight) + 15,
             this.width)
     }
 
@@ -149,7 +169,7 @@ Class.prototype.draw = function (context, view) {
     for(let j = 0; j < this.operations.length; j++) {
         context.fillText(this.operations[j],
             this.x - this.width / 2 + 5,
-            this.y - this.height / 6 + (j * 16),
+            this.y - this.height + this.nameHeight + this.attributesHeight + (j * this.fontHeight) + 15,
             this.width)
     }
 
@@ -210,6 +230,7 @@ Class.prototype.paletteImage = function() {
  */
 Class.prototype.addAttribute = function(attribute) {
     this.attributes.push(attribute)
+    this.attributesHeight += this.fontHeight;
 }
 
 /**
