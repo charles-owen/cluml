@@ -3,6 +3,7 @@ import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
+import {Class} from "../Class";
 
 /**
  * Determines the radius around the node at which
@@ -210,20 +211,19 @@ LineNode.prototype.grab = function () {
     this.touched = true;
 }
 
-LineNode.prototype.move = function (dx, dy, x, y) {
-    this.moveX += dx;
-    this.moveY += dy;
-    this.x += dx;
-    // const delta = Vector.sub(this.position, this.movedFrom);
-    //
-    // if (Math.abs(delta.x) > Math.abs(delta.y)) {
-    //     this.x = this.moveX;
-    //     this.y = this.movedFrom.y;
-    // } else {
-    //     this.x = this.movedFrom.x;
-    //     this.y = this.moveY;
-    // }
-}
+// LineNode.prototype.move = function (dx, dy, x, y) {
+//     Selectable.prototype.move.call(this, dx, dy, x, y);
+//     const cursorPos = new Vector(x,y);
+//     const delta = Vector.sub(cursorPos, this.movedFrom);
+//
+//     if (Math.abs(delta.x) > Math.abs(delta.y)) {
+//         this.x = this.moveX;
+//         this.y = this.movedFrom.y;
+//     } else {
+//         this.x = this.movedFrom.x;
+//         this.y = this.moveY;
+//     }
+// }
 
 LineNode.prototype.drop = function () {
     Selectable.prototype.drop.call(this);
@@ -234,17 +234,6 @@ LineNode.prototype.drop = function () {
         this.remove();
         this.delete();
     }
-
-    // if (this.association != null) {
-    //     for (const node of this.association.nodeGenerator()) {
-    //         if (node !== this && Vector.distance(this.position, node.position) < 5) {
-    //             // Delete this node.
-    //             this.remove();
-    //             this.delete();
-    //             return;
-    //         }
-    //     }
-    // }
 }
 
 /**
@@ -259,17 +248,19 @@ LineNode.prototype.bounds = function () {
     )
 }
 
-/**
- * Draws the LineNode object.
- *
- * @param context {CanvasRenderingContext2D} Display context
- * @param view {View} View object
- */
-LineNode.prototype.draw = function (context, view) {
-    this.selectStyle(context, view);
-
-    // TODO: Implement.
-}
+// /**
+//  * Draws the LineNode object.
+//  *
+//  * @param context {CanvasRenderingContext2D} Display context
+//  * @param view {View} View object
+//  */
+// LineNode.prototype.draw = function (context, view) {
+//     Component.prototype.draw.call(this, context, view);
+//
+//     this.selectStyle(context, view);
+//
+//     // TODO: Implement.
+// }
 
 
 LineNode.prototype.saveComponent = function () {

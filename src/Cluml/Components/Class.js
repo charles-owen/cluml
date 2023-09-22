@@ -2,6 +2,7 @@ import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
 import {PaletteImage} from "../Graphics/PaletteImage";
 import {AddPopup} from "../UI/AddPopup";
+import Vector from "../Utility/Vector";
 
 export const Class = function () {
     Component.call(this);
@@ -10,7 +11,11 @@ export const Class = function () {
      * Component height.
      * @type {number}
      */
-    this.height = 100;
+    Object.defineProperty(this, 'height', {
+        get: function () {
+            return this.nameHeight + this.attributesHeight + this.operationsHeight;
+        }
+    })
 
     /**
      * Component width.
@@ -18,11 +23,17 @@ export const Class = function () {
      */
     this.width = 200;
 
+    Object.defineProperty(this, 'size', {
+        get: function () {
+            return new Vector(this.width, this.height);
+        }
+    })
+
     /**
      * The array of attributes.
      * @type{Array<String>}
      */
-    this.attributes = ["-attribute1 :", "-attribute2 :"];
+    this.attributes = ["-attribute1 :", "-attribute2 :", "-attribute3 :", "-attribute4 :"];
 
     /**
      * The array of operations.
@@ -32,12 +43,59 @@ export const Class = function () {
 
     this.addPopup = null;
 
-    this.nameHeight = 30;
-    this.attributesHeight = 40;
-    this.operationsHeight = 40;
-
     //this doesn't actually control font its just what it seemed to be hardcoded into
-    this.fontHeight = 16;
+    this.fontHeight = 14;
+
+    Object.defineProperty(this, 'lineHeight', {
+        get: function() {
+            return this.fontHeight * 1.5;
+        }
+    });
+
+    Object.defineProperty(this, 'nameHeight', {
+        get: function () {
+            return this.fontHeight * 2.5;
+        }
+    });
+
+    Object.defineProperty(this, 'nameBounds', {
+        get: function () {
+            return Rect.fromTopAndSize(
+                new Vector(this.x, this.y),
+                new Vector(this.width, this.nameHeight)
+            )
+        }
+    });
+
+    Object.defineProperty(this, 'attributesHeight', {
+        get: function () {
+            return this.lineHeight * this.attributes.length;
+        }
+    });
+
+    Object.defineProperty(this, 'attributesBounds', {
+        get: function () {
+            return Rect.fromTopAndSize(
+                new Vector(this.x, this.y + this.nameHeight),
+                new Vector(this.width, this.attributesHeight)
+            )
+        }
+    });
+
+    Object.defineProperty(this, 'operationsHeight', {
+        get: function () {
+            return this.lineHeight * this.operations.length;
+        }
+    });
+
+    Object.defineProperty(this, 'operationsBounds', {
+        get: function () {
+            return Rect.fromTopAndSize(
+                new Vector(this.x, this.y + this.nameHeight + this.attributesHeight),
+                new Vector(this.width, this.operationsHeight)
+            )
+        }
+    });
 }
 
 Class.prototype = Object.create(Component.prototype);
@@ -56,7 +114,8 @@ Class.prototype.paletteOrder = 1;
  * @param component {Class}
  */
 Class.prototype.copyFrom = function (component) {
-    this.height = component.height;
+    this.operations = component.operations;
+    this.attributes = component.attributes;
     this.width = component.width;
     Component.prototype.copyFrom.call(this, component);
 }
@@ -70,20 +129,16 @@ Class.prototype.copyFrom = function (component) {
  */
 Class.prototype.touch = function (x, y) {
     // Have we touched the component itself?
-    if (x >= this.x - this.width / 2 &&
-        x <= this.x + this.width / 2 &&
-        y >= this.y - this.height &&
-        y <= this.y) {
+    if (this.bounds().contains(x, y)) {
         return this;
     }
 
     return null;
 }
 
-Class.prototype.tryTouchAddPopup = function(x,y) {
-    if (this.addPopup != null)
-    {
-        return this.addPopup.touch(x,y);
+Class.prototype.tryTouchAddPopup = function (x, y) {
+    if (this.addPopup != null) {
+        return this.addPopup.touch(x, y);
     }
     return null;
 }
@@ -93,19 +148,15 @@ Class.prototype.tryTouchAddPopup = function(x,y) {
  * @return {Rect}
  */
 Class.prototype.bounds = function () {
-    return new Rect(this.x - this.width / 2,
-        this.y - this.height / 2,
-        this.x + this.width / 2,
-        this.y + this.height / 2);
+    return Rect.fromTopAndSize(
+        this.position, this.size
+    );
 }
 
 Class.prototype.enableAddPopup = function (enable) {
-    if (enable)
-    {
+    if (enable) {
         this.addPopup = new AddPopup(this);
-    }
-    else
-    {
+    } else {
         this.addPopup = null;
     }
 }
@@ -117,30 +168,23 @@ Class.prototype.enableAddPopup = function (enable) {
  * @param view {View} View object
  */
 Class.prototype.draw = function (context, view) {
-    this.height = this.nameHeight + this.attributesHeight + this.operationsHeight;
     this.selectStyle(context, view);
+
+    const bounds = this.bounds();
 
     context.beginPath();
     context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";
 
     // Class Name rect
-    context.rect(
-        this.x - this.width / 2,
-        this.y - this.height,
-        this.width, this.nameHeight);
+    this.nameBounds.contextRect(context);
 
     // Attribute rect
-    context.rect(
-        this.x - this.width / 2,
-        this.y - this.height + this.nameHeight,
-        this.width, this.attributesHeight);
+    this.attributesBounds.contextRect(context);
 
     // Operations rect
-    context.rect(
-        this.x - this.width / 2,
-        this.y - this.height + this.nameHeight + this.attributesHeight,
-        this.width, this.operationsHeight);
+    this.operationsBounds.contextRect(context);
+
 
     context.fill();
     context.stroke();
@@ -150,46 +194,53 @@ Class.prototype.draw = function (context, view) {
         this.naming = "ClassName"
     }
 
-    context.fillStyle = "#000000";
 
+    // Naming text
+    context.fillStyle = "#000000";
     this.drawName(context,
         0,
-        0 - this.height + 20);
+        this.fontHeight * 1.5);
 
     context.textAlign = "left"
+
     // Attributes text
-    for(let i = 0; i < this.attributes.length; i++) {
+    let fromTop = this.nameHeight + this.fontHeight;
+    for (let i = 0; i < this.attributes.length; i++) {
         context.fillText(this.attributes[i],
             this.x - this.width / 2 + 5,
-            this.y - this.height + this.nameHeight + (i * this.fontHeight) + 15,
+            this.y + fromTop + i * this.lineHeight,
             this.width)
     }
 
     // Operations text
-    for(let j = 0; j < this.operations.length; j++) {
+    fromTop += this.attributesHeight;
+    for (let j = 0; j < this.operations.length; j++) {
         context.fillText(this.operations[j],
             this.x - this.width / 2 + 5,
-            this.y - this.height + this.nameHeight + this.attributesHeight + (j * this.fontHeight) + 15,
+            this.y + fromTop + j * this.lineHeight,
             this.width)
     }
 
-    if (this.addPopup != null)
-    {
+    if (this.addPopup != null) {
         this.addPopup.draw(context, view, this.x, this.y);
     }
+
+    Component.prototype.draw.call(this, context, view);
 }
 
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
-    obj.size = this.height;
-    obj.bus = this.width;
+    obj.attributes = this.attributes;
+    obj.operations = this.operations;
+    obj.width = this.width;
     return obj;
 }
 
 Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 
-    this.height = +obj["height"];
+    this.attributes = obj.attributes;
+    this.operations = obj.operations;
     this.width = +obj["width"];
 }
 
@@ -201,8 +252,8 @@ Class.prototype.drop = function () {
         this.x = this.width / 2;
     }
 
-    if (this.y < this.height / 2) {
-        this.y = this.height / 2;
+    if (this.y < 0) {
+        this.y = 0;
     }
 };
 
@@ -210,7 +261,7 @@ Class.prototype.drop = function () {
  * Create a PaletteImage object for the component
  * @returns {PaletteImage}
  */
-Class.prototype.paletteImage = function() {
+Class.prototype.paletteImage = function () {
     // let size=16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
@@ -228,7 +279,7 @@ Class.prototype.paletteImage = function() {
 /**
  * Add an attribute to this Class
  */
-Class.prototype.addAttribute = function(attribute) {
+Class.prototype.addAttribute = function (attribute) {
     this.attributes.push(attribute)
     this.attributesHeight += this.fontHeight;
 }
@@ -236,6 +287,6 @@ Class.prototype.addAttribute = function(attribute) {
 /**
  * Add an operation to this Class
  */
-Class.prototype.addOperation = function(operation) {
+Class.prototype.addOperation = function (operation) {
     this.operations.push(operation)
 }

@@ -113,6 +113,18 @@ Rect.prototype.expandXY = function (x, y) {
 }
 
 /**
+ * Moves the rectangle.
+ * @param x {number}
+ * @param y {number}
+ */
+Rect.prototype.moveXY = function (x, y) {
+    this.left += x;
+    this.right += x;
+    this.top += y;
+    this.bottom += y;
+}
+
+/**
  * Returns a side of the rectangle. The points that make up each line will be
  * ordered in a clockwise fashion.
  * The north side is [0, 1), east is [1, 2), south is [2, 3),
@@ -143,7 +155,7 @@ Rect.prototype.getSide = function (side) {
         case 3:
             return new Line(
                 new Vector(this.left, this.bottom),
-                new Vector(this.right, this.bottom)
+                new Vector(this.left, this.top)
             );
     }
 }
@@ -186,8 +198,20 @@ Rect.prototype.getClosestSideT = function (point) {
  * Draws this rectangle in context.
  * @param context {CanvasRenderingContext2D} Display context
  */
-Rect.prototype.drawRect = function (context) {
+Rect.prototype.fillRect = function (context) {
     context.fillRect(
+        this.left, this.top,
+        this.right - this.left,
+        this.bottom - this.top
+    );
+}
+
+/**
+ * Creates a context rectangle.
+ * @param context {CanvasRenderingContext2D} Display context
+ */
+Rect.prototype.contextRect = function (context) {
+    context.rect(
         this.left, this.top,
         this.right - this.left,
         this.bottom - this.top
@@ -218,6 +242,32 @@ Rect.fromCenterAndExtents = function (center, extents) {
         center.y + extents.y,
         center.x + extents.x,
         center.y - extents.y,
+    )
+}
+
+/**
+ * Creates a new rectangle from a top point and a size (width, height).
+ * @param topPoint {Vector}
+ * @param size {Vector}
+ * @returns {Rect}
+ */
+Rect.fromTopAndSize = function (topPoint, size) {
+    return this.fromTopAndExtents(
+        topPoint, Vector.scale(size, 0.5)
+    )
+}
+
+/**
+ * Creates a new rectangle from a top point and an extents (which is half
+ * of its size).
+ * @param topPoint {Vector}
+ * @param extents {Vector}
+ * @returns {Rect}
+ */
+Rect.fromTopAndExtents = function (topPoint, extents) {
+    return this.fromCenterAndExtents(
+        new Vector(topPoint.x, topPoint.y + extents.y),
+        extents
     )
 }
 

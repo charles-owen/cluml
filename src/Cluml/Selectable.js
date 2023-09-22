@@ -13,13 +13,31 @@ export const Selectable = function () {
 
     Object.defineProperty(this, 'position', {
         get: function () {
-            return new vector(this.x, this.y);
+            return new Vector(this.x, this.y);
         },
         set: function (point) {
             this.x = point.x;
             this.y = point.y;
         }
     });
+
+    Object.defineProperty(this, 'moveDelta', {
+        /**
+         * Returns the move delta.
+         * @return {Vector}
+         */
+        get: function () {
+            return new Vector(this.moveX, this.moveY);
+        },
+        /**
+         * Sets the move delta.
+         * @param point {Vector}
+         */
+        set: function (point) {
+            this.moveY = point.y;
+            this.moveX = point.x;
+        }
+    })
 
     this.moveX = 0;             // Position of the selectable while moving
     this.moveY = 0;

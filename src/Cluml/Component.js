@@ -4,6 +4,26 @@ import {ComponentPropertiesDlg} from './Dlg/ComponentPropertiesDlg';
 import DOMPurify from 'dompurify';
 import {Rect} from "./Utility/Rect";
 
+//region Constants
+/**
+ * The default font for the drawName function.
+ * @type {string}
+ */
+const NAME_FONT = "14px Times";
+
+/**
+ * The default font for the drawText function.
+ * @type {string}
+ */
+const CONTENT_FONT = "14px Times";
+
+/**
+ * If true, then show the bounds of the component.
+ * @type {boolean}
+ */
+const DEBUG_BOUNDS = true;
+//endregion
+
 /**
  * Base object for a component in a diagram.
  * @constructor
@@ -49,6 +69,7 @@ Component.prototype = Object.create(Selectable.prototype);
 Component.prototype.constructor = Component;
 
 
+//region Variables
 /**
  * Prefix for component naming
  * @type {string}
@@ -116,6 +137,7 @@ Component.prototype.paletteOrder = -1;
  * @type {number}
  */
 Component.maxId = 1000;
+//endregion
 
 /**
  * Copies from another component
@@ -232,7 +254,10 @@ Component.prototype.bounds = function () {
  * @param view View object
  */
 Component.prototype.draw = function (context, view) {
-    throw Error("Not implemented");
+    if (DEBUG_BOUNDS) {
+        context.fillStyle = "rgba(231,89,89,0.25)";
+        this.bounds().fillRect(context);
+    }
 }
 
 /**
@@ -402,7 +427,7 @@ Component.prototype.drawName = function (context, x, y, font) {
     // Name
     if (this.naming !== null) {
         context.beginPath();
-        context.font = font !== undefined ? font : "14px Times";
+        context.font = font !== undefined ? font : NAME_FONT;
         context.textAlign = "center";
         context.fillText(this.naming, this.x + x, this.y + y);
         context.stroke();
@@ -419,7 +444,7 @@ Component.prototype.drawName = function (context, x, y, font) {
  */
 Component.prototype.drawText = function (context, text, x, y, font) {
     context.beginPath();
-    context.font = font !== undefined ? font : "14px Times";
+    context.font = font !== undefined ? font : CONTENT_FONT;
     context.textAlign = "center";
     context.fillText(text, this.x + x, this.y + y);
     context.stroke();
