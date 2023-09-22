@@ -44,9 +44,28 @@ export const Selection = function (view) {
         }
     }
 
+    this.doubleTap = function(x,y, event)
+    {
+        const touched = view.diagram.touch(x, y);
+        if (touched !== null) {
+            if (touched.paletteLbl == "Class")
+            {
+                event.preventDefault();
+                this.selected = [touched];
+                this.selected[0].enableAddPopup(true);
+            }
+        }
+    }
+
     this.mouseDown = function (x, y, event) {
         down = true;
         firstMove = true;
+
+        if (event.touches != null) {
+            if (event.touches.length == 2) {
+                down = true;
+            }
+        }
 
         if (this.selected[0] != null)
         {

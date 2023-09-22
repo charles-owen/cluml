@@ -74,7 +74,8 @@ AddPopup.prototype.touch = function (x, y) {
         }
         else
         {
-            //delete
+            //delete this class
+            this.component.delete();
         }
         return this;
     }

@@ -87,9 +87,9 @@ export const View = function(main, canvas, diagram) {
             this.draw();
         }
 
+        let lastTap;
         let touchStartListener = (event) => {
             event.preventDefault();
-
             let touch = event.changedTouches[0];
             downListener(touch.pageX, touch.pageY, true, event);
         }
@@ -103,13 +103,23 @@ export const View = function(main, canvas, diagram) {
             lastMouse.x = mouse.x;
             lastMouse.y = mouse.y;
 
+            if (lastTap === undefined) { lastTap = new Date().getTime(); }
+            let now = new Date().getTime();
+            let timeBetween = now - lastTap;
+            if((timeBetween < 700) && (timeBetween > 0)){
+                // double tap
+                this.selection.doubleTap(mouse.x, mouse.y, event);
+                return;
+            }
+
+            lastTap = new Date().getTime();
+
             // If we are in inline mode, we don't allow selecting
             // or dragging at all.
             if(main.options.display === 'inline') {
                 this.diagram.touch(mouse.x, mouse.y);
                 return;
             }
-
 
             this.selection.mouseDown(mouse.x, mouse.y, event);
             this.draw();
