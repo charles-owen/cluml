@@ -5,6 +5,7 @@ import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import Selectable from "../../Selectable";
+import {Class} from "../Class";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -177,6 +178,8 @@ Association.prototype.bounds = function () {
  * @param view {View} View object
  */
 Association.prototype.draw = function (context, view) {
+    Component.prototype.draw.call(this, context, view);
+
     // // Delete line nodes that may have been undoned.
     // for (const selfNode of this.nodeGenerator()) {
     //     if (selfNode.fileLbl === "LineNode") {
@@ -216,7 +219,7 @@ Association.prototype.draw = function (context, view) {
 
     context.fillStyle = 'rgba(255,156,0,0.3)';
     const bnds = this.bounds();
-    bnds.drawRect(context);
+    bnds.fillRect(context);
     // endregion
 
     while (node !== this.nodes.end) {

@@ -109,7 +109,9 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo) {
     const clBounds = attachTo.bounds();
     const someGoodTea = clBounds.getClosestSideT(this.position);
 
-    if (someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
+    if (attachTo.bounds().contains(this.x, this.y) ||
+        someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
+
         // Actually attach the class.
         this.attachedTo = attachTo;
         this.position = someGoodTea.atPoint;
