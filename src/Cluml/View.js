@@ -87,13 +87,13 @@ export const View = function(main, canvas, diagram) {
             this.draw();
         }
 
-        let lastTap;
         let touchStartListener = (event) => {
             event.preventDefault();
             let touch = event.changedTouches[0];
             downListener(touch.pageX, touch.pageY, true, event);
         }
 
+        let lastTap;
         let downListener = (pageX, pageY, touch, event) => {
 
             let offset = Tools.offset(canvas);

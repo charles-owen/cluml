@@ -61,12 +61,6 @@ export const Selection = function (view) {
         down = true;
         firstMove = true;
 
-        if (event.touches != null) {
-            if (event.touches.length == 2) {
-                down = true;
-            }
-        }
-
         if (this.selected[0] != null)
         {
             // Last mouse down (right-click) was on a class
