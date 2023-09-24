@@ -1,10 +1,11 @@
 import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
-import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
+import {LineNode} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {MainSingleton} from "../../MainSingleton";
+import Selectable from "../../Selectable";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -47,14 +48,6 @@ class NodeData {
      */
     #association = undefined;
 
-    get start() {
-        return this.#start;
-    }
-
-    get end() {
-        return this.#end;
-    }
-
     //region Constructor
     /**
      * Instantiates the start and end nodes.
@@ -70,6 +63,14 @@ class NodeData {
         this.link(association);
     }
 
+    get start() {
+        return this.#start;
+    }
+
+    get end() {
+        return this.#end;
+    }
+
     /**
      * Links start and end nodes with the association.
      * @param association {Association}
@@ -79,6 +80,7 @@ class NodeData {
         this.start.association = association;
         this.end.association = association;
     }
+
     //endregion
 
     saveNodeData() {
@@ -194,6 +196,19 @@ Association.prototype.touch = function (x, y) {
 //     } while (node !== null);
 // }
 
+Association.prototype.isSelected = function (other) {
+    if (Selectable.prototype.isSelected.call(this, other)) {
+        return true;
+    } else {
+        for (const node of this.nodeGenerator()) {
+            if (node === other)
+                return true;
+        }
+    }
+
+    return false;
+}
+
 /**
  * Returns the largest bounds this association displaces.
  * @return {Rect}
@@ -237,26 +252,18 @@ Association.prototype.draw = function (context, view) {
 
     // Draw the line.
     context.beginPath();
-    context.strokeStyle = "#000000";
-
-    this.nodes.start.draw(context, view);
 
     for (const edge of this.edgeGenerator()) {
         context.moveTo(edge.from.x, edge.from.y);
+        context.lineTo(edge.from.x, edge.to.y);
         context.lineTo(edge.to.x, edge.to.y);
-
-        edge.to.draw(context, view);
     }
 
-    // context.rect(
-    //     this.x, this.y,
-    //     100, 100
-    // );
-
-    // context.moveTo(this.nodes.start.x, this.nodes.start.y);
-    // context.lineTo(this.nodes.end.x, this.nodes.end.y);
-    context.fill();
     context.stroke();
+
+    for (const node of this.nodeGenerator()) {
+        node.draw(context, view);
+    }
 }
 
 Association.prototype.saveComponent = function () {
@@ -271,14 +278,6 @@ Association.prototype.loadComponent = function (obj) {
 
     // this.nodes.loadFromIDs(this.diagram, obj.startNodeID, obj.endNodeID);
 }
-
-// /**
-//  * Call the termination node to draw the PaletteItem to the palette
-//  * @returns {PaletteImage}
-//  */
-// Association.prototype.paletteImage = function () {
-//     return this.nodes.end.paletteImage();
-// }
 
 //endregion
 
@@ -326,13 +325,21 @@ Association.prototype.createNodeNear = function (near) {
     let minEdge = undefined;
 
     for (const edge of this.edgeGenerator()) {
-        const line = new Line(edge.from.position, edge.to.position);
-        const tdp = line.pointNearest(near);
+        const middle = new Vector(edge.from.x, edge.to.y);
 
-        if (tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
-            if (minTDP === undefined || tdp.distance < minTDP.distance) {
-                minTDP = tdp;
-                minEdge = edge;
+        const lines = [
+            new Line(edge.from.position, middle),
+            new Line(middle, edge.to.position)
+        ];
+
+        for (const line of lines) {
+            const tdp = line.pointNearest(near);
+
+            if (tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
+                if (minTDP === undefined || tdp.distance < minTDP.distance) {
+                    minTDP = tdp;
+                    minEdge = edge;
+                }
             }
         }
     }
@@ -343,6 +350,7 @@ Association.prototype.createNodeNear = function (near) {
         MainSingleton.singleton.backup();
 
         const newNode = new LineNode();
+        newNode.association = this;
         newNode.position = minTDP.pointOnLine;
         newNode.insertBetween(minEdge.from, minEdge.to);
 

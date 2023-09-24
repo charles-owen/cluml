@@ -21,7 +21,7 @@ export const CONTENT_FONT = "14px Times";
  * If true, then show the bounds of the component.
  * @type {boolean}
  */
-export const DEBUG_BOUNDS = true;
+export const DEBUG_BOUNDS = false;
 //endregion
 
 /**

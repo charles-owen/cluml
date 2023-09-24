@@ -63,6 +63,15 @@ Selectable.prototype.single = function () {
     return false;
 };
 
+/**
+ * Evaluates whether other is selected.
+ * @param other {Selectable}
+ * @return {boolean}
+ */
+Selectable.prototype.isSelected = function (other) {
+    return this === other;
+}
+
 Selectable.prototype.selectStyle = function (context, view) {
     if (view.selection.isSelected(this)) {
         context.strokeStyle = this.selectedStyle;

@@ -10,7 +10,7 @@ export const Selection = function (view) {
 
     /**
      * Maintains a list of the currently selected components.
-     * @type {Component[]}
+     * @type {Selectable[]}
      */
     this.selected = [];
 
@@ -48,7 +48,7 @@ export const Selection = function (view) {
     {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            if (touched.paletteLbl == "Class")
+            if (touched.paletteLbl === "Class")
             {
                 event.preventDefault();
                 this.selected = [touched];
@@ -185,18 +185,14 @@ export const Selection = function (view) {
     }
 
     /**
-     * Is this component currently selected?
-     * @param component Component to test
+     * Is this selectable currently selected?
+     * @param selectable {Selectable} Selectable to test
      * @returns {boolean} true if selected.
      */
-    this.isSelected = function (component) {
-        for (let i = 0; i < this.selected.length; i++) {
-            if (component === this.selected[i]) {
-                return true;
-            }
-        }
-
-        return false;
+    this.isSelected = function (selectable) {
+        return this.selected.some(function (other) {
+            return selectable.isSelected(other);
+        });
     };
 
     this.draw = function (context) {

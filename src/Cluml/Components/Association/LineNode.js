@@ -49,6 +49,8 @@ export const LineNode = function () {
         }
     });
     //endregion
+
+    this.selectedStyle = "rgba(255,0,0,0.5)";
 }
 
 LineNode.prototype = Object.create(Selectable.prototype);
@@ -126,14 +128,6 @@ LineNode.prototype.copyFrom = function (selectable) {
     //     this.nextNode.copyFrom(selectable.nextNode);
     // }
     Selectable.prototype.copyFrom.call(this, selectable);
-}
-
-LineNode.prototype.added = function (diagram, parent) {
-    Selectable.prototype.added.call(this, diagram, parent);
-
-    if (parent !== undefined) {
-        this.association = parent;
-    }
 }
 
 /**
@@ -215,8 +209,14 @@ LineNode.prototype.draw = function (context, view) {
 
     this.selectStyle(context, view);
 
+    if (view.selection.isSelected(this)) {
+        context.beginPath();
+        context.arc(this.x, this.y, NODE_TOUCH_RADIUS, 0, 2 * Math.PI, true);
+        context.fill();
+    }
+
     if (DEBUG_BOUNDS) {
-        context.fillStyle = 'rgba(255,0,0,0.5)';
+        context.fillStyle = this.selectedStyle;
         context.fillRect(
             this.x - NODE_TOUCH_RADIUS,
             this.y - NODE_TOUCH_RADIUS,
