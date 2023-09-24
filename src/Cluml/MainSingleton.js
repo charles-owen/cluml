@@ -47,6 +47,15 @@ export class MainSingleton {
     }
 
     /**
+     * Returns all components that exist
+     * within the current diagram.
+     * {Array<Component>}
+     */
+    get allCurrentComponents() {
+        return this.currentDiagram.components;
+    }
+
+    /**
      * Returns all components of the specified type that exist
      * within the current diagram.
      * @param type {string}

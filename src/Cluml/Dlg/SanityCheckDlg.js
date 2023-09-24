@@ -1,4 +1,6 @@
 import {Dialog} from './Dialog';
+import {SanityElement} from "../SanityElement/SanityElement";
+import {MainSingleton} from "../MainSingleton";
 
 /**
  * Sanity Check dialog box.
@@ -29,9 +31,21 @@ export const SanityCheckDlg = function(main) {
 
             if (!isAlphaNumeric(element.naming))
             {
-                errors += `<li>Class ${element.naming} is not alphanumeric</li>`;
+                errors += `<li>Class ${element.naming} is not alphanumeric</li>`
+                errorCount++;
             }
         }
+
+        const testComps = MainSingleton.singleton.allCurrentComponents;
+
+        for (const element of SanityElement.getAllSanityElements()) {
+            const msg = element.processSanityCheck()
+            if (msg !== '') {
+                errors += `<li>${msg}</li>`;
+                errorCount++;
+            }
+        }
+
         content += `<h2>(${errorCount}) errors have been detected</h2>`;
         content += `<ul>${errors}</ul>`;
 

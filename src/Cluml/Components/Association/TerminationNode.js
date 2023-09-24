@@ -3,6 +3,7 @@ import {PaletteImage} from "../../Graphics/PaletteImage";
 import Selectable from "../../Selectable";
 import {Class} from "../Class";
 import {MainSingleton} from "../../MainSingleton";
+import {Multiplicity} from "../../SanityElement/Multiplicity";
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -18,7 +19,7 @@ export const TerminationNode = function () {
      * The multiplicity value.
      * @type {Multiplicity}
      */
-    this.multiplicityValue = null;
+    this.multiplicityValue = new Multiplicity('2.........7');
 
     /**
      * The attribute label.

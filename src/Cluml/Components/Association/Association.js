@@ -10,18 +10,34 @@ export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
 export const Association = function () {
     Component.call(this);
+
+    /**
+     *
+     * @return {Generator<SanityElement, void, *>}
+     */
+    this.forwardSanityCheck = function* () {
+        if (this.nodes !== undefined) {
+            if (this.nodes.start !== null) {
+                yield this.nodes.start.multiplicityValue;
+            }
+
+            if (this.nodes.end !== null) {
+                yield this.nodes.end.multiplicityValue;
+            }
+        }
+    }
 }
 
 class NodeData {
     /**
      * The start node of this association.
-     * @type {LineNode}
+     * @type {TerminationNode}
      */
     #start = null;
 
     /**
      * The end node of this association.
-     * @type {LineNode}
+     * @type {TerminationNode}
      */
     #end = null;
 
