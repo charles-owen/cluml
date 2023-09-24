@@ -9,19 +9,19 @@ import {Rect} from "./Utility/Rect";
  * The default font for the drawName function.
  * @type {string}
  */
-const NAME_FONT = "14px Times";
+export const NAME_FONT = "14px Times";
 
 /**
  * The default font for the drawText function.
  * @type {string}
  */
-const CONTENT_FONT = "14px Times";
+export const CONTENT_FONT = "14px Times";
 
 /**
  * If true, then show the bounds of the component.
  * @type {boolean}
  */
-const DEBUG_BOUNDS = true;
+export const DEBUG_BOUNDS = true;
 //endregion
 
 /**
@@ -147,9 +147,18 @@ Component.prototype.copyFrom = function (component) {
     this.prev = component.prev;
     this.naming = component.naming;
     this.id = component.id;
+    this.placedOnCanvas = component.placedOnCanvas;
     component.prev = this;
     Selectable.prototype.copyFrom.call(this, component);
 };
+
+/**
+ * Called right after the object in undone. This does not pass
+ * any variables, so everything needs to be saved with the component.
+ */
+Component.prototype.onUndo = function () {
+
+}
 
 Component.prototype.grab = function () {
     Selectable.prototype.grab.call(this);
@@ -165,7 +174,7 @@ Component.prototype.mouseUp = function () {
 
 /**
  * Called when a component is added to a diagram
- * @param diagram
+ * @param diagram {Diagram}
  */
 Component.prototype.added = function (diagram) {
     this.diagram = diagram;
@@ -279,6 +288,7 @@ Component.prototype.saveComponent = function () {
         "x": this.x,
         "y": this.y,
         "name": naming,
+        "placed": this.placedOnCanvas,
         "paletteDesc": this.paletteDesc,
         "htmlDesc": this.htmlDesc,
         "paletteLbl": this.paletteLbl,
@@ -306,6 +316,7 @@ Component.prototype.loadComponent = function (obj) {
     this.moveX = this.x;
     this.moveY = this.y;
     let naming = obj["name"];
+    this.placedOnCanvas = obj.placed;
     if (naming !== null) {
         this.naming = this.sanitize(naming).toString().replace(/`/g, "'");
     } else {
@@ -584,13 +595,4 @@ Component.prototype.sanitize = function (text) {
  */
 Component.prototype.update = function () {
 
-}
-
-/**
- * Adds a "child" component that shares the diagram with the parent.
- * @param child {Component}
- * @param position {Vector}
- */
-Component.prototype.addChild = function (child, position) {
-    this.diagram.diagrams.simulation.view.initializeComponent(child, position.x, position.y);
 }

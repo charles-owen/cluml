@@ -1,9 +1,11 @@
 import {Selectable} from "../../Selectable";
-import {Component} from "../../Component";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
-import {Class} from "../Class";
+import {NodeWrapper} from "./NodeWrapper";
+import {DEBUG_BOUNDS} from "../../Component";
+import {MainSingleton} from "../../MainSingleton";
+import {TerminationNode} from "./TerminationNode";
 
 /**
  * Determines the radius around the node at which
@@ -13,148 +15,43 @@ import {Class} from "../Class";
 export const NODE_TOUCH_RADIUS = 15;
 
 export const LineNode = function () {
-    Component.call(this);
+    Selectable.call(this);
 
     //region Fields
-    /**
-     * Determines whether this node has been touched.
-     * Untouched nodes may reposition themselves automatically.
-     * Touched nodes will not.
-     * @type {boolean}
-     */
-    this.touched = false;
-
     /**
      * The next LineNode.
      * @type {LineNode}
      */
-    let next = null;
-
-    /**
-     * The id of the next LineNode.
-     * @type {string}
-     */
-    let nextID = undefined;
+    this.nextNode = null;
 
     /**
      * The previous LineNode.
      * @type {LineNode}
      */
-    let previous = null;
+    this.previousNode = null;
 
     /**
-     * The id of the previous LineNode.
-     * @type {string}
+     * @type{Association}
      */
-    let previousID = undefined;
-
-    /**
-     * The association of this node.
-     * @type {Association}
-     */
-    let associate = null;
-
-    /**
-     * The ID of the association of this node.
-     * @type {undefined}
-     */
-    let associateID = undefined;
+    this.association = null;
     //endregion
 
     //region Properties
-    Object.defineProperty(this, 'nextNode', {
-        get: function () {
-            if (next !== null) {
-                return next;
-            } else if (this.hasNext) {
-                next = this.diagram.getComponentByID(nextID);
-                return next;
-            } else {
-                return null;
-            }
-        },
-        set: function (node) {
-            if (node !== null) {
-                nextID = node.id;
-                next = node;
-            } else {
-                nextID = undefined;
-                next = null;
-            }
-        }
-    });
-
     Object.defineProperty(this, 'hasNext', {
         get: function () {
-            return nextID !== undefined;
-        }
-    })
-
-    Object.defineProperty(this, 'previousNode', {
-        get: function () {
-            if (previous !== null) {
-                return previous;
-            } else if (this.hasPrevious) {
-                previous = this.diagram.getComponentByID(previousID);
-                return previous;
-            } else {
-                return null;
-            }
-        },
-        set: function (node) {
-            if (node !== null) {
-                previousID = node.id;
-                previous = node;
-            } else {
-                previousID = undefined;
-                previous = null;
-            }
+            return this.nextNode !== undefined && this.nextNode !== null;
         }
     });
 
     Object.defineProperty(this, 'hasPrevious', {
         get: function () {
-            return previousID !== undefined;
-        }
-    })
-
-    Object.defineProperty(this, 'association', {
-        get: function () {
-            if (associate !== null) {
-                return associate;
-            } else if (this.hasAssocation) {
-                associate = this.diagram.getComponentByID(associateID);
-                return associate;
-            } else {
-                return null;
-            }
-        },
-        set: function (newAssociation) {
-            if (newAssociation !== null) {
-                associate = newAssociation;
-                associateID = associate.id;
-            } else {
-                associate = null;
-                associateID = undefined;
-            }
+            return this.previousNode !== undefined && this.previousNode !== null;
         }
     });
-
-    Object.defineProperty(this, 'hasAssocation', {
-        get: function () {
-            return associateID !== undefined;
-        }
-    })
     //endregion
-
-    this.loadIDs = function (idNext, idPrevious, idAssociation) {
-        nextID = idNext;
-        previousID = idPrevious;
-        associateID = idAssociation;
-    }
 }
 
-LineNode.prototype = Object.create(Component.prototype);
+LineNode.prototype = Object.create(Selectable.prototype);
 LineNode.prototype.constructor = LineNode;
 
 
@@ -165,27 +62,83 @@ LineNode.prototype.paletteDesc = "The intermediate nodes of an association.";
 LineNode.prototype.htmlDesc = '<h2>Line Node</h2><p>The intermediate nodes of an association.</p>';
 LineNode.prototype.paletteOrder = -1;
 
-//region Selectable Functions
+//region Save/Load
 /**
- * Copies from another component.
- * @param component {LineNode}
+ *
+ * @return {{x: number, y: number, next: *, nextType: undefined|string}}
  */
-LineNode.prototype.copyFrom = function (component) {
-    this.touched = component.touched;
-    this.nextNode = component.nextNode;
-    this.previousNode = component.previousNode;
-    this.association = component.association;
+LineNode.prototype.saveNode = function () {
+    let obj = {
+        x: this.x,
+        y: this.y,
+    }
 
-    // if (this.hasNext) {
-    //     // Propagate.
-    //     this.nextNode.copyFrom(component.nextNode);
-    // }
-    Component.prototype.copyFrom.call(this, component);
+    if (this.hasNext) {
+        obj.next = this.nextNode.saveNode();
+        obj.nextType = this.nextNode.hasNext ? "Intermediate" : "Termination";
+    } else {
+        obj.next = null;
+    }
+
+    return obj;
 }
 
 /**
- * Try to touch this component or some part of
- * the component.
+ * Loads the node and all nodes next to it.
+ * @param obj {*}
+ * @param association {Association}
+ */
+LineNode.prototype.loadNode = function (obj, association) {
+    this.association = association;
+
+    this.x = obj.x;
+    this.y = obj.y;
+
+    if (obj.next !== null) {
+        switch (obj.nextType) {
+            case "Intermediate":
+                this.nextNode = new LineNode();
+                break;
+            case "Termination":
+                this.nextNode = new TerminationNode();
+                break;
+            default:
+                throw Error("nextType '" + obj.nextType + "' not recognised.");
+        }
+
+        this.nextNode.previousNode = this;
+    }
+}
+//endregion
+
+//region Selectable Functions
+/**
+ * Copies from another selectable.
+ * @param selectable {LineNode}
+ */
+LineNode.prototype.copyFrom = function (selectable) {
+    this.nextNode = selectable.nextNode;
+    this.previousNode = selectable.previousNode;
+    this.association = selectable.association;
+
+    // if (this.hasNext) {
+    //     // Propagate.
+    //     this.nextNode.copyFrom(selectable.nextNode);
+    // }
+    Selectable.prototype.copyFrom.call(this, selectable);
+}
+
+LineNode.prototype.added = function (diagram, parent) {
+    Selectable.prototype.added.call(this, diagram, parent);
+
+    if (parent !== undefined) {
+        this.association = parent;
+    }
+}
+
+/**
+ * Try to touch this selectable or some part of
+ * the selectable.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
  * @return {LineNode|null}
@@ -207,6 +160,9 @@ LineNode.prototype.touch = function (x, y) {
  * Start of the dragging process
  */
 LineNode.prototype.grab = function () {
+    // Do backup.
+    MainSingleton.singleton.backup();
+
     Selectable.prototype.grab.call(this);
     this.touched = true;
 }
@@ -248,35 +204,28 @@ LineNode.prototype.bounds = function () {
     )
 }
 
-// /**
-//  * Draws the LineNode object.
-//  *
-//  * @param context {CanvasRenderingContext2D} Display context
-//  * @param view {View} View object
-//  */
-// LineNode.prototype.draw = function (context, view) {
-//     Component.prototype.draw.call(this, context, view);
-//
-//     this.selectStyle(context, view);
-//
-//     // TODO: Implement.
-// }
+/**
+ * Draws the LineNode object.
+ *
+ * @param context {CanvasRenderingContext2D} Display context
+ * @param view {View} View object
+ */
+LineNode.prototype.draw = function (context, view) {
+    // Selectable.prototype.draw.call(this, context, view);
 
+    this.selectStyle(context, view);
 
-LineNode.prototype.saveComponent = function () {
-    const obj = Component.prototype.saveComponent.call(this);
-    obj.touched = this.touched;
-    obj.nextID = this.hasNext ? this.nextNode.id : null;
-    obj.previousID = this.hasPrevious ? this.previousNode.id : null;
-    obj.associationID = this.hasAssocation ? this.association : null;
-    return obj;
+    if (DEBUG_BOUNDS) {
+        context.fillStyle = 'rgba(255,0,0,0.5)';
+        context.fillRect(
+            this.x - NODE_TOUCH_RADIUS,
+            this.y - NODE_TOUCH_RADIUS,
+            NODE_TOUCH_RADIUS * 2,
+            NODE_TOUCH_RADIUS * 2
+        );
+    }
 }
 
-LineNode.prototype.loadComponent = function (obj) {
-    Component.prototype.loadComponent.call(this, obj);
-
-    this.loadIDs(obj.nextID, obj.previousID, obj.associationID);
-}
 
 LineNode.prototype.paletteImage = function () {
     // TODO: Implement (not needed lol).

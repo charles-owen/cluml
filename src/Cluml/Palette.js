@@ -45,29 +45,29 @@ export const Palette = function (main, work) {
 
         // Load the diagram components into the palette
 
-        main.components.componentList.forEach(function (obj) {
-            addToPalette(obj);
+        main.components.componentList.forEach(function (template) {
+            addToPalette(template);
         });
     }
 
     /**
      * Adds a component type to the palette.
-     * @param obj {Component}
+     * @param template {function}
      */
-    const addToPalette = (obj) => {
+    const addToPalette = (template) => {
         // // Only some diagrams get added to the pallet...
         // // A component is added if it is in the current
         // // list of diagrams or main.options.always
 
         //let name = 'Class';
-        let name = obj.fileLbl;
+        let name = template.prototype.fileLbl;
         if (!Util.inArray(name, components) &&
             !Util.inArray(name, main.options.always)) {
             return;
         }
 
-        this.palette.push(obj);
-        const pi = new PaletteItem(this, obj, undefined);
+        this.palette.push(template);
+        const pi = new PaletteItem(this, template, undefined);
         this.div.appendChild(pi.element);
     }
 

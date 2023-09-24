@@ -26,7 +26,7 @@ export const Selection = function (view) {
     this.rightClick = function(x, y,  event) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            if (touched.paletteLbl == "Class")
+            if (touched.paletteLbl === "Class")
             {
                 event.preventDefault();
                 this.selected = [touched];
@@ -64,7 +64,7 @@ export const Selection = function (view) {
         if (this.selected[0] != null)
         {
             // Last mouse down (right-click) was on a class
-            if (this.selected[0].paletteLbl == "Class")
+            if (this.selected[0].paletteLbl === "Class")
             {
                 this.selected[0].tryTouchAddPopup(x,y);
                 this.selected[0].enableAddPopup(false);

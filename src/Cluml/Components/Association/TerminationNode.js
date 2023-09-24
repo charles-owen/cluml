@@ -2,6 +2,7 @@ import {LineNode} from "./LineNode.js"
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import Selectable from "../../Selectable";
 import {Class} from "../Class";
+import {MainSingleton} from "../../MainSingleton";
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -89,7 +90,7 @@ TerminationNode.prototype.drop = function () {
 
     // Determine if we are near a class. For now, just go
     // through every class.
-    const classes = this.diagram.getComponentsByType("Class");
+    const classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
 
     for (const cl of classes) {
         if (this.tryAttachToClass(cl))

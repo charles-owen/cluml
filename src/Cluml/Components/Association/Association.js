@@ -4,71 +4,94 @@ import {Rect} from "../../Utility/Rect";
 import {LineNode, NODE_TOUCH_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
-import Selectable from "../../Selectable";
-import {Class} from "../Class";
+import {MainSingleton} from "../../MainSingleton";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
 export const Association = function () {
     Component.call(this);
+}
 
-    //region Fields
-    this.nodes = {
-        /**
-         * The start node of this association.
-         * @type {TerminationNode}
-         */
-        start: null,
-        /**
-         * The end node of this association.
-         * @type {TerminationNode}
-         */
-        end: null,
-        /**
-         * Instantiates the start and end nodes.
-         * @param association {Association}
-         */
-        instantiate: function (association) {
-            this.start = new TerminationNode();
-            this.start.association = association;
-            this.end = new TerminationNode();
-            this.end.association = association;
+class NodeData {
+    /**
+     * The start node of this association.
+     * @type {LineNode}
+     */
+    #start = null;
 
-            this.start.linkToNext(this.end);
-        },
-        /**
-         * Copies the nodes.
-         * @param association {Association}
-         */
-        copyFrom: function (association) {
-            // Don't need to save end. The saving will propagate through the
-            // path.
-            // this.start.copyFrom(association.nodes.start);
-            // this.end = association.nodes.end;
-        }
-        // /**
-        //  * Saves the start and end nodes.
-        //  */
-        // saveNodes: function () {
-        //     let obj = {
-        //         start: this.start.saveComponent(),
-        //         end: this.end.saveComponent()
-        //     }
-        // },
-        // /**
-        //  * Loads the start/end nodes.
-        //  */
-        // loadNodes: function (obj) {
-        //     this.start = obj.nodes.start;
-        //     this.end = obj.nodes.end;
-        // },
+    /**
+     * The end node of this association.
+     * @type {LineNode}
+     */
+    #end = null;
+
+    /**
+     *
+     * @type {Association}
+     */
+    #association = undefined;
+
+    get start() {
+        return this.#start;
     }
 
-    // Create the two termination associations
-    this.nodes.instantiate(this);
+    get end() {
+        return this.#end;
+    }
+
+    //region Constructor
+    /**
+     * Instantiates the start and end nodes.
+     * @param association {Association}
+     */
+    constructor(association) {
+        const pos = association.position;
+        this.#start = new TerminationNode();
+        this.#start.position = new Vector(pos.x - 50, pos.y);
+        this.#end = new TerminationNode();
+        this.#end.position = new Vector(pos.x + 50, pos.y);
+        this.#start.linkToNext(this.#end);
+        this.link(association);
+    }
+
+    /**
+     * Links start and end nodes with the association.
+     * @param association {Association}
+     */
+    link(association) {
+        this.#association = association;
+        this.start.association = association;
+        this.end.association = association;
+    }
     //endregion
 
-    //endregion
+    saveNodeData() {
+        return this.#start.saveNode();
+    }
+
+    loadNodeData(obj, association) {
+        let node = new TerminationNode();
+        let nData = obj;
+        node.loadNode(nData, association);
+        this.#start = node;
+
+        while (node.hasNext) {
+            nData = nData.next;
+            node = node.nextNode;
+            node.loadNode(nData, association);
+        }
+
+        this.#end = node;
+    }
+
+    // /**
+    //  * Copies the values in "other".
+    //  * @param other {NodeData}
+    //  */
+    // copyFrom(other) {
+    //     this.#start.id = other.#start.id;
+    //     this.#end.id = other.#end.id;
+    // }
 }
 
 Association.prototype = Object.create(Component.prototype);
@@ -84,14 +107,39 @@ Association.prototype.paletteOrder = 20;
 //endregion
 
 //region Component Methods
+Association.prototype.drop = function () {
+    Component.prototype.drop.call(this);
+
+    /**
+     *
+     * @type {NodeData}
+     */
+    this.nodes = new NodeData(this);
+}
+
+/**
+ * Clones this association.
+ * @return {Component}
+ */
+Association.prototype.clone = function () {
+    this.serializedNodeData = this.nodes.saveNodeData();
+
+    return Component.prototype.clone.call(this);
+}
+
 /**
  * Copies from another Association.
  * @param component {Association}
  */
 Association.prototype.copyFrom = function (component) {
-    this.nodes = component.nodes;
-    this.nodes.copyFrom(component);
+    // this.nodes.copyFrom(component.nodes);
+    this.serializedNodeData = component.serializedNodeData;
     Component.prototype.copyFrom.call(this, component);
+}
+
+Association.prototype.onUndo = function () {
+    this.nodes = new NodeData(this);
+    this.nodes.loadNodeData(this.serializedNodeData, this);
 }
 
 /**
@@ -105,14 +153,11 @@ Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         // Return a node instead of the association itself.
-        let node = this.nodes.start;
-
-        do {
+        for (const node of this.nodeGenerator()) {
             if (node.touch(x, y) !== null) {
                 return node;
             }
-            node = node.nextNode;
-        } while (node !== null)
+        }
 
         // No node found. Create a new node.
         return this.createNodeNear(new Vector(x, y));
@@ -133,42 +178,32 @@ Association.prototype.touch = function (x, y) {
 //     } while (node !== null);
 // }
 
-Association.prototype.drop = function () {
-    Selectable.prototype.drop.call(this);
-
-    if (!this.placedOnCanvas) {
-        // Instantiate placements.
-        const pos = this.position;
-        this.addChild(this.nodes.start, new Vector(pos.x - 50, pos.y));
-        this.addChild(this.nodes.end, new Vector(pos.x + 50, pos.y));
-    }
-}
-
 /**
  * Returns the largest bounds this association displaces.
  * @return {Rect}
  */
 Association.prototype.bounds = function () {
-    let node = this.nodes.start;
+    if (this.placedOnCanvas) {
+        let min = this.nodes.start.bounds().max;
+        let max = this.nodes.start.bounds().min;
 
-    let min = node.bounds().max;
-    let max = node.bounds().min;
+        for (const node of this.nodeGenerator()) {
+            max = Vector.maxComponents(
+                max,
+                node.bounds().max
+            );
+            min = Vector.minComponents(
+                min,
+                node.bounds().min
+            )
+        }
 
-    do {
-        max = Vector.maxComponents(
-            max,
-            node.bounds().max
+        return Rect.fromMinAndMax(
+            min, max
         );
-        min = Vector.minComponents(
-            min,
-            node.bounds().min
-        )
-        node = node.nextNode;
-    } while (node !== null);
-
-    return Rect.fromMinAndMax(
-        min, max
-    );
+    } else {
+        return new Rect(0, 0, 0, 0);
+    }
 }
 
 /**
@@ -180,66 +215,21 @@ Association.prototype.bounds = function () {
 Association.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 
-    // // Delete line nodes that may have been undoned.
-    // for (const selfNode of this.nodeGenerator()) {
-    //     if (selfNode.fileLbl === "LineNode") {
-    //         let contains = false;
-    //
-    //         for (const component of view.diagram.components) {
-    //             if (selfNode === component) {
-    //                 contains = true;
-    //                 break;
-    //             }
-    //         }
-    //
-    //         if (contains) {
-    //             selfNode.remove();
-    //         }
-    //     }
-    // }
+    // const testNodes = [...this.nodeGenerator()];
 
     this.selectStyle(context, view);
 
     // Draw the line.
     context.beginPath();
-    // context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";
 
-    let node = this.nodes.start;
+    this.nodes.start.draw(context, view);
 
-    // region DEBUG
-    const startPos = node.position;
-    context.fillStyle = 'rgba(255,0,0,0.5)';
-    context.fillRect(
-        startPos.x - NODE_TOUCH_RADIUS,
-        startPos.y - NODE_TOUCH_RADIUS,
-        NODE_TOUCH_RADIUS * 2,
-        NODE_TOUCH_RADIUS * 2
-    );
+    for (const edge of this.edgeGenerator()) {
+        context.moveTo(edge.from.x, edge.from.y);
+        context.lineTo(edge.to.x, edge.to.y);
 
-    context.fillStyle = 'rgba(255,156,0,0.3)';
-    const bnds = this.bounds();
-    bnds.fillRect(context);
-    // endregion
-
-    while (node !== this.nodes.end) {
-        let pos = node.position;
-        context.moveTo(pos.x, pos.y);
-
-        node = node.nextNode;
-
-        pos = node.position;
-        context.lineTo(pos.x, pos.y);
-
-        // region DEBUG
-        context.fillStyle = 'rgba(255,0,0,0.5)';
-        context.fillRect(
-            pos.x - NODE_TOUCH_RADIUS,
-            pos.y - NODE_TOUCH_RADIUS,
-            NODE_TOUCH_RADIUS * 2,
-            NODE_TOUCH_RADIUS * 2
-        );
-        // endregion
+        edge.to.draw(context, view);
     }
 
     // context.rect(
@@ -255,25 +245,24 @@ Association.prototype.draw = function (context, view) {
 
 Association.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
-    obj.startNodeID = this.nodes.start.id;
-    obj.endNodeID = this.nodes.end.id;
+    obj.nodeData = this.nodes.saveNodeData();
     return obj;
 }
 
 Association.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent(obj);
+    this.nodes.loadNodeData(obj, this);
 
-    this.nodes.start = this.diagram.getComponentByID(obj.startNodeID);
-    this.nodes.end = this.diagram.getComponentByID(obj.endNodeID);
+    // this.nodes.loadFromIDs(this.diagram, obj.startNodeID, obj.endNodeID);
 }
 
-/**
- * Call the termination node to draw the PaletteItem to the palette
- * @returns {PaletteImage}
- */
-Association.prototype.paletteImage = function () {
-    return this.nodes.end.paletteImage();
-}
+// /**
+//  * Call the termination node to draw the PaletteItem to the palette
+//  * @returns {PaletteImage}
+//  */
+// Association.prototype.paletteImage = function () {
+//     return this.nodes.end.paletteImage();
+// }
 
 //endregion
 
@@ -334,46 +323,16 @@ Association.prototype.createNodeNear = function (near) {
 
     if (minTDP !== undefined) {
         // Now have the nearest point on the line.
-        let newNode = new LineNode();
-        newNode.association = this;
-        this.addChild(newNode, minTDP.pointOnLine);
+        // First do backup.
+        MainSingleton.singleton.backup();
+
+        const newNode = new LineNode();
+        newNode.position = minTDP.pointOnLine;
         newNode.insertBetween(minEdge.from, minEdge.to);
 
         return newNode;
     } else {
         return null;
     }
-
-
-    // let node = this.nodes.start;
-    // /**
-    //  * @type {{t: number, distance: number, pointOnLine: Vector}}
-    //  */
-    // let min = undefined;
-    // let minNodes = undefined;
-    //
-    // while (node !== this.nodes.end) {
-    //     const line = Selectable.lineBetween(node, node.nextNode);
-    //     const pn = line.pointNearest(near);
-    //
-    //     if (min === undefined || min.distance > pn.distance) {
-    //         min = pn;
-    //         minNodes = {
-    //             from: node,
-    //             to: node.nextNode
-    //         }
-    //     }
-    //
-    //     node = node.nextNode;
-    // }
-    //
-    //
-    // // Now have the nearest point on the line.
-    // let newNode = new LineNode();
-    // newNode.association = this;
-    // this.addChild(newNode, min.pointOnLine);
-    // newNode.insertBetween(minNodes.from, minNodes.to);
-    //
-    // return newNode;
 }
 //endregion
