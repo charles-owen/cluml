@@ -5,21 +5,25 @@
 export const Components = function () {
 
     /**
-     * Components.
-     * @type {Component[]}
+     * Component templates.
+     * @type {function[]}
      */
     this.componentList = [];
 
+    /**
+     *
+     * @type {{}}
+     */
     this.palettes = {};
 
     /**
      * Add a component to the collection of available component objects
-     * @param component {Component} Component object
+     * @param component {function} Component template.
      */
     this.add = function (component) {
         this.componentList.push(component);
         this.componentList.sort(function (a, b) {
-            return a.paletteOrder - b.paletteOrder;
+            return a.prototype.paletteOrder - b.prototype.paletteOrder;
         });
     };
 
@@ -30,7 +34,7 @@ export const Components = function () {
      */
     this.get = function (type) {
         for (let i = 0; i < this.componentList.length; i++) {
-            if (this.componentList[i].fileLbl === type) {
+            if (this.componentList[i].prototype.fileLbl === type) {
                 return this.componentList[i];
             }
         }
@@ -41,12 +45,12 @@ export const Components = function () {
     /**
      * Add a palette of diagrams by name.
      * @param name {string} Name to refer to the palette
-     * @param components {Component[]} Array of component objects.
+     * @param components {function[]} Array of component templates.
      */
     this.addPalette = function (name, components) {
         const names = [];
         for (let i = 0; i < components.length; i++) {
-            names.push(components[i].fileLbl);
+            names.push(components[i].prototype.fileLbl);
         }
 
         this.palettes[name] = names;

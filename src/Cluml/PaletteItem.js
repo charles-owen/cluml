@@ -1,6 +1,5 @@
 import {PaletteImage} from './Graphics/PaletteImage';
 import {Tools} from './DOM/Tools';
-import {Association} from "./Components/Association/Association";
 
 /**
  * Items that appear in the palette
@@ -8,21 +7,28 @@ import {Association} from "./Components/Association/Association";
  * jQuery free
  *
  * @param palette {Palette} The Palette that owns this item
- * @param obj {Component} The Component object
+ * @param template {function} The Component template
  * @param diagram {Diagram} The Diagram
  * @constructor
  */
-export const PaletteItem = function(palette, obj, diagram) {
+export const PaletteItem = function (palette, template, diagram) {
     /**
      * The palette
      * @type {Palette}
      */
     this.palette = palette;
     /**
-     * The component
-     * @type {Component}
+     * The component template.
+     * @type {function}
      */
-    this.obj = obj;
+    this.template = template;
+
+    Object.defineProperty(this, 'proto', {
+        get: function () {
+            return this.template.prototype;
+        }
+    });
+
     /**
      * The name of the diagram.
      * @type {string|null}
@@ -30,7 +36,7 @@ export const PaletteItem = function(palette, obj, diagram) {
     this.diagram = diagram !== undefined ? diagram.name : null;
 
     // Create an image component DOM element (canvas or img)
-    const image = this.paletteImage(obj);
+    const image = this.paletteImage();
 
     const element = Tools.createClassedDiv('cs-item');
     const box = Tools.createClassedDiv('cs-box');
@@ -40,19 +46,15 @@ export const PaletteItem = function(palette, obj, diagram) {
     box.appendChild(img);
 
     const desc = Tools.createClassedDiv('cs-desc');
-    if(obj.paletteLbl.length > 7) {
+    if (this.proto.paletteLbl.length > 7) {
         Tools.addClass(desc, 'long');
     }
-    desc.innerText = diagram !== undefined ? diagram.name : obj.paletteLbl;
+    desc.innerText = diagram !== undefined ? diagram.name : this.proto.paletteLbl;
     box.appendChild(desc);
     img.appendChild(image);
 
-	this.element = element;
-    // //if the object is a component, it should be a draggable
-    // //if it's an association, it shouldn't be
-    // if(obj.fileLbl !== 'Association'){
-    //     palette.main.dragAndDrop.draggable(this);
-    // }
+    this.element = element;
+
     palette.main.dragAndDrop.draggable(this);
     palette.main.toggleManager.toggleable(this);
 
@@ -63,22 +65,22 @@ export const PaletteItem = function(palette, obj, diagram) {
  * image file or creating one using PaletteImage.
  * @returns {HTMLImageElement|HTMLCanvasElement} element for either canvas or img
  */
-PaletteItem.prototype.paletteImage = function() {
-    const obj = this.obj;
+PaletteItem.prototype.paletteImage = function () {
+    const proto = this.proto;
 
-    if(obj.img !== null && obj.img !== undefined) {
+    if (proto.img !== null && proto.img !== undefined) {
         let root = this.palette.cluml.root;
 
         const element = document.createElement('img');
-        element.setAttribute('src', root + 'cluml/img/' + obj.img);
-        element.setAttribute('alt', obj.paletteDesc);
-        element.setAttribute('title', obj.paletteDesc);
-	    element.setAttribute('draggable', 'false');
+        element.setAttribute('src', root + 'cluml/img/' + proto.img);
+        element.setAttribute('alt', proto.paletteDesc);
+        element.setAttribute('title', proto.paletteDesc);
+        element.setAttribute('draggable', 'false');
 
         return element;
 
-    } else if(obj.paletteImage() !== null) {
-        return obj.paletteImage().element;
+    } else if (proto.paletteImage() !== null) {
+        return proto.paletteImage().element;
     } else {
         let pi = new PaletteImage(60, 60);
 
@@ -95,7 +97,7 @@ PaletteItem.prototype.paletteImage = function() {
         pi.box(30, 40);
         pi.io(15, 20, 'w', 2, 20);
         pi.io(45, 20, 'e', 2, 20);
-        pi.drawText(obj.paletteLbl, 0, 0, "6px Times");
+        pi.drawText(proto.paletteLbl, 0, 0, "6px Times");
 
         return pi.element;
     }

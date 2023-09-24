@@ -21,6 +21,7 @@ import {Toast} from "./Graphics/Toast";
 import {ExportDlg} from "./Dlg/ExportDlg";
 import {ImportDlg} from "./Dlg/ImportDlg";
 import {Rect} from "./Utility/Rect";
+import {MainSingleton} from "./MainSingleton";
 
 /**
  * Actual instance of cluml for a single element.
@@ -30,6 +31,8 @@ import {Rect} from "./Utility/Rect";
  * @constructor
  */
 export const Main = function (cluml, element, tests) {
+    new MainSingleton(this);
+
     this.cluml = cluml;
     this.element = element;
     this.options = cluml.options;

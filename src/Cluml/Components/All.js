@@ -7,8 +7,8 @@ import {Association} from "./Association/Association";
  * @constructor
  */
 export const All = function (components) {
-    components.add(new Class());
-    components.add(new Association());
+    components.add(Class);
+    components.add(Association);
 
-    components.addPalette('all', [new Class(), new Association()]);
+    components.addPalette('all', [Class, Association]);
 }

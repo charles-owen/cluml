@@ -60,12 +60,12 @@ export const View = function(main, canvas, diagram) {
         this.setSize();
 
         main.dragAndDrop.droppable(this, (paletteItem, x, y) => {
-            const componentObject = paletteItem.obj;
-            if(componentObject === undefined) {
+            const componentTemplate = paletteItem.template;
+            if(componentTemplate === undefined) {
                 return;
             }
 
-            const component = new componentObject.constructor(paletteItem);
+            const component = new componentTemplate(paletteItem);
             this.initializeComponent(component, x, y);
         });
 

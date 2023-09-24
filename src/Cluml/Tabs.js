@@ -90,7 +90,7 @@ export const Tabs = function (main) {
         // New collection of tabs
         let tabsNew = [];
 
-        collection.forEach((diagram) => {
+        for (const diagram of collection) {
             let li = document.createElement('li');
             let a = document.createElement('a');
             li.appendChild(a);
@@ -136,7 +136,7 @@ export const Tabs = function (main) {
             panesDiv.appendChild(pane);
             view.tabnum = tabsNew.length;
             tabsNew.push(new TabData(li, pane, diagram, view));
-        });
+        }
 
         tabsDiv.innerHTML = '';
 
@@ -270,6 +270,10 @@ export const Tabs = function (main) {
         if (current !== null) {
             // We need to know the undo version...
             current = current.prev;
+
+            for (const component of current.components) {
+                component.onUndo();
+            }
         }
 
         // Clear any 'active' any selections

@@ -98,7 +98,6 @@ Diagram.prototype.defHeight = 1080;
  * @returns {Diagram} The clone of the diagram.
  */
 Diagram.prototype.clone = function () {
-    let component;
     const copy = new Diagram(this.name);
     copy.width = this.width;
     copy.height = this.height;
@@ -108,10 +107,11 @@ Diagram.prototype.clone = function () {
     this.prev = copy;
 
     // Iterate over the components, cloning each of them.
-    for (let i = 0; i < this.components.length; i++) {
-        component = this.components[i];
-        const componentCopy = component.clone();
-        copy.add(componentCopy);
+    for (const component of this.components) {
+        if (component.placedOnCanvas) {
+            const componentCopy = component.clone();
+            copy.add(componentCopy);
+        }
     }
 
     // // Again we iterate over the diagrams, this time
@@ -141,9 +141,9 @@ Diagram.prototype.update = function () {
 }
 
 Diagram.prototype.draw = function (context, view) {
-    this.components.forEach(function (component, index, array) {
+    for (const component of this.components) {
         component.draw(context, view);
-    });
+    }
 };
 
 Diagram.prototype.newTab = function () {
@@ -194,7 +194,7 @@ Diagram.prototype.snapIt = function (item) {
 
 Diagram.prototype.add = function (component) {
     this.components.push(component);
-    Component.prototype.added.call(component, this);
+    component.added(this);
     return component;
 };
 
@@ -325,6 +325,10 @@ Diagram.prototype.getComponentByNaming = function (naming) {
  * @returns {Component|null}
  */
 Diagram.prototype.getComponentByID = function (id) {
+    if (id === undefined || id === null || id === '') {
+        throw Error("Value of ID " + id + " is invalid.");
+    }
+
     for (let i = 0; i < this.components.length; i++) {
         const component = this.components[i];
         if (component.id.length > 0 && component.id === id) {
