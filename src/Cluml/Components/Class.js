@@ -3,9 +3,14 @@ import {Rect} from "../Utility/Rect";
 import {PaletteImage} from "../Graphics/PaletteImage";
 import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
+import {ClassName} from "../SanityElement/ClassName";
 
 export const Class = function () {
     Component.call(this);
+
+    this.forwardSanityCheck = function* () {
+        yield new ClassName(this.naming);
+    }
 
     /**
      * Component height.
@@ -281,7 +286,6 @@ Class.prototype.paletteImage = function () {
  */
 Class.prototype.addAttribute = function (attribute) {
     this.attributes.push(attribute)
-    this.attributesHeight += this.fontHeight;
 }
 
 /**
