@@ -40,10 +40,10 @@ export const SanityCheckDlg = function(main) {
             */
 
             // Will later convert this code over to sanity elements.
-            const classTemplate = `Class '${element.naming}'`;
+            const classTemplate = `Class <a>${element.naming}</a>`;
             for (const attribute of element["attributes"])
             {
-                const attributeTemplate = `${classTemplate}, attribute '${attribute}'`;
+                const attributeTemplate = `${classTemplate}, attribute <a>${attribute}</a>`;
                 const colonIndex = attribute.indexOf(":");
                 const attributeName = attribute.substring(1, colonIndex).trim();
                 const attributeType = attribute.substring(colonIndex + 1).trim();
@@ -67,7 +67,7 @@ export const SanityCheckDlg = function(main) {
 
             for (const operation of element["operations"])
             {
-                const operationTemplate = `${classTemplate}, operation '${operation}'`;
+                const operationTemplate = `${classTemplate}, operation <a>${operation}</a>`;
                 const colonIndex = operation.indexOf(":");
                 const operationName = operation.substring(1, operation.indexOf('(')).trim();
 

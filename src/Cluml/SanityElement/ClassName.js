@@ -16,7 +16,7 @@ export class ClassName extends SanityElement {
 
     constructor(stringValue) {
         super(stringValue);
-        this.messageTemplate = `Class '${stringValue}': name `;
+        this.messageTemplate = `Class <a>${stringValue}</a>: name `;
 
         // Run the sanity check to update the multiplicity types.
         //this.processSanityCheck();
