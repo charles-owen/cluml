@@ -13,14 +13,15 @@ export class ClassName extends SanityElement {
      * Creates a new class name from the provided string.
      * @param stringValue {string} The string value.
      */
+
     constructor(stringValue) {
         super(stringValue);
         this.messageTemplate = `Class '${stringValue}': name `;
 
         // Run the sanity check to update the multiplicity types.
-        this.processSanityCheck();
+        //this.processSanityCheck();
     }
-    
+
     processSanityCheck() {
         const messages = [];
         if (this.elementValue[0].toUpperCase() !== this.elementValue[0]) {
@@ -30,7 +31,7 @@ export class ClassName extends SanityElement {
             messages.push(this.messageTemplate + "contains spaces.")
         }
         if (nonAlphanumeric.test(this.elementValue)) {
-            messages.push(this.messageTemplate + "contains non alphanumeric characters.");
+            messages.push(this.messageTemplate + "contains non-alphanumeric characters.");
         }
 
         if (messages.length === 0)

@@ -38,13 +38,13 @@ export const Class = function () {
      * The array of attributes.
      * @type{Array<String>}
      */
-    this.attributes = ["-attribute1 :", "-attribute2 :", "-attribute3 :", "-attribute4 :"];
+    this.attributes = ["-attrib ute1 :", "-attribute2 :", "-attribute3 :", "-attribute4 :"];
 
     /**
      * The array of operations.
      * @type{Array<String>}
      */
-    this.operations = ["+operation1() :", "+operation2() :"];
+    this.operations = ["+operation1() :", "+Operation_2() :"];
 
     this.addPopup = null;
 
