@@ -22,6 +22,12 @@ export class Multiplicity extends SanityElement {
      * @type {string}
      */
     multiplicityType = Multiplicity.MultiplicityType.Invalid;
+
+    /**
+     * Font of the label.
+     * @type {string}
+     */
+    font = '14px Times';
     //endregion
 
     //region Constructors
@@ -53,5 +59,14 @@ export class Multiplicity extends SanityElement {
         }
 
         return '';
+    }
+
+    /**
+     * Draws this multiplicity.
+     * @param context
+     * @param view
+     */
+    draw(context, view) {
+
     }
 }

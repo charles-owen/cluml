@@ -4,6 +4,7 @@ import Selectable from "../../Selectable";
 import {Class} from "../Class";
 import {MainSingleton} from "../../MainSingleton";
 import {Multiplicity} from "../../SanityElement/Multiplicity";
+import {AttributeDrawer} from "../../Attributes/AttributeDrawer";
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -17,9 +18,10 @@ export const TerminationNode = function () {
     //region Fields
     /**
      * The multiplicity value.
-     * @type {Multiplicity}
+     * @type {AttributeDrawer}
      */
-    this.multiplicityValue = new Multiplicity('2.........7');
+    this.multiplicityValue = new AttributeDrawer(new Multiplicity('2.........7'), this);
+    this.multiplicityValue.y = 15;
 
     /**
      * The attribute label.
@@ -97,6 +99,12 @@ TerminationNode.prototype.drop = function () {
         if (this.tryAttachToClass(cl))
             break;
     }
+}
+
+TerminationNode.prototype.draw = function (context, view) {
+    LineNode.prototype.draw.call(this, context, view);
+
+    this.multiplicityValue.draw(context, view, this.position);
 }
 //endregion
 

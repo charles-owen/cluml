@@ -13,8 +13,11 @@ export const Association = function () {
     Component.call(this);
 
     /**
+     * Yields an object that implements either the functions
+     * processSanityCheck() or forwardSanityCheck().
+     * Can also yield an object that contains both.
      *
-     * @return {Generator<SanityElement, void, *>}
+     * @return {Generator<*, void, *>}
      */
     this.forwardSanityCheck = function* () {
         if (this.nodes !== undefined) {

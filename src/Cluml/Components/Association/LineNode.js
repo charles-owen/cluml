@@ -1,9 +1,7 @@
-import {Selectable} from "../../Selectable";
+import {Selectable, DEBUG_BOUNDS} from "../../Selectable";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
-import {NodeWrapper} from "./NodeWrapper";
-import {DEBUG_BOUNDS} from "../../Component";
 import {MainSingleton} from "../../MainSingleton";
 import {TerminationNode} from "./TerminationNode";
 
