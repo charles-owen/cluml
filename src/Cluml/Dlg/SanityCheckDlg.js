@@ -20,6 +20,7 @@ export const SanityCheckDlg = function(main) {
         // error check the diagram in view
         const diagram = main.currentView().diagram;
         const classes = diagram.getComponentsByType("Class");
+        /*
         for (const element of classes)
         {
             // check if the class names are capitalized properly
@@ -35,14 +36,21 @@ export const SanityCheckDlg = function(main) {
                 errorCount++;
             }
         }
+         */
 
         const testComps = MainSingleton.singleton.allCurrentComponents;
 
         for (const element of SanityElement.getAllSanityElements()) {
             const msg = element.processSanityCheck()
-            if (msg !== '') {
+            if (typeof msg === 'string' && msg !== '') {
                 errors += `<li>${msg}</li>`;
                 errorCount++;
+            } else {
+                for (const message of msg)
+                {
+                    errors += `<li>${message}</li>`;
+                    errorCount++;
+                }
             }
         }
 

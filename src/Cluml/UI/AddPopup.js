@@ -6,7 +6,7 @@ export const AddPopup = function (component) {
     });
     this.component = component;
     this.xOffset = 50;
-    this.yOffset = 55;
+    this.yOffset = 155;
     this.margin = 5;
 
     this.height = 60;
@@ -19,7 +19,7 @@ AddPopup.prototype.constructor = AddPopup;
 
 AddPopup.prototype.draw = function (context, view, x, y) {
     this.x = x + this.xOffset + (this.width / 2);
-    this.y = y + this.margin - (this.height/2);
+    this.y = y + this.yOffset - (this.height / 2);
 
     context.beginPath();
     context.fillStyle = "#ffffff";
@@ -27,7 +27,7 @@ AddPopup.prototype.draw = function (context, view, x, y) {
 
     context.rect(
         x+this.xOffset,
-        y-this.yOffset,
+        y+this.yOffset-this.height,
         this.width, this.height);
 
     context.fill();
@@ -38,19 +38,18 @@ AddPopup.prototype.draw = function (context, view, x, y) {
     context.textAlign = "left"
     context.fillText("Add",
         x+this.xOffset+this.margin,
-        y-this.margin-30,this.width);
+        y+this.yOffset-10-(this.height/2),this.width);
 
     // Draw Divider
     context.beginPath();
-    context.moveTo(x+this.xOffset, (y+this.margin)-(this.height/2)); // Move the pen to (30, 50)
-    context.lineTo(x+this.xOffset+this.width,
-        (y+this.margin)-(this.height/2));
+    context.moveTo(x+this.xOffset, this.y);
+    context.lineTo(x+this.xOffset+this.width, this.y);
     context.stroke();
 
     // Delete text
     context.fillText("Delete",
         x+this.xOffset+this.margin,
-        y-this.margin,this.width);
+        y+this.yOffset-10,this.width);
 }
 
 /**
@@ -69,12 +68,10 @@ AddPopup.prototype.touch = function (x, y) {
 
         if (y < this.y)
         {
-            //add
             this.component.addAttribute("-attribute : ");
         }
         else
         {
-            //delete this class
             this.component.delete();
         }
         return this;
