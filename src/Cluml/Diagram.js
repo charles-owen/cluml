@@ -194,6 +194,7 @@ Diagram.prototype.snapIt = function (item) {
 
 Diagram.prototype.add = function (component) {
     this.components.push(component);
+    component.added(this);
     return component;
 };
 
