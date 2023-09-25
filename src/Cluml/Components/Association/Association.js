@@ -1,7 +1,7 @@
 import {Component} from "../../Component";
 import {TerminationNode} from "./TerminationNode";
 import {Rect} from "../../Utility/Rect";
-import {LineNode} from "./LineNode";
+import {LineNode, SPIN_HORIZONTAL, SPIN_VERTICAL} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {MainSingleton} from "../../MainSingleton";
@@ -258,7 +258,13 @@ Association.prototype.draw = function (context, view) {
 
     for (const edge of this.edgeGenerator()) {
         context.moveTo(edge.from.x, edge.from.y);
-        context.lineTo(edge.from.x, edge.to.y);
+
+        if (edge.from.spin() === SPIN_HORIZONTAL) {
+            context.lineTo(edge.to.x, edge.from.y);
+        } else {
+            context.lineTo(edge.from.x, edge.to.y);
+        }
+
         context.lineTo(edge.to.x, edge.to.y);
     }
 
@@ -328,7 +334,9 @@ Association.prototype.createNodeNear = function (near) {
     let minEdge = undefined;
 
     for (const edge of this.edgeGenerator()) {
-        const middle = new Vector(edge.from.x, edge.to.y);
+        const middle = edge.from.spin() === SPIN_HORIZONTAL ?
+            new Vector(edge.from.y, edge.to.x) :
+            new Vector(edge.from.x, edge.to.y);
 
         const lines = [
             new Line(edge.from.position, middle),

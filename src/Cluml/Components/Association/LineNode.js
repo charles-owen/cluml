@@ -12,6 +12,16 @@ import {TerminationNode} from "./TerminationNode";
  */
 export const NODE_TOUCH_RADIUS = 15;
 
+/**
+ * Determines the radius of the node graphic when it is
+ * not touched.
+ * @type {number}
+ */
+export const NODE_NORMAL_RADIUS = 5;
+
+export const SPIN_VERTICAL = 0;
+export const SPIN_HORIZONTAL = 1;
+
 export const LineNode = function () {
     Selectable.call(this);
 
@@ -197,6 +207,84 @@ LineNode.prototype.bounds = function () {
 }
 
 /**
+ * The "orientation" of the node. A Vertical spin means that
+ * the node will be drawn with a vertical line first, then a
+ * horizontal line, traveling from start to end. A Horizontal
+ * spin means that the node will be drawn with a horizontal
+ * line first, then a vertical line, traveling from start to end.
+ */
+LineNode.prototype.spin = function () {
+    if (this.hasNext) {
+        if (this.hasPrevious) {
+            let xRel = 0, yRel = 0;
+
+            if (this.previousNode.x < this.x && this.x < this.nextNode.x) {
+                // Between the 2 nodes.
+                xRel = 0;
+            } else if (this.previousNode.x > this.x  && this.x < this.nextNode.x) {
+                // Left of the 2 nodes.
+                xRel = -1;
+            } else {
+                // Right of the 2 nodes.
+                xRel = 1;
+            }
+
+            if (this.previousNode.y > this.y && this.y > this.nextNode.y) {
+                // Between the 2 nodes.
+                yRel = 0;
+            } else if (this.previousNode.y < this.y  && this.y > this.nextNode.y) {
+                // Below the 2 nodes.
+                yRel = -1;
+            } else {
+                // Above the 2 nodes.
+                yRel = 1;
+            }
+
+            if (xRel === 0 && yRel === 0) {
+                // Between the nodes.
+                if (this.y < this.nextNode.y) {
+                    // Below next.
+                    return SPIN_VERTICAL;
+                } else {
+                    // Above next.
+                    return SPIN_HORIZONTAL;
+                }
+            } else if (xRel === 0) {
+                // Below/above both nodes.
+                return SPIN_HORIZONTAL;
+            } else if (xRel < 0) {
+                // Left of both nodes.
+                return SPIN_HORIZONTAL;
+            }
+        } else {
+            // Start node.
+            if (this.x < this.nextNode.x) {
+                // To the left.
+                if (this.y < this.nextNode.y) {
+                    // Left and below.
+                    return SPIN_VERTICAL;
+                } else {
+                    // Left and above.
+                    return SPIN_VERTICAL;
+                }
+            } else {
+                // To the right.
+                if (this.y < this.nextNode.y) {
+                    // Right and below.
+                    return SPIN_HORIZONTAL;
+                } else {
+                    // Right and above.
+                    return SPIN_HORIZONTAL;
+                }
+            }
+        }
+    }
+
+    // Spin doesn't matter for the end node.
+    return SPIN_VERTICAL;
+}
+
+/**
  * Draws the LineNode object.
  *
  * @param context {CanvasRenderingContext2D} Display context
@@ -211,6 +299,10 @@ LineNode.prototype.draw = function (context, view) {
         context.beginPath();
         context.arc(this.x, this.y, NODE_TOUCH_RADIUS, 0, 2 * Math.PI, true);
         context.fill();
+    } else {
+        context.beginPath();
+        context.arc(this.x, this.y, NODE_NORMAL_RADIUS, 0, 2 * Math.PI, true);
+        context.stroke();
     }
 
     if (DEBUG_BOUNDS) {
