@@ -182,7 +182,7 @@ export const View = function(main, canvas, diagram) {
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Component)) {
                 let component = this.selection.selected[0];
-                component.properties(main);
+                // component.properties(main);
             }
         }
 

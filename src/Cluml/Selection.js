@@ -30,7 +30,7 @@ export const Selection = function (view) {
             {
                 event.preventDefault();
                 this.selected = [touched];
-                this.selected[0].enableAddPopup(true);
+                // this.selected[0].enableAddPopup(true);
             }
         }
         else {
@@ -52,6 +52,7 @@ export const Selection = function (view) {
             {
                 event.preventDefault();
                 this.selected = [touched];
+                this.selected[0].enableEditing(true);
                 this.selected[0].enableAddPopup(true);
             }
         }

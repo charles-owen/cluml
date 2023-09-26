@@ -4,6 +4,7 @@ import {PaletteImage} from "../Graphics/PaletteImage";
 import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
+import {EditingPopup} from "../UI/EditingPopup";
 
 export const Class = function () {
     Component.call(this);
@@ -38,15 +39,20 @@ export const Class = function () {
      * The array of attributes.
      * @type{Array<String>}
      */
-    this.attributes = ["-attrib ute1 :", "-attribute2 :", "-attribute3 :", "-attribute4 :"];
+    this.attributes = ["-attribute1 :"];
 
     /**
      * The array of operations.
      * @type{Array<String>}
      */
-    this.operations = ["+operation1() :", "+Operation_2() :"];
+    this.operations = ["+operation1() :"];
 
     this.addPopup = null;
+
+    /**
+     * The editing popup for this class when editing the class
+     */
+    this.editingPopup = null;
 
     //this doesn't actually control font its just what it seemed to be hardcoded into
     this.fontHeight = 14;
@@ -166,6 +172,14 @@ Class.prototype.enableAddPopup = function (enable) {
     }
 }
 
+Class.prototype.enableEditing = function (enable) {
+    if (enable) {
+        this.editingPopup = new EditingPopup(this);
+    } else {
+        this.editingPopup = null;
+    }
+}
+
 /**
  * Draws the class object.
  *
@@ -230,6 +244,10 @@ Class.prototype.draw = function (context, view) {
         this.addPopup.draw(context, view, this.x, this.y);
     }
 
+    if (this.editingPopup != null) {
+        this.editingPopup.draw(context, view, this.x, this.y)
+    }
+
     Component.prototype.draw.call(this, context, view);
 }
 
@@ -289,8 +307,46 @@ Class.prototype.addAttribute = function (attribute) {
 }
 
 /**
+ * Edit an existing attribute in the class
+ */
+Class.prototype.editAttribute = function (attributeIndex, newAttribute) {
+    this.attributes[attributeIndex] = newAttribute
+}
+
+/**
  * Add an operation to this Class
  */
 Class.prototype.addOperation = function (operation) {
     this.operations.push(operation)
+}
+
+/**
+ * Edit an existing operation in the class
+ */
+Class.prototype.editOperation = function (operationIndex, newOperation) {
+    this.attributes[operationIndex] = newOperation
+}
+
+/**
+ * Handles the visibility operation in the Options menu
+ */
+Class.prototype.changeVisibility = function () {
+    // If the +/- is currently visible, make it not visible
+    if(this.isVisible) {
+        for (let i = 0; i < this.attributes.length; i++) {
+            // Code for making attributes invisible here
+        }
+        for (let j = 0; j < this.operations.length; j++) {
+            // Code for making operations invisible here
+        }
+    }
+    // If the +/- is not currently visible, make it visible
+    else {
+        for (let i = 0; i < this.attributes.length; i++) {
+            // Code for making attributes visible here
+        }
+        for (let j = 0; j < this.operations.length; j++) {
+            // Code for making operations visible here
+        }
+    }
 }

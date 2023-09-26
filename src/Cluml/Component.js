@@ -288,10 +288,14 @@ Component.prototype.loadComponent = function (obj) {
     this.helpLbl = obj["helpLbl"];
 };
 
-Component.prototype.properties = function (main) {
-    const dlg = new ComponentPropertiesDlg(this, main);
-    dlg.open();
-};
+/*
+    Commenting this out because we don't want dialog boxes to pop-up
+    when editing classes in clUML.
+ */
+// Component.prototype.properties = function (main) {
+//     const dlg = new ComponentPropertiesDlg(this, main);
+//     dlg.open();
+// };
 
 /**
  * Advance the animation for this component by delta seconds

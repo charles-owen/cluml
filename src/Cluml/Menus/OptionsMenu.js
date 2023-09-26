@@ -19,9 +19,8 @@ export const OptionsMenu = function(menu, main) {
      * Activate the menu, installing all handlers
      */
     this.activate = function() {
-	    menu.click('.option-showoutputstates', (event) => {
-		    main.options.showOutputStates = !main.options.showOutputStates;
-		    main.currentView().draw();
+	    menu.click('.option-visibility', (event) => {
+
 	    });
     }
 
