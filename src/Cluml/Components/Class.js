@@ -222,10 +222,13 @@ Class.prototype.draw = function (context, view) {
 
     context.textAlign = "left"
 
+    // boolean to check if attributes/operations' visibility should be drawn
+    const visibility = this.diagram.diagrams.model.main.options.showVisibility;
+
     // Attributes text
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
-        context.fillText(this.attributes[i],
+        context.fillText(this.attributes[i].substring(visibility ? 0 : 1),
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,
             this.width)
@@ -234,7 +237,7 @@ Class.prototype.draw = function (context, view) {
     // Operations text
     fromTop += this.attributesHeight;
     for (let j = 0; j < this.operations.length; j++) {
-        context.fillText(this.operations[j],
+        context.fillText(this.operations[j].substring(visibility ? 0 : 1),
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
             this.width)

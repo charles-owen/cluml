@@ -11,7 +11,7 @@ export const OptionsMenu = function(menu, main) {
     this.html = function() {
         return `<li><a>Options</a>
 <ul class="option-menu">
-<li><a class="option-showoutputstates">Visibility<img></a></li>
+<li><a class="option-showvisibility">Visibility<img></a></li>
 </ul></li>`;
     }
 
@@ -19,8 +19,9 @@ export const OptionsMenu = function(menu, main) {
      * Activate the menu, installing all handlers
      */
     this.activate = function() {
-	    menu.click('.option-visibility', (event) => {
-
+	    menu.click('.option-showvisibility', (event) => {
+            main.options.showVisibility = !main.options.showVisibility;
+            main.currentView().draw();
 	    });
     }
 
@@ -29,10 +30,10 @@ export const OptionsMenu = function(menu, main) {
      * Set the state of the menu, so it will be valid when shown.
      */
     this.opening = function() {
-        if(main.options.showOutputStates) {
-            Tools.addClass(menu.find('.option-showoutputstates img'), 'check');
+        if(main.options.showVisibility) {
+            Tools.addClass(menu.find('.option-showvisibility img'), 'check');
         } else {
-	        Tools.removeClass(menu.find('.option-showoutputstates img'), 'check');
+	        Tools.removeClass(menu.find('.option-showvisibility img'), 'check');
         }
     }
 }
