@@ -53,6 +53,29 @@ PaletteImage.prototype.box = function(wid, hit) {
     this.fillStroke();
 }
 
+/**
+ * Draw a box.
+ * @param wid Box width
+ * @param hit Box height
+ */
+PaletteImage.prototype.diamond = function(x, y, len) {
+    // x += this.width/2;
+    // y += this.height/2;
+
+    const topY = y + len/2 + 0.5;
+    const rightX = x + len/2 + 0.5;
+    const botY = y - len/2 - 0.5;
+    const leftX = x - len/2 - 0.5;
+
+    this.context.beginPath();
+    this.context.moveTo(x, topY);
+    this.context.lineTo(rightX, y);
+    this.context.lineTo(x, botY);
+    this.context.lineTo(leftX, y);
+    this.context.moveTo(x, topY);
+
+    this.fillStroke();
+}
 
 //draws a line from one point to the other
 PaletteImage.prototype.drawLine = function(x1, y1, x2, y2){

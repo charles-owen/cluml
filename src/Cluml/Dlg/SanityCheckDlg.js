@@ -1,7 +1,7 @@
 import {Dialog} from './Dialog';
 import {SanityElement} from "../SanityElement/SanityElement";
 import {MainSingleton} from "../MainSingleton";
-import {Name} from "../SanityElement/Name";
+//import {Name} from "../SanityElement/Name";
 
 /**
  * Sanity Check dialog box.

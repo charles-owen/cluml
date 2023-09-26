@@ -6,12 +6,12 @@ import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {MainSingleton} from "../../MainSingleton";
 import Selectable from "../../Selectable";
+import {PaletteImage} from "../../Graphics/PaletteImage";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
 export const Association = function () {
     Component.call(this);
-
     /**
      * Yields an object that implements either the functions
      * processSanityCheck() or forwardSanityCheck().
@@ -370,4 +370,50 @@ Association.prototype.createNodeNear = function (near) {
         return null;
     }
 }
+
+//call the termination node to draw the PaletteItem to the palette
+Association.prototype.paletteImage = function() {
+
+
+
+    let size=16;  // Box size
+    let width = 60;       // Image width
+    let height = 40;      // Image height
+    const pi = new PaletteImage(width, height);
+
+    //Association
+    // pi.drawLine(10, 20, 50, 20);
+    // return pi;
+
+    //Inheritance
+    pi.drawLine(17, 20, 50, 20);
+    pi.drawLine(10, 20, 17, 13);
+    pi.drawLine(10, 20, 17, 27);
+    pi.drawLine(17, 13, 17, 27);
+    return pi;
+
+    // //Aggregation
+    // pi.drawLine(22, 20, 50, 20);
+    // pi.drawLine(22, 20, 16, 26);
+    // pi.drawLine(16, 26, 10, 20);
+    // pi.drawLine(10, 20, 16, 14);
+    // pi.drawLine(16, 14, 22, 20);
+    // return pi;
+
+    // //Composition
+    // pi.drawLine(20, 20, 50, 20);
+    // pi.diamond(15, 20, 10);
+    // pi.fillStroke("#000000");
+    // return pi;
+
+    // //Containment
+    // pi.drawLine(22, 20, 50, 20);
+    // pi.circle(-14, 0, 6);
+    // pi.drawLine(16, 24, 16, 16);
+    // pi.drawLine(12, 20, 20, 20);
+    // return pi;
+    // const pi = this.nodes.end.paletteImage();
+    // return pi;
+}
+
 //endregion
