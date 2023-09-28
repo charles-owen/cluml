@@ -83,7 +83,7 @@ TerminationNode.prototype.drop = function () {
     const classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
 
     for (const cl of classes) {
-        if (this.tryAttachToClass(cl))
+        if (this.tryAttachToClass(cl, false))
             break;
     }
 }
@@ -100,13 +100,14 @@ TerminationNode.prototype.draw = function (context, view) {
  * Tries to attach the termination node to the specified class,
  * if the class is close enough.
  * @param attachTo {Class}
- * @return {Boolean}
+ * @param force {boolean}
+ * @return {boolean}
  */
-TerminationNode.prototype.tryAttachToClass = function (attachTo) {
+TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
     const clBounds = attachTo.bounds();
     const someGoodTea = clBounds.getClosestSideT(this.position);
 
-    if (attachTo.bounds().contains(this.x, this.y) ||
+    if (force || attachTo.bounds().contains(this.x, this.y) ||
         someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
 
         // Actually attach the class.
