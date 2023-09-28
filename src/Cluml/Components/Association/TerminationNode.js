@@ -71,21 +71,7 @@ TerminationNode.prototype.paletteDesc = "The start and end nodes for an associat
 TerminationNode.prototype.htmlDesc = '<h2>Termination Node</h2><p>The start and end nodes for an association.</p>';
 TerminationNode.prototype.paletteOrder = -1;
 
-//region Selectable/Component Methods
-/**
- * draw the association to the palette
- * @return {PaletteImage}
- */
-TerminationNode.prototype.paletteImage = function () {
-    let size = 16;  // Box size
-    let width = 60;       // Image width
-    let height = 40;      // Image height
-
-    const pi = new PaletteImage(width, height);
-    pi.drawLine(10, 20, 50, 20);
-    return pi;
-}
-
+//region Selectable Methods
 TerminationNode.prototype.drop = function () {
     // Do not replace with LineNode.prototype.drop. That would destroy
     // the end nodes (bad).

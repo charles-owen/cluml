@@ -195,8 +195,6 @@ Class.prototype.enableEditing = function (enable) {
 Class.prototype.draw = function (context, view) {
     this.selectStyle(context, view);
 
-    const bounds = this.bounds();
-
     context.beginPath();
     context.fillStyle = "#e7e8b0";
     context.strokeStyle = "#000000";

@@ -311,12 +311,6 @@ LineNode.prototype.draw = function (context, view) {
         );
     }
 }
-
-
-LineNode.prototype.paletteImage = function () {
-    // TODO: Implement (not needed lol).
-    return null;
-}
 //endregion
 
 //region LineNode Specific Methods
