@@ -160,6 +160,17 @@ Rect.prototype.getSide = function (side) {
     }
 }
 
+/**
+ * Returns a point that lies on the perimeter of the rectangle.
+ * t determines how far along the perimeter to return the point.
+ * The north side is [0, 1), east is [1, 2), south is [2, 3),
+ * west is [3, 4). The decimal value determines what percent
+ * of the side we are on, with 0.0 representing the
+ * counter-clockwise most side and 1.0 representing the
+ * clockwise most side.
+ * @param t {number}
+ * @return {Vector}
+ */
 Rect.prototype.pointOnEdge = function (t) {
     const line = this.getSide(t);
     return line.pointOnLine(t % 1);

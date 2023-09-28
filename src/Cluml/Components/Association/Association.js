@@ -348,7 +348,7 @@ Association.prototype.createNodeNear = function (near) {
     let minEdge = undefined;
 
     for (const edge of this.edgeGenerator()) {
-        const middle = edge.from.spin() === SPIN_HORIZONTAL ?
+        const middle = edge.from.spin() === SPIN_VERTICAL ?
             new Vector(edge.from.y, edge.to.x) :
             new Vector(edge.from.x, edge.to.y);
 
