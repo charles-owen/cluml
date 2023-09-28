@@ -7,10 +7,14 @@ import {Diagram} from "./Diagram";
  * One Model objects owns the diagrams, so all references are
  * to the model rather than to the diagrams. This allows the
  * diagrams to be switched out due to an undo or load.
- * @param main {{get: function(): Main}} The Cluml object
+ * @param main {Main} The Cluml object
  * @constructor
  */
 export const Model = function (main) {
+    /**
+     *
+     * @type {Main}
+     */
     this.main = main;
 
     this.diagrams = new Diagrams(this);

@@ -30,13 +30,13 @@ export const ImportDlg = function(main, model) {
 
         const reader = new FileReader();
 
-        // // Closure to capture the file information.
-        // reader.onload = function(e) {
-        //     model.fmJSON(e.target.result);
-        //
-        //     that.close();
-        //     main.reload();
-        // };
+        // Closure to capture the file information.
+        reader.onload = function(e) {
+            model.fmJSON(e.target.result);
+
+            that.close();
+            main.reload();
+        };
 
         reader.onerror = function(e) {
             that.error("Error reading diagrams file");

@@ -151,7 +151,7 @@ TerminationNode.prototype.loadNode = function (obj, association) {
     LineNode.prototype.loadNode.call(this, obj, association);
 
     if (obj.attachedToID !== undefined) {
-        this.attachedTo = MainSingleton.singleton.currentDiagram.getComponentByID(obj.attachedToID);
+        this.attachedTo = association.diagram.getComponentByID(obj.attachedToID);
         this.attachedTo.attachedTNodes.push(this);
         this.position = obj.position;
         this.side = obj.side;

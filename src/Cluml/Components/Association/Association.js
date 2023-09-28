@@ -125,6 +125,7 @@ Association.prototype.paletteLbl = "Association";
 Association.prototype.paletteDesc = "Association component.";
 Association.prototype.htmlDesc = '<h2>Association</h2><p>A basic association between 2 classes.</p>';
 Association.prototype.paletteOrder = 20;
+Association.prototype.loadOrder = 20;
 //endregion
 
 //region Component Methods
@@ -295,7 +296,8 @@ Association.prototype.saveComponent = function () {
 
 Association.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent(obj);
-    this.nodes.loadNodeData(obj, this);
+    this.serializedNodeData = obj.nodeData;
+    this.onUndo();
 
     // this.nodes.loadFromIDs(this.diagram, obj.startNodeID, obj.endNodeID);
 }

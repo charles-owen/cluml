@@ -2,6 +2,7 @@ import {Sanitize} from './Utility/Sanitize';
 import {Rect} from "./Utility/Rect";
 import {Diagrams} from "./Diagrams";
 import {Component} from "./Component";
+import {MainSingleton} from "./MainSingleton";
 
 /**
  * Construct a diagram

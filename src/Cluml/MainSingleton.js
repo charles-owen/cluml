@@ -43,7 +43,9 @@ export class MainSingleton {
      * @return {Diagram}
      */
     get currentDiagram() {
-        return this.currentView.diagram;
+        // More accurate than this.#main.currentView().currentDiagram()
+        const i = this.#main.tabs.active;
+        return this.#main.model.diagrams.getDiagrams()[i];
     }
 
     /**
