@@ -5,6 +5,7 @@ import {Class} from "../Class";
 import {MainSingleton} from "../../MainSingleton";
 import {Multiplicity} from "../../SanityElement/Multiplicity";
 import {AttributeDrawer} from "../../Attributes/AttributeDrawer";
+import Vector from "../../Utility/Vector";
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -90,7 +91,7 @@ TerminationNode.prototype.drop = function () {
 TerminationNode.prototype.draw = function (context, view) {
     LineNode.prototype.draw.call(this, context, view);
 
-    this.multiplicityValue.draw(context, view, this.position);
+    this.multiplicityValue.draw(context, view);
 }
 //endregion
 
@@ -118,6 +119,20 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo) {
     }
 
     return false;
+}
+
+/**
+ * Refreshes the position of the termination node.
+ * @return {Vector} The new position.
+ */
+TerminationNode.prototype.refreshPosition = function () {
+    if (this.attachedTo !== undefined && this.attachedTo !== null) {
+        this.position = Vector.add(
+            this.attachedTo.bounds().pointOnEdge(this.side),
+            this.association.position
+        );
+        return this.position;
+    }
 }
 
 TerminationNode.prototype.saveNode = function () {

@@ -136,7 +136,7 @@ Rect.prototype.moveXY = function (x, y) {
  * @return {Line}
  */
 Rect.prototype.getSide = function (side) {
-    switch (side) {
+    switch (Math.floor(side)) {
         case 0:
             return new Line(
                 new Vector(this.left, this.top),
@@ -160,9 +160,9 @@ Rect.prototype.getSide = function (side) {
     }
 }
 
-Rect.prototype.pointOnSide = function (t) {
+Rect.prototype.pointOnEdge = function (t) {
     const line = this.getSide(t);
-    return line.pointOnLine(t);
+    return line.pointOnLine(t % 1);
 }
 
 /**

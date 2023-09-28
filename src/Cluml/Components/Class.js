@@ -153,6 +153,14 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
+Class.prototype.move = function (dx, dy, x, y) {
+    Component.prototype.move.call(this, dx, dy, x, y);
+
+    for (const node of this.attachedTNodes) {
+        node.refreshPosition();
+    }
+}
+
 Class.prototype.tryTouchAddPopup = function (x, y) {
     if (this.addPopup != null) {
         return this.addPopup.touch(x, y);

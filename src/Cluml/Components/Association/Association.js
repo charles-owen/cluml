@@ -145,6 +145,9 @@ Association.prototype.drop = function () {
      * @type {NodeData}
      */
     this.nodes = new NodeData(this);
+
+    this.x = 0;
+    this.y = 0;
 }
 
 /**
