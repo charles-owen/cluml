@@ -73,10 +73,6 @@ LineNode.prototype.htmlDesc = '<h2>Line Node</h2><p>The intermediate nodes of an
 LineNode.prototype.paletteOrder = -1;
 
 //region Save/Load
-/**
- *
- * @return {{x: number, y: number, next: *, nextType: undefined|string}}
- */
 LineNode.prototype.saveNode = function () {
     let obj = {
         x: this.x,

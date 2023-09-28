@@ -160,6 +160,11 @@ Rect.prototype.getSide = function (side) {
     }
 }
 
+Rect.prototype.pointOnSide = function (t) {
+    const line = this.getSide(t);
+    return line.pointOnLine(t);
+}
+
 /**
  * Returns the closest side percentage to point.
  * Each side of the rectangle is labeled with a value range.

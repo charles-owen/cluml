@@ -1,5 +1,4 @@
 import {NAME_FONT, Selectable} from './Selectable';
-import {ComponentPropertiesDlg} from './Dlg/ComponentPropertiesDlg';
 
 import DOMPurify from 'dompurify';
 import {Rect} from "./Utility/Rect";
@@ -111,6 +110,13 @@ Component.prototype.helpLbl = '[UNSET]';
  * @type {number}
  */
 Component.prototype.paletteOrder = -1;
+
+/**
+ * Order of which the component will be loaded. Larger values
+ * are loaded later. 0 is the minimum value.
+ * @type {number}
+ */
+Component.prototype.loadOrder = 0;
 
 /**
  * Maximum ID integer value for any component
@@ -251,7 +257,8 @@ Component.prototype.saveComponent = function () {
         "htmlDesc": this.htmlDesc,
         "paletteLbl": this.paletteLbl,
         "fileLbl": this.fileLbl,
-        "helpLbl": this.helpLbl
+        "helpLbl": this.helpLbl,
+        "loadOrder": this.loadOrder
     };
 };
 

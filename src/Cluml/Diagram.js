@@ -253,14 +253,14 @@ Diagram.prototype.load = function (obj) {
     // Load the diagrams
     const compsMap = {};  // Map from component ID to component object
 
-    for (let i = 0; i < obj.components.length; i++) {
-        /**
-         * @type {Component}
-         */
-        const componentData = obj.components[i];
+    function compareComps(a, b) {
+        return a.loadOrder - b.loadOrder;
+    }
 
+    const compsList = obj.components.sort(compareComps);
+
+    for (const componentData of compsList) {
         const componentConstructor = this.diagrams.model.main.components.get(componentData.fileLbl);
-
         if (componentConstructor !== null) {
             /**
              * @type {Component}

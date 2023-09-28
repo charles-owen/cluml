@@ -54,6 +54,12 @@ export const Class = function () {
      */
     this.editingPopup = null;
 
+    /**
+     * Attached termination nodes.
+     * @type {TerminationNode[]}
+     */
+    this.attachedTNodes = [];
+
     //this doesn't actually control font its just what it seemed to be hardcoded into
     this.fontHeight = 14;
 

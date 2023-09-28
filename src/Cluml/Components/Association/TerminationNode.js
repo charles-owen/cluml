@@ -20,7 +20,7 @@ export const TerminationNode = function () {
      * The multiplicity value.
      * @type {AttributeDrawer}
      */
-    this.multiplicityValue = new AttributeDrawer(new Multiplicity('2.........7'), this);
+    this.multiplicityValue = new AttributeDrawer(new Multiplicity('1...2'), this);
     this.multiplicityValue.y = 15;
 
     /**
@@ -124,6 +124,7 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo) {
 
         // Actually attach the class.
         this.attachedTo = attachTo;
+        this.attachedTo.attachedTNodes.push(this);
         this.position = someGoodTea.atPoint;
         this.side = someGoodTea.side;
 
@@ -131,5 +132,28 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo) {
     }
 
     return false;
+}
+
+TerminationNode.prototype.saveNode = function () {
+    let obj = LineNode.prototype.saveNode.call(this);
+
+    if (this.attachedTo !== null) {
+        obj.attachedToID = this.attachedTo.id;
+        obj.position = this.position;
+        obj.side = this.side;
+    }
+
+    return obj;
+}
+
+TerminationNode.prototype.loadNode = function (obj, association) {
+    LineNode.prototype.loadNode.call(this, obj, association);
+
+    if (obj.attachedToID !== undefined) {
+        this.attachedTo = MainSingleton.singleton.currentDiagram.getComponentByID(obj.attachedToID);
+        this.attachedTo.attachedTNodes.push(this);
+        this.position = obj.position;
+        this.side = obj.side;
+    }
 }
 // endregion
