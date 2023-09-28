@@ -114,6 +114,15 @@ Selectable.prototype.grab = function () {
 };
 
 /**
+ * Called when a double click is detected.
+ * @param x {number}
+ * @param y {number}
+ */
+Selectable.prototype.doubleClick = function (x, y) {
+
+}
+
+/**
  * Moves this selectable.
  * @param dx {number} The cursor delta x position.
  * @param dy {number} The cursor delta y position.

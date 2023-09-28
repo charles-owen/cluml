@@ -23,17 +23,18 @@ export const Selection = function (view) {
      */
     let rect = null;
 
-    this.rightClick = function(x, y,  event) {
+    this.rightClick = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            if (touched.paletteLbl === "Class")
-            {
+            if (touched.paletteLbl === "Class") {
                 event.preventDefault();
                 this.selected = [touched];
                 // this.selected[0].enableAddPopup(true);
             }
-        }
-        else {
+
+            event.preventDefault();
+            this.selected = [touched];
+        } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle
             if (!event.shiftKey) {
@@ -44,17 +45,16 @@ export const Selection = function (view) {
         }
     }
 
-    this.doubleTap = function(x,y, event)
-    {
+    this.doubleTap = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            if (touched.paletteLbl === "Class")
-            {
-                event.preventDefault();
-                this.selected = [touched];
-                this.selected[0].enableEditing(true);
-                this.selected[0].enableAddPopup(true);
-            }
+            event.preventDefault();
+            this.selected = [touched];
+
+            touched.doubleClick(x, y);
+
+            // view.model.update(view.diagram);
+            view.draw();
         }
     }
 
@@ -62,12 +62,10 @@ export const Selection = function (view) {
         down = true;
         firstMove = true;
 
-        if (this.selected[0] != null)
-        {
+        if (this.selected[0] != null) {
             // Last mouse down (right-click) was on a class
-            if (this.selected[0].paletteLbl === "Class")
-            {
-                this.selected[0].tryTouchAddPopup(x,y);
+            if (this.selected[0].paletteLbl === "Class") {
+                this.selected[0].tryTouchAddPopup(x, y);
                 this.selected[0].enableAddPopup(false);
             }
         }

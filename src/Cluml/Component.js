@@ -196,7 +196,7 @@ Component.prototype.added = function (diagram) {
  * @return {Component}
  */
 Component.prototype.touch = function (x, y) {
-    throw new Error("Not implemented");
+
 };
 
 /**

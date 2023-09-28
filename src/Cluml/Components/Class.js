@@ -5,6 +5,7 @@ import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
+import Selectable from "../Selectable";
 
 export const Class = function () {
     Component.call(this);
@@ -151,6 +152,13 @@ Class.prototype.touch = function (x, y) {
     }
 
     return null;
+}
+
+Class.prototype.doubleClick = function(x, y) {
+    Selectable.prototype.doubleClick.call(this, x, y);
+
+    this.enableEditing(true);
+    this.enableAddPopup(true);
 }
 
 Class.prototype.move = function (dx, dy, x, y) {

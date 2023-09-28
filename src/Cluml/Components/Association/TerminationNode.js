@@ -76,7 +76,7 @@ TerminationNode.prototype.paletteOrder = -1;
 TerminationNode.prototype.drop = function () {
     // Do not replace with LineNode.prototype.drop. That would destroy
     // the end nodes (bad).
-    Selectable.prototype.drop.call(this);
+    LineNode.prototype.drop.call(this);
 
     // Determine if we are near a class. For now, just go
     // through every class.

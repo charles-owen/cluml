@@ -94,25 +94,30 @@ export const View = function(main, canvas, diagram) {
         }
 
         let lastTap;
-        let downListener = (pageX, pageY, touch, event) => {
 
+        function setMousePos(pageX, pageY) {
             let offset = Tools.offset(canvas);
             lastPage = {x: pageX, y: pageY};
             mouse.x = pageX - offset.left;
             mouse.y = pageY - offset.top;
             lastMouse.x = mouse.x;
             lastMouse.y = mouse.y;
+        }
 
-            if (lastTap === undefined) { lastTap = new Date().getTime(); }
-            let now = new Date().getTime();
-            let timeBetween = now - lastTap;
-            if((timeBetween < 700) && (timeBetween > 0)){
-                // double tap
-                this.selection.doubleTap(mouse.x, mouse.y, event);
-                return;
-            }
+        let downListener = (pageX, pageY, touch, event) => {
 
-            lastTap = new Date().getTime();
+            setMousePos(pageX, pageY);
+
+            // if (lastTap === undefined) { lastTap = new Date().getTime(); }
+            // let now = new Date().getTime();
+            // let timeBetween = now - lastTap;
+            // if((timeBetween < 700) && (timeBetween > 0)){
+            //     // double tap
+            //     this.selection.doubleTap(mouse.x, mouse.y, event);
+            //     return;
+            // }
+            //
+            // lastTap = new Date().getTime();
 
             // If we are in inline mode, we don't allow selecting
             // or dragging at all.
@@ -176,13 +181,18 @@ export const View = function(main, canvas, diagram) {
             this.draw();
         }
 
-        let mouseDblClickListener = (event) => {
+        /**
+         * Listener for double clicks.
+         * @param event {MouseEvent}
+         */
+        let dblClickListener = (event) => {
             event.preventDefault();
+
+            setMousePos(event.pageX, event.pageY);
 
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Component)) {
-                let component = this.selection.selected[0];
-                // component.properties(main);
+                this.selection.doubleTap(mouse.x, mouse.y, event);
             }
         }
 
@@ -215,9 +225,9 @@ export const View = function(main, canvas, diagram) {
         }
 
         // Install mouse handlers
-        canvas.addEventListener('contextmenu', contextMenuListener);
+        // canvas.addEventListener('contextmenu', contextMenuListener);
         canvas.addEventListener('mousedown', mouseDownListener);
-        canvas.addEventListener('dblclick', mouseDblClickListener);
+        canvas.addEventListener('dblclick', dblClickListener);
 
         let body = document.querySelector('body');
         body.addEventListener('mouseup', mouseUpListener);
