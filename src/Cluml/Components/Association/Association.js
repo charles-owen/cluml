@@ -128,6 +128,15 @@ Association.prototype.paletteOrder = 20;
 //endregion
 
 //region Component Methods
+/**
+ * Drops the association, then calls callback.
+ * @param callback {function}
+ */
+Association.prototype.dropWithCallback = function (callback) {
+    this.drop();
+    callback();
+}
+
 Association.prototype.drop = function () {
     Component.prototype.drop.call(this);
 
