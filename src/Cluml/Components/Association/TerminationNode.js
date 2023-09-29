@@ -97,10 +97,23 @@ TerminationNode.prototype.draw = function (context, view) {
 
 // region TerminationNode Specific Methods
 /**
+ * Actually attaches the class.
+ * @param attachTo {Class}
+ * @param position {Vector}
+ * @param side {number}
+ */
+TerminationNode.prototype.attachToClass = function (attachTo, position, side) {
+    this.attachedTo = attachTo;
+    this.attachedTo.attachedTNodes.push(this);
+    this.position = position;
+    this.side = side;
+}
+
+/**
  * Tries to attach the termination node to the specified class,
  * if the class is close enough.
  * @param attachTo {Class}
- * @param force {boolean}
+ * @param force {boolean} Ignores distance check.
  * @return {boolean}
  */
 TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
@@ -111,10 +124,7 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
         someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
 
         // Actually attach the class.
-        this.attachedTo = attachTo;
-        this.attachedTo.attachedTNodes.push(this);
-        this.position = someGoodTea.atPoint;
-        this.side = someGoodTea.side;
+        this.attachToClass(attachTo, someGoodTea.atPoint, someGoodTea.side);
 
         return true;
     }
@@ -152,10 +162,9 @@ TerminationNode.prototype.loadNode = function (obj, association) {
     LineNode.prototype.loadNode.call(this, obj, association);
 
     if (obj.attachedToID !== undefined) {
-        this.attachedTo = association.diagram.getComponentByID(obj.attachedToID);
-        this.attachedTo.attachedTNodes.push(this);
-        this.position = obj.position;
-        this.side = obj.side;
+        const at = association.diagram.getComponentByID(obj.attachedToID);
+
+        this.attachToClass(at, obj.position, obj.side);
     }
 }
 // endregion
