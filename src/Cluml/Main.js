@@ -116,6 +116,11 @@ export const Main = function (cluml, element, tests) {
             this.dragAndDrop = new DragAndDrop(this);
             this.toggleManager = new ToggleManager(this);
 
+            //toggle that determines the current selection mode;
+            //true means 'class' mode
+            //false means 'association' mode
+            this.selectionToggle = true;
+
             //
             // Install a mutation observer, so we can know if the
             // element that contains cluml is removed from the

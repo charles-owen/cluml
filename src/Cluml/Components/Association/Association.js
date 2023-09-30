@@ -59,7 +59,7 @@ class NodeData {
     constructor(association) {
         const pos = association.position;
         this.#start = new TerminationNode();
-        this.#start.position = new Vector(pos.x - 50, pos.y);
+        this.#start.position = new Vector(pos.x, pos.y);
         this.#end = new TerminationNode();
         this.#end.position = new Vector(pos.x + 50, pos.y);
         this.#start.linkToNext(this.#end);
@@ -146,6 +146,8 @@ Association.prototype.drop = function () {
      * @type {NodeData}
      */
     this.nodes = new NodeData(this);
+    //attempt to connect the start node with the class
+    this.nodes.start.drop();
 
     this.x = 0;
     this.y = 0;
@@ -263,7 +265,6 @@ Association.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 
     // const testNodes = [...this.nodeGenerator()];
-
     this.selectStyle(context, view);
 
     // Draw the line.
@@ -401,7 +402,7 @@ Association.prototype.createNodeNear = function (near) {
     }
 }
 
-//call the termination node to draw the PaletteItem to the palette
+//Draw the paletteImage for the palette
 Association.prototype.paletteImage = function() {
     let size=16;  // Box size
     let width = 60;       // Image width

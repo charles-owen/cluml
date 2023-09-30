@@ -60,6 +60,8 @@ export const View = function(main, canvas, diagram) {
         this.setSize();
 
         main.dragAndDrop.droppable(this, (paletteItem, x, y) => {
+            //whenever a component is dragged from the palette and dropped on the canvas,
+            //this function is called
             const componentTemplate = paletteItem.template;
             if(componentTemplate === undefined) {
                 return;
@@ -108,6 +110,7 @@ export const View = function(main, canvas, diagram) {
 
             setMousePos(pageX, pageY);
 
+
             // if (lastTap === undefined) { lastTap = new Date().getTime(); }
             // let now = new Date().getTime();
             // let timeBetween = now - lastTap;
@@ -124,6 +127,26 @@ export const View = function(main, canvas, diagram) {
             if(main.options.display === 'inline') {
                 this.diagram.touch(mouse.x, mouse.y);
                 return;
+            }
+
+            let tempComp = this.diagram.touch(mouse.x, mouse.y);
+
+            //if user is in association selection mode, and the user has touched a class
+            if(main.selectionToggle === false &&
+                tempComp !== null && tempComp.fileLbl === 'Class'){
+                //create an association
+                const componentTemplate = main.toggleManager.toggledAssociation.template;
+                console.log(componentTemplate);
+                if(main.toggleManager.toggledAssociation === undefined){
+                    return;
+                }
+
+                const newAssociation = new componentTemplate(main.toggleManager.toggledAssociation);
+                this.initializeComponent(newAssociation, mouse.x, mouse.y);
+
+                //Set the end node of association as selected
+                this.selection.selectEndNode(newAssociation, mouse.x, mouse.y);
+                //return;
             }
 
             this.selection.mouseDown(mouse.x, mouse.y, event);
@@ -144,6 +167,13 @@ export const View = function(main, canvas, diagram) {
 	        const offset = Tools.offset(canvas); // canvasJ.offset();
 	        mouse.x = lastPage.x - offset.left;
 	        mouse.y = lastPage.y - offset.top;
+
+            //if user is in association selection mode
+            if(main.selectionToggle === false){
+                this.diagram.touch(mouse.x, mouse.y);
+                return;
+            }
+
 	        this.selection.mouseMove(mouse.x, mouse.y, mouse.x - lastMouse.x, mouse.y - lastMouse.y);
 	        lastMouse.x = mouse.x;
 	        lastMouse.y = mouse.y;
@@ -172,6 +202,7 @@ export const View = function(main, canvas, diagram) {
 	        lastPage = {x: pageX, y: pageY};
             mouse.x = pageX - offset.left;
             mouse.y = pageY - offset.top;
+
             this.selection.mouseMove(mouse.x, mouse.y, mouse.x - lastMouse.x, mouse.y - lastMouse.y);
 
             this.ensureSize();
@@ -189,6 +220,12 @@ export const View = function(main, canvas, diagram) {
             event.preventDefault();
 
             setMousePos(event.pageX, event.pageY);
+
+            //if user is in association selection mode
+            if(main.selectionToggle === false){
+                this.diagram.touch(mouse.x, mouse.y);
+                return;
+            }
 
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Component)) {
@@ -218,6 +255,13 @@ export const View = function(main, canvas, diagram) {
 	        let offset = Tools.offset(canvas);
             mouse.x = pageX - offset.left;
             mouse.y = pageY - offset.top;
+
+            // //if user is in association selection mode
+            // if(main.selectionToggle === false){
+            //     this.diagram.touch(mouse.x, mouse.y);
+            //     return;
+            // }
+
             this.selection.mouseUp(mouse.x, mouse.y);
             lastMouse.x = mouse.x;
             lastMouse.y = mouse.y;

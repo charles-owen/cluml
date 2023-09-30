@@ -20,12 +20,16 @@ export const ToggleManager = function(main){
 
     const click = (paletteItem) =>{
 
-        console.log(paletteItem.template.fileLbl, "Was just clicked");
-        if(paletteItem.template.fileLbl === 'Association'){
-            this.toggledAssociation = paletteItem.template;
+        console.log(paletteItem.proto.fileLbl, "Was just clicked");
+        if(paletteItem.proto.fileLbl === 'Association'){
+            this.toggledAssociation = paletteItem;
+            main.selectionToggle = false;
+            console.log(main.selectionToggle)
             //call to main or wherever else that its currently in 'association mode'
         } else {
             this.toggledAssociation = null;
+            main.selectionToggle = true;
+            console.log(main.selectionToggle)
             //call to main or wherever else that its currently in class mode.
         }
     }
