@@ -105,6 +105,21 @@ class NodeData {
         this.#end = node;
     }
 
+    swapEnds() {
+        const oldEnd = this.#end;
+        const oldStart = this.#start;
+
+        this.#start.attachedTo = oldEnd.attachedTo;
+        this.#start.side = oldEnd.side;
+        this.#start.linkToNext(oldEnd.previousNode);
+        this.#start.refreshPosition();
+
+        this.#end.attachedTo = oldStart.attachedTo;
+        this.#end.side = oldStart.side;
+        this.#end.linkToPrevious(oldStart.nextNode);
+        this.#end.refreshPosition();
+    }
+
     // /**
     //  * Copies the values in "other".
     //  * @param other {NodeData}
@@ -361,6 +376,13 @@ Association.prototype.nodeSpins = function* () {
 }
 
 /**
+ * Swaps the end and start nodes.
+ */
+Association.prototype.swapEnds = function () {
+    this.nodes.swapEnds();
+}
+
+/**
  * Creates a node line node near the point "near".
  * @param near {Vector}
  * @return {LineNode|null}
@@ -401,7 +423,10 @@ Association.prototype.createNodeNear = function (near) {
     }
 }
 
-//call the termination node to draw the PaletteItem to the palette
+/**
+ * Call the termination node to draw the PaletteItem to the palette
+ * @return {PaletteImage}
+ */
 Association.prototype.paletteImage = function() {
     let size=16;  // Box size
     let width = 60;       // Image width

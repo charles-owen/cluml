@@ -49,6 +49,14 @@ export class MainSingleton {
     }
 
     /**
+     * Returns the current selected tab's div.
+     * @return {Element}
+     */
+    static get currentTabDiv() {
+        return document.getElementsByClassName('tab')[0];
+    }
+
+    /**
      * Returns all components that exist
      * within the current diagram.
      * {Array<Component>}

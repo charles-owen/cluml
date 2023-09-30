@@ -2,6 +2,7 @@ import {View} from './View';
 import {Tools} from './DOM/Tools';
 import {TextInput} from "./Input/TextInput";
 import {Rect} from "./Utility/Rect";
+import {CustomContextMenu} from "./ContextMenu/CustomContextMenu";
 
 
 /**
@@ -342,18 +343,5 @@ export const Tabs = function (main) {
     this.rename = function (name) {
         main.model.diagrams.rename(this.active, name);
         this.sync();
-    }
-
-    /**
-     * Creates a text field at the specified location.
-     * @param callback {function} A function with a single parameter. Will be called once value is set.
-     * @param dimensions {Rect} Dimensions of this text input.
-     * @param font {string} Font to use with the input.
-     */
-    this.createTextInput = function (callback, dimensions, font = "14px Times") {
-        const textInputTesting = new TextInput(
-            callback, dimensions, font
-        );
-        tabs[this.active].pane.appendChild(textInputTesting.inputElement);
     }
 };

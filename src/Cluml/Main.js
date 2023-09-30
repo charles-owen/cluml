@@ -22,6 +22,7 @@ import {ExportDlg} from "./Dlg/ExportDlg";
 import {ImportDlg} from "./Dlg/ImportDlg";
 import {Rect} from "./Utility/Rect";
 import {MainSingleton} from "./MainSingleton";
+import {TextInput} from "./Input/TextInput";
 
 /**
  * Actual instance of cluml for a single element.
@@ -198,12 +199,16 @@ export const Main = function (cluml, element, tests) {
             this.div.appendChild(divOverlay);
 
             // Testing.
-            tabs.createTextInput(
+            /**
+             *
+             * @type {TextInput}
+             */
+            this.testTextInput = new TextInput(
                 function (value) {
 
                 },
                 new Rect(50, 50, 150, 100)
-            )
+            );
 
             this.toast = new Toast(this);
             this.toast.create(this.div);

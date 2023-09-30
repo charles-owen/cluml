@@ -4,6 +4,9 @@ import {Tools} from './DOM/Tools';
 import {ImportTabDialog} from "./Dlg/ImportTabDialog";
 import {Model} from "./Model";
 import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
+import Vector from "./Utility/Vector";
+import {Rect} from "./Utility/Rect";
+import Selectable from "./Selectable";
 
 /**
  * View of a diagram
@@ -72,9 +75,9 @@ export const View = function(main, canvas, diagram) {
         //
         // Mouse management
         //
-        let lastMouse = {x: 0, y: 0};
-        let mouse = {x: 0, y: 0};
-        let lastPage = {x: 0, y: 0};
+        let lastMouse = new Vector(0, 0);
+        let mouse = new Vector(0, 0);
+        let lastPage = new Vector(0, 0);
 
         let mouseDownListener = (event) => {
             event.preventDefault();
@@ -95,13 +98,25 @@ export const View = function(main, canvas, diagram) {
 
         let lastTap;
 
+        /**
+         * Sets the mouse position
+         * @param pageX {number}
+         * @param pageY {number}
+         * @return {Vector} How far the cursor was moved.
+         */
         function setMousePos(pageX, pageY) {
             let offset = Tools.offset(canvas);
             lastPage = {x: pageX, y: pageY};
             mouse.x = pageX - offset.left;
             mouse.y = pageY - offset.top;
+
+            const dx = mouse.x - lastMouse.x;
+            const dy = mouse.y - lastMouse.y;
+
             lastMouse.x = mouse.x;
             lastMouse.y = mouse.y;
+
+            return new Vector(dx, dy);
         }
 
         let downListener = (pageX, pageY, touch, event) => {
@@ -168,16 +183,15 @@ export const View = function(main, canvas, diagram) {
                 return;
             }
 
-	        const offset = Tools.offset(canvas);
-	        lastPage = {x: pageX, y: pageY};
-            mouse.x = pageX - offset.left;
-            mouse.y = pageY - offset.top;
-            this.selection.mouseMove(mouse.x, mouse.y, mouse.x - lastMouse.x, mouse.y - lastMouse.y);
+            const dv = setMousePos(pageX, pageY);
+
+            main.testTextInput.dimensions = Rect.fromCenterAndExtents(
+                mouse, new Vector(15, 15)
+            );
+
+            this.selection.mouseMove(mouse.x, mouse.y, dv.x, dv.y);
 
             this.ensureSize();
-            
-            lastMouse.x = mouse.x;
-            lastMouse.y = mouse.y;
             this.draw();
         }
 
@@ -191,7 +205,7 @@ export const View = function(main, canvas, diagram) {
             setMousePos(event.pageX, event.pageY);
 
             if (this.selection.selected.length === 1 &&
-                (this.selection.selected[0] instanceof Component)) {
+                (this.selection.selected[0] instanceof Selectable)) {
                 this.selection.doubleTap(mouse.x, mouse.y, event);
             }
         }
@@ -215,12 +229,7 @@ export const View = function(main, canvas, diagram) {
         let upListener = (pageX, pageY, touch) => {
             canvas.parentNode.removeEventListener('scroll', scrollListener);
             // canvasJ.parent().off("scroll");
-	        let offset = Tools.offset(canvas);
-            mouse.x = pageX - offset.left;
-            mouse.y = pageY - offset.top;
-            this.selection.mouseUp(mouse.x, mouse.y);
-            lastMouse.x = mouse.x;
-            lastMouse.y = mouse.y;
+	        setMousePos(pageX, pageY);
             this.draw();
         }
 

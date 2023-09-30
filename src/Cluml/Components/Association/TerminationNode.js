@@ -1,11 +1,11 @@
 import {LineNode} from "./LineNode.js"
-import {PaletteImage} from "../../Graphics/PaletteImage";
 import Selectable from "../../Selectable";
 import {Class} from "../Class";
 import {MainSingleton} from "../../MainSingleton";
 import {Multiplicity} from "../../SanityElement/Multiplicity";
 import {AttributeDrawer} from "../../Attributes/AttributeDrawer";
 import Vector from "../../Utility/Vector";
+import {CustomContextMenu} from "../../ContextMenu/CustomContextMenu";
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -86,6 +86,19 @@ TerminationNode.prototype.drop = function () {
         if (this.tryAttachToClass(cl, false))
             break;
     }
+}
+
+TerminationNode.prototype.doubleClick = function (x, y) {
+    Selectable.prototype.doubleClick.call(this, x, y);
+
+    // Show context menu.
+    const contextMenu = new CustomContextMenu(this, new Vector(x, y));
+    contextMenu.addEntry("Edit Multiplicity/Label", function () {
+        
+    });
+    contextMenu.addEntry("Swap Start and End", function () {
+        this.association.swapEnds();
+    });
 }
 
 TerminationNode.prototype.draw = function (context, view) {
