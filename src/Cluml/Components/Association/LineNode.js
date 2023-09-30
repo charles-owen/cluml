@@ -185,7 +185,6 @@ LineNode.prototype.drop = function () {
     if ((this.hasNext && Vector.distance(this.position, this.nextNode.position) < 5) ||
         (this.hasPrevious && Vector.distance(this.position, this.previousNode.position) < 5)) {
         // Delete this node.
-        this.remove();
         this.delete();
     }
 }
@@ -354,7 +353,7 @@ LineNode.prototype.insertBetween = function (previous, next) {
 /**
  * Removes this node from the linked list.
  */
-LineNode.prototype.remove = function () {
+LineNode.prototype.delete = function () {
     if (this.nextNode !== null) {
         this.nextNode.previousNode = this.previousNode;
     }

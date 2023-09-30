@@ -167,4 +167,12 @@ TerminationNode.prototype.loadNode = function (obj, association) {
         this.attachToClass(at, obj.position, obj.side);
     }
 }
+
+/**
+ * Deletes this termination node. This also deletes the
+ * association.
+ */
+TerminationNode.prototype.delete = function () {
+    this.association.delete();
+}
 // endregion
