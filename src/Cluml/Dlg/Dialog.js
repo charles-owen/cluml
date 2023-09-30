@@ -24,7 +24,7 @@ export const Dialog = function(classes) {
  * @param html HTML for the body
  * @param title Title for the title bar
  */
-Dialog.prototype.contents = function( html, title) {
+Dialog.prototype.contents = function(html, title) {
     this.html = html;
     this.title = title;
 }

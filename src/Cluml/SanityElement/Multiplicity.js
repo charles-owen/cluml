@@ -37,9 +37,6 @@ export class Multiplicity extends SanityElement {
      */
     constructor(stringValue) {
         super(stringValue);
-
-        // Run the sanity check to update the multiplicity types.
-        this.processSanityCheck();
     }
 
     //endregion
@@ -59,14 +56,5 @@ export class Multiplicity extends SanityElement {
         }
 
         return '';
-    }
-
-    /**
-     * Draws this multiplicity.
-     * @param context
-     * @param view
-     */
-    draw(context, view) {
-
     }
 }

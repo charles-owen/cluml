@@ -9,6 +9,9 @@ export class SanityElement {
      */
     constructor(stringValue) {
         this.elementValue = stringValue;
+
+        // Run the sanity check to update the types.
+        this.processSanityCheck();
     }
 
     /**

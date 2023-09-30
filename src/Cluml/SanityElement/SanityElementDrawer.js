@@ -1,9 +1,8 @@
 import Selectable, {CONTENT_FONT} from "../Selectable";
-import {MainSingleton} from "../MainSingleton";
 import {Rect} from "../Utility/Rect";
 import Vector from "../Utility/Vector";
 
-export class AttributeDrawer extends Selectable {
+export class SanityElementDrawer extends Selectable {
     //region Fields
     /**
      * @type {SanityElement}

@@ -1,11 +1,14 @@
-import {LineNode} from "./LineNode.js"
+import { LineNode } from "./LineNode.js"
 import Selectable from "../../Selectable";
-import {Class} from "../Class";
-import {MainSingleton} from "../../MainSingleton";
-import {Multiplicity} from "../../SanityElement/Multiplicity";
-import {AttributeDrawer} from "../../Attributes/AttributeDrawer";
+import { Class } from "../Class";
+import { MainSingleton } from "../../MainSingleton";
+import { Multiplicity } from "../../SanityElement/Multiplicity";
+import { SanityElementDrawer } from "../../SanityElement/SanityElementDrawer.js";
 import Vector from "../../Utility/Vector";
-import {CustomContextMenu} from "../../ContextMenu/CustomContextMenu";
+import { CustomContextMenu } from "../../ContextMenu/CustomContextMenu";
+import { TerminationNodeDlg } from "../../Dlg/TerminationNodeDlg.js";
+import { TNodeTag } from "../../SanityElement/TNodeTag.js";
+
 
 /**
  * Determines how far away to snap nodes to classes.
@@ -19,16 +22,17 @@ export const TerminationNode = function () {
     //region Fields
     /**
      * The multiplicity value.
-     * @type {AttributeDrawer}
+     * @type {SanityElementDrawer}
      */
-    this.multiplicityValue = new AttributeDrawer(new Multiplicity('1...2'), this);
+    this.multiplicityValue = new SanityElementDrawer(new Multiplicity('*'), this);
     this.multiplicityValue.y = 15;
 
     /**
      * The attribute label.
-     * @type {AttrLabel}
+     * @type {SanityElementDrawer}
      */
-    this.labelValue = null;
+    this.tagValue = new SanityElementDrawer(new TNodeTag('tag'), this);
+    this.tagValue.y = -15;
 
     /**
      * The class this is attached to.
@@ -94,7 +98,8 @@ TerminationNode.prototype.doubleClick = function (x, y) {
     // Show context menu.
     const contextMenu = new CustomContextMenu(this, new Vector(x, y));
     contextMenu.addEntry("Edit Multiplicity/Label", function () {
-        
+        const tNodeDlg = new TerminationNodeDlg(this);
+        tNodeDlg.open();
     });
     contextMenu.addEntry("Swap Start and End", function () {
         this.association.swapEnds();
@@ -105,6 +110,7 @@ TerminationNode.prototype.draw = function (context, view) {
     LineNode.prototype.draw.call(this, context, view);
 
     this.multiplicityValue.draw(context, view);
+    this.tagValue.draw(context, view);
 }
 //endregion
 
