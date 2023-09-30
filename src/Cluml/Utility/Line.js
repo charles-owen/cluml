@@ -85,14 +85,7 @@ Line.prototype.pointNearest = function (point) {
     const pointOnLine = this.pointOnLine(t);
 
     const line_cp = new Line(pointOnLine, point);
-    // const lineToPoint = new Line(this.from, point);
-    // const len = (disp.x * disp.x) + (disp.y + disp.y);
-    // const dot = (lineToPoint.x * disp.x) + (lineToPoint.y + disp.y);
-    // const t = Math.min(1, Math.max(0, dot / len));
-    // const dispT = Vector.scale(disp, t);
-    // const output = Vector.add(this.from, dispT);
-    // const distance = Vector.distance(output, point);
-    //
+
     return {
         pointOnLine: pointOnLine,
         t: t,
