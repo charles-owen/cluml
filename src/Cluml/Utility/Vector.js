@@ -189,8 +189,9 @@ Vector.computeT = function (p, p1, p2) {
  * @param p2 {Vector}
  */
 Vector.distance = function (p1, p2) {
-    return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) +
-        (p2.y - p1.y) * (p2.y - p1.y));
+    const x = p2.x - p1.x;
+    const y = p2.y - p1.y;
+    return Math.sqrt(x * x + y * y);
 };
 
 /**

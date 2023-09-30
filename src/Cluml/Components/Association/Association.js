@@ -399,7 +399,7 @@ Association.prototype.createNodeNear = function (near) {
         for (const line of [nodeSpin.lineStart, nodeSpin.lineEnd]) {
             const tdp = line.pointNearest(near);
 
-            if (tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
+            if (tdp.t <= 1 && tdp.t >= 0 && tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
                 if (minTDP === undefined || tdp.distance < minTDP.distance) {
                     minTDP = tdp;
                     minEdge = nodeSpin.edge;
