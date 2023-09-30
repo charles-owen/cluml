@@ -1,4 +1,5 @@
 import {Rect} from './Utility/Rect';
+import {Association} from "./Components/Association/Association";
 
 /**
  * The Selection object keeps track of what is currently
@@ -210,6 +211,23 @@ export const Selection = function (view) {
         }
 
     };
+
+
+    /**
+     * Provide support for association selection mode
+     * Sets the end node of the created association as the current selected
+     * Places the end node at the same position as the mouse
+     * @param association {Association}
+     * @param x {MousePosX}
+     * @param y {MousePosY}
+     */
+    this.selectEndNode = function(association, x, y){
+        console.log("Testing that this does a thing");
+        this.clear();
+        this.selected = [association.nodes.end]
+        association.nodes.end.x = x;
+        association.nodes.end.y = y;
+    }
 
     this.getSelection = function () {
         return this.selected;
