@@ -117,10 +117,31 @@ export const Main = function (cluml, element, tests) {
             this.dragAndDrop = new DragAndDrop(this);
             this.toggleManager = new ToggleManager(this);
 
-            //toggle that determines the current selection mode;
-            //true means 'class' mode
-            //false means 'association' mode
-            this.selectionToggle = true;
+            /**
+             * Toggle that determines the current selection mode.
+             * True means 'class' mode.
+             * False means 'association' mode.
+             * @type {boolean}
+             */
+            let _selectionToggle = true;
+
+            Object.defineProperty(this, 'selectionToggle', {
+                get: function () {
+                    return _selectionToggle;
+                },
+                set: function (value) {
+                    _selectionToggle = value;
+
+                    const paletteDiv = document.getElementsByClassName('cs-palette')[0];
+
+                    if (value) {
+                        // In class mode now.
+                        paletteDiv.style.background = 'white';
+                    } else {
+                        paletteDiv.style.background = 'cyan';
+                    }
+                }
+            });
 
             //
             // Install a mutation observer, so we can know if the
