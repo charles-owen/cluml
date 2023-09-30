@@ -269,16 +269,9 @@ Association.prototype.draw = function (context, view) {
     // Draw the line.
     context.beginPath();
 
-    for (const edge of this.edgeGenerator()) {
-        context.moveTo(edge.from.x, edge.from.y);
-
-        if (edge.from.spin() === SPIN_HORIZONTAL) {
-            context.lineTo(edge.to.x, edge.from.y);
-        } else {
-            context.lineTo(edge.from.x, edge.to.y);
-        }
-
-        context.lineTo(edge.to.x, edge.to.y);
+    for (const nodeSpin of this.nodeSpins()) {
+        nodeSpin.lineStart.contextLineTo(context);
+        nodeSpin.lineEnd.contextLineTo(context);
     }
 
     context.stroke();
@@ -335,6 +328,38 @@ Association.prototype.edgeGenerator = function* () {
     }
 }
 
+Association.prototype.nodeSpins = function* () {
+    let spin = SPIN_HORIZONTAL;
+    let node = this.nodes.start;
+
+    if (node.attachedTo !== null) {
+        // If the start node is attached to any class, determine which
+        // spin is best based on the side it's attached to.
+        const side = node.side;
+        if ((side >= 0 && side < 1) ||
+            (side >= 2 && side < 3)) {
+            // Top/bottom.
+            spin = SPIN_VERTICAL;
+        } else {
+            // Left/right.
+            spin = SPIN_HORIZONTAL;
+        }
+    }
+
+    for (const edge of this.edgeGenerator()) {
+        const middle = spin === SPIN_HORIZONTAL ?
+            new Vector(edge.to.x, edge.from.y) :
+            new Vector(edge.from.x, edge.to.y);
+
+        yield {
+            edge: edge,
+            spin: spin,
+            lineStart: new Line(edge.from.position, middle),
+            lineEnd: new Line(middle, edge.to.position)
+        }
+    }
+}
+
 /**
  * Creates a node line node near the point "near".
  * @param near {Vector}
@@ -347,23 +372,14 @@ Association.prototype.createNodeNear = function (near) {
     let minTDP = undefined;
     let minEdge = undefined;
 
-    for (const edge of this.edgeGenerator()) {
-        const middle = edge.from.spin() === SPIN_VERTICAL ?
-            new Vector(edge.from.y, edge.to.x) :
-            new Vector(edge.from.x, edge.to.y);
-
-        const lines = [
-            new Line(edge.from.position, middle),
-            new Line(middle, edge.to.position)
-        ];
-
-        for (const line of lines) {
+    for (const nodeSpin of this.nodeSpins()) {
+        for (const line of [nodeSpin.lineStart, nodeSpin.lineEnd]) {
             const tdp = line.pointNearest(near);
 
             if (tdp.distance < ASSOCIATION_MIN_NODE_CREATE_DISTANCE) {
                 if (minTDP === undefined || tdp.distance < minTDP.distance) {
                     minTDP = tdp;
-                    minEdge = edge;
+                    minEdge = nodeSpin.edge;
                 }
             }
         }
@@ -387,9 +403,6 @@ Association.prototype.createNodeNear = function (near) {
 
 //call the termination node to draw the PaletteItem to the palette
 Association.prototype.paletteImage = function() {
-
-
-
     let size=16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height

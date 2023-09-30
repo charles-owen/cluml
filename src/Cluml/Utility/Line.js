@@ -12,6 +12,21 @@ export const Line = function (from, to) {
 }
 
 /**
+ * Creates a line from numerical coordinates.
+ * @param x1 {number}
+ * @param y1 {number}
+ * @param x2 {number}
+ * @param y2 {number}
+ * @return {Line}
+ */
+Line.fromCoordinates = function (x1, y1, x2, y2) {
+    return new Line(
+        new Vector(x1, y1),
+        new Vector(x2, y2)
+    );
+}
+
+/**
  * Returns the displacement of the line.
  * @return {Vector}
  */
@@ -25,6 +40,15 @@ Line.prototype.displacement = function () {
  */
 Line.prototype.length = function () {
     return Vector.distance(this.to, this.from);
+}
+
+/**
+ * Calls the function lineTo() on context.
+ * @param context {CanvasRenderingContext2D} Display context
+ */
+Line.prototype.contextLineTo = function (context) {
+    context.moveTo(this.from.x, this.from.y);
+    context.lineTo(this.to.x, this.to.y);
 }
 
 /**
