@@ -1,5 +1,9 @@
 import {Class} from "./Class";
 import {Association} from "./Association/Association";
+import {Inheritance} from "./Association/Inheritance";
+import {Composition} from "./Association/Composition";
+import {Aggregation} from "./Association/Aggregation";
+import {Containment} from "./Association/Containment";
 
 /**
  * Adds all components into the system.
@@ -9,6 +13,11 @@ import {Association} from "./Association/Association";
 export const All = function (components) {
     components.add(Class);
     components.add(Association);
+    components.add(Inheritance);
+    components.add(Composition);
+    components.add(Aggregation);
+    components.add(Containment);
 
-    components.addPalette('all', [Class, Association]);
+    //components.addPalette('all', [Class, Association, Inheritance, Composition]);
+    components.addPalette('all', [Class, Association, Inheritance, Composition, Aggregation, Containment]);
 }

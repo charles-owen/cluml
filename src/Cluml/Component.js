@@ -100,6 +100,11 @@ Component.prototype.paletteLbl = '[UNSET]';
 Component.prototype.fileLbl = '[UNSET]';
 
 /**
+ * Lable that determines if component is an association
+ */
+Component.prototype.isAssociation = false;
+
+/**
  * Label used to determine which help screen to show.
  * @type {string}
  */

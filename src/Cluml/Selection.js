@@ -224,7 +224,7 @@ export const Selection = function (view) {
     this.selectEndNode = function(association, x, y){
         console.log("Testing that this does a thing");
         this.clear();
-        this.selected = [association.nodes.end]
+        this.selected = [association.nodes.end];
         association.nodes.end.x = x;
         association.nodes.end.y = y;
     }

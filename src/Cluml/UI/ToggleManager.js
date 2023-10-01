@@ -19,12 +19,11 @@ export const ToggleManager = function(main){
     }
 
     const click = (paletteItem) =>{
-
         console.log(paletteItem.proto.fileLbl, "Was just clicked");
-        if(paletteItem.proto.fileLbl === 'Association'){
+        if(paletteItem.proto.isAssociation){
             this.toggledAssociation = paletteItem;
             main.selectionToggle = false;
-            console.log(main.selectionToggle)
+            console.log(main.selectionToggle);
             //call to main or wherever else that its currently in 'association mode'
         } else {
             this.toggledAssociation = null;
