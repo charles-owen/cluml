@@ -70,6 +70,15 @@ export const ClassPropertiesDlg = function(component, main) {
             abstractToggle.type = "checkbox";
             abstractToggle.id = toggleId;
 
+            if (component.abstract)
+            {
+                abstractToggle.setAttribute("checked", "true");
+            }
+            else
+            {
+                abstractToggle.removeAttribute("checked");
+            }
+
             let toggleLabel = document.createElement('label');
             //toggleLabel.htmlFor = abstractToggle.id;
             toggleLabel.appendChild(document.createTextNode('Abstract Class: '));
