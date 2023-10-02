@@ -37,6 +37,7 @@ export class Multiplicity extends SanityElement {
      */
     constructor(stringValue) {
         super(stringValue);
+        this.processSanityCheck();
     }
 
     //endregion
@@ -52,9 +53,9 @@ export class Multiplicity extends SanityElement {
             this.multiplicityType = Multiplicity.MultiplicityType.AnyOnly;
         } else {
             this.multiplicityType = Multiplicity.MultiplicityType.Invalid;
-            return `Multiplicity "${this.elementValue}" formatted incorrectly.`;
+            return [`Multiplicity "${this.elementValue}" formatted incorrectly.`];
         }
 
-        return '';
+        return [];
     }
 }

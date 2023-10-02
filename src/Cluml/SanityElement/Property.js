@@ -15,12 +15,11 @@ export class Property extends SanityElement {
 
     /**
      *
-     * @param parent the class of the property
      * @param visibility {String} visibility of the property {private(-), protected(#), public(+)}
      * @param name {String} name of the property
      * @param type {String} type/return type of the property
      */
-    constructor(parent, visibility, name, type) {
+    constructor(visibility='-', name='attribute', type='') {
         super('');
         this.parent = parent;
         this.visibility = visibility;

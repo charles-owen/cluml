@@ -40,6 +40,7 @@ export const SanityCheckDlg = function(main) {
 
             // Will later convert this code over to sanity elements.
             const classTemplate = `Class <a>${element.naming}</a>`;
+            /*
             for (const attribute of element["attributes"])
             {
                 const attributeTemplate = `${classTemplate}, attribute <a>${attribute}</a>`;
@@ -63,6 +64,7 @@ export const SanityCheckDlg = function(main) {
                     errorCount++;
                 }
             }
+            */
 
             for (const operation of element["operations"])
             {

@@ -8,12 +8,17 @@ import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
+import {Property} from "../SanityElement/Property";
 
 export const Class = function () {
     Component.call(this);
 
     this.forwardSanityCheck = function* () {
         yield new ClassName(this.naming);
+        for (const attribute of this.attributes)
+        {
+            yield attribute;
+        }
     }
 
     /**
@@ -40,9 +45,9 @@ export const Class = function () {
 
     /**
      * The array of attributes.
-     * @type{Array<String>}
+     * @type{Array<*>}
      */
-    this.attributes = ["-attribute1 :"];
+    this.attributes = [new Property('-', 'attribute', '')];
 
     /**
      * The array of operations.
@@ -273,7 +278,9 @@ Class.prototype.draw = function (context, view) {
     // Attributes text
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
-        context.fillText(this.attributes[i].substring(visibility ? 0 : 1),
+        const attribute = this.attributes[i];
+        const attributeText = `${visibility ? attribute.visibility : ''}${attribute.name}: ${attribute.type}`;
+        context.fillText(attributeText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,
             this.width)

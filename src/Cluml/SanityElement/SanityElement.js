@@ -11,7 +11,7 @@ export class SanityElement {
         this.elementValue = stringValue;
 
         // Run the sanity check to update the types.
-        this.processSanityCheck();
+        //this.processSanityCheck();
     }
 
     /**
