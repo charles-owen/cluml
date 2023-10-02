@@ -9,17 +9,20 @@ export const AddPopup = function (component) {
     this.yOffset = 100;
     this.margin = 5;
 
-    this.height = 60;
+    this.height = 90;
     this.width = 150;
 
     this.x = 0;
     this.y = 0;
+
+    this.top = 0;
 };
 AddPopup.prototype.constructor = AddPopup;
 
 AddPopup.prototype.draw = function (context, view, x, y) {
     this.x = x + this.xOffset + (this.width / 2);
     this.y = y + this.yOffset - (this.height / 2);
+    this.top = this.y - (this.height / 2);
 
     context.beginPath();
     context.fillStyle = "#ffffff";
@@ -38,18 +41,29 @@ AddPopup.prototype.draw = function (context, view, x, y) {
     context.textAlign = "left"
     context.fillText("Add",
         x+this.xOffset+this.margin,
-        y+this.yOffset-10-(this.height/2),this.width);
+        this.top + (this.height / 3) - 10,this.width);
 
-    // Draw Divider
+    // Draw Divider1
     context.beginPath();
-    context.moveTo(x+this.xOffset, this.y);
-    context.lineTo(x+this.xOffset+this.width, this.y);
+    context.moveTo(x+this.xOffset, this.top + (this.height / 3));
+    context.lineTo(x+this.xOffset+this.width, this.top + (this.height / 3));
+    context.stroke();
+
+    // Properties text
+    context.fillText("Properties",
+        x+this.xOffset+this.margin,
+        this.top + 2*(this.height / 3) - 10,this.width);
+
+    // Draw Divider2
+    context.beginPath();
+    context.moveTo(x+this.xOffset, this.top + 2*(this.height / 3));
+    context.lineTo(x+this.xOffset+this.width, this.top + 2*(this.height / 3));
     context.stroke();
 
     // Delete text
     context.fillText("Delete",
         x+this.xOffset+this.margin,
-        y+this.yOffset-10,this.width);
+        this.top + 2*(this.height / 3) + 20,this.width);
 }
 
 /**
@@ -66,13 +80,17 @@ AddPopup.prototype.touch = function (x, y) {
         y >= this.y - this.height / 2 &&
         y <= this.y + this.height / 2) {
 
-        if (y < this.y)
+        if (y < this.top + (this.height / 3))
         {
             this.component.addAttribute("-attribute : ");
         }
-        else
+        else if (y > this.top + 2*(this.height / 3))
         {
             this.component.delete();
+        }
+        else
+        {
+            this.component.toggleProperties();
         }
         return this;
     }

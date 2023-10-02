@@ -7,7 +7,7 @@ import {Class} from "../Components/Class";
  * Component properties dialog box
  * @constructor
  */
-export const ComponentPropertiesDlg = function(component, main) {
+export const ClassPropertiesDlg = function(component, main) {
     Dialog.call(this, 'component');
 
     this.resize = 'both';
@@ -168,5 +168,5 @@ export const ComponentPropertiesDlg = function(component, main) {
     }
 };
 
-ComponentPropertiesDlg.prototype = Object.create(Dialog.prototype);
-ComponentPropertiesDlg.prototype.constructor = ComponentPropertiesDlg;
+ClassPropertiesDlg.prototype = Object.create(Dialog.prototype);
+ClassPropertiesDlg.prototype.constructor = ClassPropertiesDlg;

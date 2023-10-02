@@ -6,7 +6,7 @@ import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
-import {ComponentPropertiesDlg} from "../Dlg/ComponentPropertiesDlg";
+import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 
 export const Class = function () {
     Component.call(this);
@@ -157,17 +157,22 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
-Class.prototype.doubleClick = function(x, y, main) {
-    Selectable.prototype.doubleClick.call(this, x, y, main);
+Class.prototype.doubleClick = function(x, y) {
+    Selectable.prototype.doubleClick.call(this, x, y);
 
     //clicked on attribute or operation?
 
     //no? ok then do class properties dialog box
-    const propertiesDlg = new ComponentPropertiesDlg(this, main);
+    const propertiesDlg = new ClassPropertiesDlg(this, this.main);
     propertiesDlg.open();
 
     //this.enableEditing(true);
     //this.enableAddPopup(true);
+}
+
+Class.prototype.toggleProperties = function() {
+    const propertiesDlg = new ClassPropertiesDlg(this, this.main);
+    propertiesDlg.open();
 }
 
 Class.prototype.move = function (dx, dy, x, y) {

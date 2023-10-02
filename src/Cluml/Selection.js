@@ -47,13 +47,13 @@ export const Selection = function (view) {
         }
     }
 
-    this.doubleTap = function (x, y, event, main) {
+    this.doubleTap = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
 
-            touched.doubleClick(x, y, main);
+            touched.doubleClick(x, y);
 
             // view.model.update(view.diagram);
             view.draw();

@@ -242,7 +242,7 @@ export const View = function(main, canvas, diagram) {
 
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Selectable)) {
-                this.selection.doubleTap(mouse.x, mouse.y, event, main);
+                this.selection.doubleTap(mouse.x, mouse.y, event);
             }
         }
 
@@ -387,6 +387,7 @@ View.prototype.initializeComponent = function (component, x, y) {
 
     component.x = x;
     component.y = y;
+    component.main = this.main;
 
     this.diagram.add(component);
     this.diagram.snapIt(component);

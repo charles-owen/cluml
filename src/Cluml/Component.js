@@ -10,6 +10,8 @@ import {Rect} from "./Utility/Rect";
 export const Component = function () {
     Selectable.call(this);
 
+    this.main = null;
+
     /**
      * The diagram.
      * @type {Diagram}
@@ -305,7 +307,7 @@ Component.prototype.loadComponent = function (obj) {
     when editing classes in clUML.
  */
 // Component.prototype.properties = function (main) {
-//     const dlg = new ComponentPropertiesDlg(this, main);
+//     const dlg = new ClassPropertiesDlg(this, main);
 //     dlg.open();
 // };
 

@@ -124,7 +124,7 @@ Selectable.prototype.grab = function () {
  * @param x {number}
  * @param y {number}
  */
-Selectable.prototype.doubleClick = function (x, y, main) {
+Selectable.prototype.doubleClick = function (x, y) {
 
 }
 
