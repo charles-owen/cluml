@@ -136,7 +136,8 @@ Rect.prototype.moveXY = function (x, y) {
  * @return {Line}
  */
 Rect.prototype.getSide = function (side) {
-    switch (Math.floor(side)) {
+    const rounded = Math.floor(side) % 4;
+    switch (rounded) {
         case 0:
             return new Line(
                 new Vector(this.left, this.top),
@@ -158,6 +159,8 @@ Rect.prototype.getSide = function (side) {
                 new Vector(this.left, this.top)
             );
     }
+
+    throw new Error(`Value of side ${side} (rounded to ${rounded}) is invalid.`);
 }
 
 /**

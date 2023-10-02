@@ -35,6 +35,14 @@ Line.prototype.displacement = function () {
 }
 
 /**
+ * Returns the normalized displacement of the line.
+ * @returns {Vector}
+ */
+Line.prototype.direction = function () {
+    return Vector.normalize(this.displacement());
+}
+
+/**
  * Returns the length of the line.
  * @return {number}
  */
@@ -68,27 +76,26 @@ Line.prototype.pointOnLine = function (t) {
  * Returns the point on the line that is nearest to the specified point.
  * Adapted from https://stackoverflow.com/a/74134734.
  * @param point {Vector}
- * @returns {{t: number, distance: number, pointOnLine: Vector}}
+ * @returns {{t: number, distance: number, normalLine: Line, pointOnLine: Vector}}
  */
 Line.prototype.pointNearest = function (point) {
-    const vec_ap = Vector.sub(point, this.from);
-    const vec_bp = Vector.sub(point, this.to);
-    const vec_ab = this.displacement();
+    const direction = this.direction();
+    const maxDist = this.length();
 
-    const dist_ap = vec_ap.magnitude();     // D1
-    const dist_bp = vec_bp.magnitude();     // D2
-    const dist_ab = vec_ab.magnitude();     // D3
+    const lhs = Vector.sub(point, this.from);
+    let t = Vector.dot(lhs, direction);
+    // Clamp t value to be between 0 and 1.
+    t = Math.min(t, maxDist);
+    t = Math.max(t, 0);
+    t /= maxDist;
 
-    const dist_ac = (dist_bp * dist_bp - (dist_ap * dist_ap) - (dist_ab * dist_ab)) /
-        (-2 * dist_ab);
-    const t = dist_ac / dist_ab;
     const pointOnLine = this.pointOnLine(t);
-
-    const line_cp = new Line(pointOnLine, point);
+    const normalLine = new Line(pointOnLine, point);
 
     return {
         pointOnLine: pointOnLine,
         t: t,
-        distance: line_cp.length(),
+        normalLine: normalLine,
+        distance: normalLine.length(),
     };
 }

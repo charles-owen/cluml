@@ -233,7 +233,7 @@ Vector.add = function (v1, v2) {
 }
 
 /**
- * Subtracts v2 from v1 and returns the result.
+ * Subtracts v2 from v1 (calculates v1 - v2) and returns the result.
  * @param v1 {Vector} first vector.
  * @param v2 {Vector} second vector;
  */
@@ -257,6 +257,16 @@ Vector.neg = function (v) {
  */
 Vector.scale = function (v, s) {
     return new Vector(v.x * s, v.y * s);
+}
+
+/**
+ * Returns the dot product of the two vectors.
+ * @param {Vector} v1 
+ * @param {Vector} v2 
+ * @returns {number} The dot product.
+ */
+Vector.dot = function (v1, v2) {
+    return (v1.x * v2.x) + (v1.y * v2.y);
 }
 
 /**
