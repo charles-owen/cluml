@@ -1,6 +1,7 @@
 import {Dialog} from './Dialog';
 import {Unique} from '../Utility/Unique';
 import {Tools} from '../DOM/Tools';
+import {Class} from "../Components/Class";
 
 /**
  * Component properties dialog box
@@ -13,6 +14,9 @@ export const ComponentPropertiesDlg = function(component, main) {
 
     // A unique ID for the component name input control
     let nameId = null;
+
+    // A unique ID for the abstract toggle
+    let toggleId = null;
 
     let extraHTML = '';
     let extraCreate = function() {};
@@ -31,7 +35,6 @@ export const ComponentPropertiesDlg = function(component, main) {
             description += component.constructor.description + '</div>';
         }
 
-
         // Does this component have a naming?
         let name = '';
         if(component.naming !== null) {
@@ -49,20 +52,35 @@ export const ComponentPropertiesDlg = function(component, main) {
             }
         }
 
-
         let dlg = '';
 
         if(component.prefix !== null) {
             nameId = Unique.uniqueName();
+            toggleId = Unique.uniqueName();
             dlg += '<div class="control1 center gap"><label for="' + nameId + '">Name: </label>' +
                 '<input type="text" name="' + nameId + '" id="' + nameId + '" value="' + name + '" spellcheck="false" class="compname text ui-widget-content ui-corner-all">' +
                 '</div>';
         }
 
-        dlg += extraHTML + description;
+        if (component instanceof Class) {
+            let abstractDiv = document.createElement("div");
+            abstractDiv.style.textAlign = 'center';
+
+            let abstractToggle = document.createElement('input');
+            abstractToggle.type = "checkbox";
+            abstractToggle.id = toggleId;
+
+            let toggleLabel = document.createElement('label');
+            //toggleLabel.htmlFor = abstractToggle.id;
+            toggleLabel.appendChild(document.createTextNode('Abstract Class: '));
+
+            abstractDiv.appendChild(toggleLabel);
+            abstractDiv.append(abstractToggle);
+
+            dlg += abstractDiv.outerHTML;
+        }
 
         this.contents(dlg, "Cluml Component Properties");
-
         Dialog.prototype.open.call(this);
 
         extraCreate();
@@ -86,10 +104,13 @@ export const ComponentPropertiesDlg = function(component, main) {
         // Trim spaces on either end
 	    let name = '';
 
+        //Get abstract state
+        let isAbstract = false;
+
+
         if(component.prefix !== null) {
         	const nameElement = document.getElementById(nameId);
         	name = nameElement.value.replace(/^\s+|\s+$/gm,'');
-
             if(name.length !== 0) {
                 // If name is not empty, we ensure it is unique
                 var existing = component.diagram.getComponentByNaming(name);
@@ -99,9 +120,14 @@ export const ComponentPropertiesDlg = function(component, main) {
                     return;
                 }
             }
-
 	        Tools.removeClass(nameElement, 'cluml-error');
 	        name = this.sanitize(name);
+
+            if (component instanceof Class)
+            {
+                const toggleElement = document.getElementById(toggleId);
+                isAbstract = toggleElement.checked;
+            }
         }
 
         var extraRet = extraValidate();
@@ -113,6 +139,11 @@ export const ComponentPropertiesDlg = function(component, main) {
         main.backup();
         if(component.prefix !== null) {
             component.naming = name.length > 0 ? name : null;
+
+            if (component instanceof Class)
+            {
+                component.abstract = isAbstract;
+            }
         }
 
         extraTake();

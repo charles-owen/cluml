@@ -10,6 +10,12 @@ import {Rect} from "./Utility/Rect";
 export const NAME_FONT = "14px Times";
 
 /**
+ * The default font for italics
+ * @type {string}
+ */
+export const ITALICS_FONT = "italic 14px Times";
+
+/**
  * The default font for the drawText function.
  * @type {string}
  */
@@ -118,7 +124,7 @@ Selectable.prototype.grab = function () {
  * @param x {number}
  * @param y {number}
  */
-Selectable.prototype.doubleClick = function (x, y) {
+Selectable.prototype.doubleClick = function (x, y, main) {
 
 }
 

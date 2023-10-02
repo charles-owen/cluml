@@ -1,5 +1,6 @@
 import {Rect} from './Utility/Rect';
 import {Association} from "./Components/Association/Association";
+import {Class} from "./Components/Class";
 
 /**
  * The Selection object keeps track of what is currently
@@ -27,10 +28,10 @@ export const Selection = function (view) {
     this.rightClick = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            if (touched.paletteLbl === "Class") {
+            if (touched instanceof Class) {
                 event.preventDefault();
                 this.selected = [touched];
-                // this.selected[0].enableAddPopup(true);
+                this.selected[0].enableAddPopup(true);
             }
 
             event.preventDefault();
@@ -46,13 +47,13 @@ export const Selection = function (view) {
         }
     }
 
-    this.doubleTap = function (x, y, event) {
+    this.doubleTap = function (x, y, event, main) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
 
-            touched.doubleClick(x, y);
+            touched.doubleClick(x, y, main);
 
             // view.model.update(view.diagram);
             view.draw();
@@ -65,7 +66,7 @@ export const Selection = function (view) {
 
         if (this.selected[0] != null) {
             // Last mouse down (right-click) was on a class
-            if (this.selected[0].paletteLbl === "Class") {
+            if (this.selected[0] instanceof Class) {
                 this.selected[0].tryTouchAddPopup(x, y);
                 this.selected[0].enableAddPopup(false);
             }

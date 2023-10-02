@@ -6,7 +6,7 @@ export const AddPopup = function (component) {
     });
     this.component = component;
     this.xOffset = 50;
-    this.yOffset = 155;
+    this.yOffset = 100;
     this.margin = 5;
 
     this.height = 60;

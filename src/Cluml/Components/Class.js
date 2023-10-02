@@ -5,7 +5,8 @@ import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
-import Selectable from "../Selectable";
+import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
+import {ComponentPropertiesDlg} from "../Dlg/ComponentPropertiesDlg";
 
 export const Class = function () {
     Component.call(this);
@@ -63,6 +64,8 @@ export const Class = function () {
 
     //this doesn't actually control font its just what it seemed to be hardcoded into
     this.fontHeight = 14;
+
+    this.abstract = false;
 
     Object.defineProperty(this, 'lineHeight', {
         get: function() {
@@ -154,11 +157,17 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
-Class.prototype.doubleClick = function(x, y) {
-    Selectable.prototype.doubleClick.call(this, x, y);
+Class.prototype.doubleClick = function(x, y, main) {
+    Selectable.prototype.doubleClick.call(this, x, y, main);
 
-    this.enableEditing(true);
-    this.enableAddPopup(true);
+    //clicked on attribute or operation?
+
+    //no? ok then do class properties dialog box
+    const propertiesDlg = new ComponentPropertiesDlg(this, main);
+    propertiesDlg.open();
+
+    //this.enableEditing(true);
+    //this.enableAddPopup(true);
 }
 
 Class.prototype.move = function (dx, dy, x, y) {
@@ -236,12 +245,23 @@ Class.prototype.draw = function (context, view) {
 
     // Naming text
     context.fillStyle = "#000000";
-    this.drawName(context,
-        0,
-        this.fontHeight * 1.5);
+    if (this.abstract)
+    {
+        this.drawName(context,
+            0,
+            this.fontHeight * 1.5,
+            ITALICS_FONT);
+    }
+    else
+    {
+        this.drawName(context,
+            0,
+            this.fontHeight * 1.5,
+            NAME_FONT);
+    }
 
     context.textAlign = "left"
-
+    context.font = NAME_FONT;
     // boolean to check if attributes/operations' visibility should be drawn
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 

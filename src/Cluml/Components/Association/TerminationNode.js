@@ -92,8 +92,8 @@ TerminationNode.prototype.drop = function () {
     }
 }
 
-TerminationNode.prototype.doubleClick = function (x, y) {
-    Selectable.prototype.doubleClick.call(this, x, y);
+TerminationNode.prototype.doubleClick = function (x, y, main) {
+    Selectable.prototype.doubleClick.call(this, x, y, main);
 
     // Show context menu.
     const contextMenu = new CustomContextMenu(this, new Vector(x, y));

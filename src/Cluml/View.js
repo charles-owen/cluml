@@ -242,7 +242,7 @@ export const View = function(main, canvas, diagram) {
 
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Selectable)) {
-                this.selection.doubleTap(mouse.x, mouse.y, event);
+                this.selection.doubleTap(mouse.x, mouse.y, event, main);
             }
         }
 
@@ -271,7 +271,7 @@ export const View = function(main, canvas, diagram) {
         }
 
         // Install mouse handlers
-        // canvas.addEventListener('contextmenu', contextMenuListener);
+        canvas.addEventListener('contextmenu', contextMenuListener);
         canvas.addEventListener('mousedown', mouseDownListener);
         canvas.addEventListener('dblclick', dblClickListener);
 
