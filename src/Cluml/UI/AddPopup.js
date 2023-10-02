@@ -90,7 +90,7 @@ AddPopup.prototype.touch = function (x, y) {
         }
         else
         {
-            this.component.toggleProperties();
+            this.component.openProperties();
         }
         return this;
     }

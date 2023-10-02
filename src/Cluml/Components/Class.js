@@ -7,6 +7,7 @@ import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
+import Unique from "../Utility/Unique";
 
 export const Class = function () {
     Component.call(this);
@@ -163,14 +164,13 @@ Class.prototype.doubleClick = function(x, y) {
     //clicked on attribute or operation?
 
     //no? ok then do class properties dialog box
-    const propertiesDlg = new ClassPropertiesDlg(this, this.main);
-    propertiesDlg.open();
+    this.openProperties();
 
     //this.enableEditing(true);
     //this.enableAddPopup(true);
 }
 
-Class.prototype.toggleProperties = function() {
+Class.prototype.openProperties = function() {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main);
     propertiesDlg.open();
 }
@@ -244,7 +244,7 @@ Class.prototype.draw = function (context, view) {
 
     // Defaults the name to NewClass if no name is given
     if (this.naming == null) {
-        this.naming = "ClassName"
+        this.naming = "ClassName:" + Unique.uniqueName();
     }
 
 
