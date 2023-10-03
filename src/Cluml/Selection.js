@@ -45,6 +45,15 @@ export const Selection = function (view) {
 
             rect = new Rect(x, y, x, y);
         }
+
+        if (touched !== null) {
+            event.preventDefault();
+            this.selected = [touched];
+
+            touched.rightClick(x, y);
+
+            view.draw();
+        }
     }
 
     this.doubleTap = function (x, y, event) {

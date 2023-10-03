@@ -15,8 +15,9 @@ export class ContextEntry {
 
         this.button = document.createElement('input');
         this.button.type = 'button';
-        this.button.style.padding = '0';
+        this.button.style.padding = '5px';
         this.button.style.margin = '0';
+        this.button.style.width = '100%';
         this.button.style.border = 'none 0';
         this.button.style.cursor = 'pointer';
         const ce = this;
@@ -43,6 +44,8 @@ export class CustomContextMenu {
      * @type {HTMLTableSectionElement}
      */
     menuBody;
+
+    static #instances = [];
 
     /**
      *
