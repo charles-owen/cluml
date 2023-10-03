@@ -2,6 +2,7 @@ import {Rect} from './Utility/Rect';
 import {Association} from "./Components/Association/Association";
 import {Class} from "./Components/Class";
 import {CustomContextMenu} from "./ContextMenu/CustomContextMenu";
+import {TextInput} from "./Input/TextInput";
 
 /**
  * The Selection object keeps track of what is currently
@@ -129,6 +130,7 @@ export const Selection = function (view) {
 
     this.closeOpenMenus = function () {
         CustomContextMenu.closeOpenMenus();
+        TextInput.closeAllInputs();
     }
 
     this.mouseMove = function (x, y, dx, dy) {
