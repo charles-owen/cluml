@@ -69,6 +69,8 @@ export const Selection = function (view) {
             if (this.selected[0] instanceof Class) {
                 this.selected[0].tryTouchAddPopup(x, y);
                 this.selected[0].enableAddPopup(false);
+                this.selected[0].tryTouchEditingPopup(x, y);
+                this.selected[0].enableEditing(false);
             }
         }
 

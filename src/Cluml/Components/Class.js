@@ -73,6 +73,18 @@ export const Class = function () {
 
     this.abstract = false;
 
+    /**
+     * The x-value of the mouse the last time this class was selected
+     * @type {number}
+     */
+    this.lastSelectedX = 0;
+
+    /**
+     * The y-value of the mouse the last time this class was selected
+     * @type {number}
+     */
+    this.lastSelectedY = 0;
+
     Object.defineProperty(this, 'lineHeight', {
         get: function() {
             return this.fontHeight * 1.5;
@@ -165,13 +177,19 @@ Class.prototype.touch = function (x, y) {
 
 Class.prototype.doubleClick = function(x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
+    this.lastSelectedX = x;
+    this.lastSelectedY = y;
 
     //clicked on attribute or operation?
+    if(this.lastSelectedX < this.x) {
+        //yes? ok then edit the class
+        this.enableEditing(true);
+    }
+    else {
+        //no? ok then do class properties dialog box
+        this.openProperties();
+    }
 
-    //no? ok then do class properties dialog box
-    this.openProperties();
-
-    //this.enableEditing(true);
     //this.enableAddPopup(true);
 }
 
@@ -191,6 +209,13 @@ Class.prototype.move = function (dx, dy, x, y) {
 Class.prototype.tryTouchAddPopup = function (x, y) {
     if (this.addPopup != null) {
         return this.addPopup.touch(x, y);
+    }
+    return null;
+}
+
+Class.prototype.tryTouchEditingPopup = function (x, y) {
+    if (this.editingPopup != null) {
+        return this.editingPopup.touch(x, y);
     }
     return null;
 }
@@ -300,7 +325,38 @@ Class.prototype.draw = function (context, view) {
     }
 
     if (this.editingPopup != null) {
-        this.editingPopup.draw(context, view, this.x, this.y)
+        // name box
+        if(this.lastSelectedY < this.attributesBounds.bottom) {
+            this.editingPopup.drawNameEdit(context, view, this.nameBounds);
+        }
+        // attribute box
+        else if(this.lastSelectedY < this.operationsBounds.bottom) {
+            let boxHeight = this.attributesHeight/this.attributes.length;
+            let selectedAttributeNumber = Math.floor((this.lastSelectedY
+                - this.attributesBounds.bottom)/boxHeight)
+            let selectedAttributeHeight = this.attributesBounds.bottom
+                + (selectedAttributeNumber * boxHeight)
+            this.editingPopup.drawAttributionEdit(context,
+                view,
+                this.x - this.width/2,
+                selectedAttributeHeight,
+                this.width,
+                boxHeight);
+        }
+        // operation box
+        else if(this.lastSelectedY < this.operationsBounds.top) {
+            let boxHeight = this.operationsHeight/this.operations.length;
+            let selectedOperationNumber = Math.floor((this.lastSelectedY
+                - this.operationsBounds.bottom)/boxHeight)
+            let selectedOperationHeight = this.operationsBounds.bottom
+                + (selectedOperationNumber * boxHeight)
+            this.editingPopup.drawAttributionEdit(context,
+                view,
+                this.x - this.width/2,
+                selectedOperationHeight,
+                this.width,
+                boxHeight);
+        }
     }
 
     Component.prototype.draw.call(this, context, view);
@@ -380,28 +436,4 @@ Class.prototype.addOperation = function (operation) {
  */
 Class.prototype.editOperation = function (operationIndex, newOperation) {
     this.attributes[operationIndex] = newOperation
-}
-
-/**
- * Handles the visibility operation in the Options menu
- */
-Class.prototype.changeVisibility = function () {
-    // If the +/- is currently visible, make it not visible
-    if(this.isVisible) {
-        for (let i = 0; i < this.attributes.length; i++) {
-            // Code for making attributes invisible here
-        }
-        for (let j = 0; j < this.operations.length; j++) {
-            // Code for making operations invisible here
-        }
-    }
-    // If the +/- is not currently visible, make it visible
-    else {
-        for (let i = 0; i < this.attributes.length; i++) {
-            // Code for making attributes visible here
-        }
-        for (let j = 0; j < this.operations.length; j++) {
-            // Code for making operations visible here
-        }
-    }
 }
