@@ -29,7 +29,7 @@ export class ContextEntry {
 
     selectEntry() {
         this.callback.call(this.menu.target);
-        this.menu.menuTable.remove();
+        this.menu.close();
     }
 }
 
@@ -45,6 +45,10 @@ export class CustomContextMenu {
      */
     menuBody;
 
+    /**
+     * The open context menus
+     * @type {CustomContextMenu[]}
+     */
     static #instances = [];
 
     /**
@@ -64,6 +68,7 @@ export class CustomContextMenu {
         this.menuBody = this.menuTable.createTBody();
 
         MainSingleton.currentTabDiv.append(this.menuTable);
+        CustomContextMenu.#instances.push(this);
     }
 
     /**
@@ -89,5 +94,17 @@ export class CustomContextMenu {
         cell.style.padding = '0';
         cell.style.margin = '0';
         cell.append(entree.button);
+    }
+
+    close() {
+        this.menuTable.remove();
+    }
+
+    static closeOpenMenus() {
+        for (const instance of CustomContextMenu.#instances) {
+            instance.close();
+        }
+
+        CustomContextMenu.#instances = [];
     }
 }
