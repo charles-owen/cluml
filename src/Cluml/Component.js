@@ -126,6 +126,13 @@ Component.prototype.paletteOrder = -1;
 Component.prototype.loadOrder = 0;
 
 /**
+ * Order of which the components will be drawn. Larger values
+ * will be drawn on top of smaller ones.
+ * @type {number}
+ */
+Component.prototype.drawOrder = 0;
+
+/**
  * Maximum ID integer value for any component
  * @type {number}
  */

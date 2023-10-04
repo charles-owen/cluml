@@ -131,7 +131,9 @@ class NodeData {
     //     this.#end.id = other.#end.id;
     // }
 }
-
+/**
+ * @type {Component}
+ */
 Association.prototype = Object.create(Component.prototype);
 Association.prototype.constructor = Association;
 
@@ -144,6 +146,7 @@ Association.prototype.paletteDesc = "Association component.";
 Association.prototype.htmlDesc = '<h2>Association</h2><p>A basic association between 2 classes.</p>';
 Association.prototype.paletteOrder = 20;
 Association.prototype.loadOrder = 20;
+Association.prototype.drawOrder = 20;
 //endregion
 
 //region Component Methods

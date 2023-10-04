@@ -1,8 +1,8 @@
-import {Sanitize} from './Utility/Sanitize';
-import {Rect} from "./Utility/Rect";
-import {Diagrams} from "./Diagrams";
-import {Component} from "./Component";
-import {MainSingleton} from "./MainSingleton";
+import { Sanitize } from './Utility/Sanitize';
+import { Rect } from "./Utility/Rect";
+import { Diagrams } from "./Diagrams";
+import { Component } from "./Component";
+import { MainSingleton } from "./MainSingleton";
 
 /**
  * Construct a diagram
@@ -100,6 +100,7 @@ Diagram.prototype.defHeight = 1080;
  */
 Diagram.prototype.clone = function () {
     const copy = new Diagram(this.name);
+    copy.isClone = true;
     copy.width = this.width;
     copy.height = this.height;
 
@@ -193,8 +194,62 @@ Diagram.prototype.snapIt = function (item) {
     }
 };
 
+/**
+ * Adds a component to the diagram.
+ * @param {Component} component 
+ * @returns {Component}
+ */
 Diagram.prototype.add = function (component) {
-    this.components.push(component);
+    if (this.components.length > 2) {
+        // Binary search and insertion.
+        const val = component.drawOrder;
+        let from = 0;
+        let at = 0;
+        let to = this.components.length - 1;
+        let added = false;
+
+        while (from < to) {
+            at = Math.floor((from + to) / 2);
+            const left = this.components[at].drawOrder;
+            const right = this.components[at + 1].drawOrder;
+ 
+
+            if (left <= val && val <= right) {
+                // In middle of same values.
+                added = true;
+            
+                // Insert value.
+                this.components.splice(at + 1, 0, component);
+                break;
+            } else if (left > val) {
+                // Left is greater than middle.
+                to = at - 1;
+            } else if (val > right) {
+                // Right is less than middle.
+                from = at + 1;
+            } else {
+                throw new Error("Line should not be executed.");
+            }
+        }
+
+        if (!added) {
+            // Add to either end or beginning.
+            if (from === this.components.length - 1) {
+                this.components.push(component);
+            } else if (to === 0) {
+                this.components.splice(0, 0, component);
+            } else {
+                throw new Error("Was not able to insert component.");
+            }
+        }
+    } else {
+        // Not too many elements. Just sort the array.
+        this.components.push(component);
+        this.components.sort(function (c1, c2) {
+            return c1.drawOrder - c2.drawOrder;
+        })
+    }
+
     component.added(this);
     return component;
 };
@@ -254,6 +309,12 @@ Diagram.prototype.load = function (obj) {
     // Load the diagrams
     const compsMap = {};  // Map from component ID to component object
 
+    /**
+     * 
+     * @param {Component} b 
+     * @param {Component} a 
+     * @returns 
+     */
     function compareComps(a, b) {
         return a.loadOrder - b.loadOrder;
     }
@@ -390,7 +451,7 @@ Diagram.prototype.maxXY = function () {
         }
     }
 
-    return {x: maxX + 16, y: maxY + 16};
+    return { x: maxX + 16, y: maxY + 16 };
 }
 
 /**
