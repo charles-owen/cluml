@@ -154,5 +154,4 @@ export const Cluml = function(sel, options) {
             main.runTest(test);
         })
     }
-
 }

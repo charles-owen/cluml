@@ -171,7 +171,6 @@ Class.prototype.touch = function (x, y) {
     if (this.bounds().contains(x, y)) {
         return this;
     }
-
     return null;
 }
 
@@ -196,14 +195,6 @@ Class.prototype.doubleClick = function(x, y) {
 Class.prototype.openProperties = function() {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main);
     propertiesDlg.open();
-}
-
-Class.prototype.move = function (dx, dy, x, y) {
-    Component.prototype.move.call(this, dx, dy, x, y);
-
-    for (const node of this.attachedTNodes) {
-        node.refreshPosition();
-    }
 }
 
 Class.prototype.tryTouchAddPopup = function (x, y) {
@@ -272,7 +263,7 @@ Class.prototype.draw = function (context, view) {
     context.fill();
     context.stroke();
 
-    // Defaults the name to NewClass if no name is given
+    // Defaults the name to ClassName: UniqueName if no name is given
     if (this.naming == null) {
         this.naming = "ClassName:" + Unique.uniqueName();
     }
@@ -327,7 +318,8 @@ Class.prototype.draw = function (context, view) {
     if (this.editingPopup != null) {
         // name box
         if(this.lastSelectedY < this.attributesBounds.bottom) {
-            this.editingPopup.drawNameEdit(context, view, this.nameBounds);
+            this.editingPopup.drawNameEdit(context, view, this.nameBounds,
+                this.width, this.nameHeight);
         }
         // attribute box
         else if(this.lastSelectedY < this.operationsBounds.bottom) {

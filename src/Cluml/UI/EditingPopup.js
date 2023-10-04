@@ -1,3 +1,5 @@
+import {EditableClassText} from "../Input/EditableClassText";
+
 export const EditingPopup = function (component) {
     Object.defineProperty(this, 'popup', {
 
@@ -10,6 +12,8 @@ export const EditingPopup = function (component) {
 
     this.x = component.lastSelectedX;
     this.y = component.lastSelectedY;
+
+    this.text = new EditableClassText();
 };
 
 /**
@@ -23,13 +27,21 @@ EditingPopup.prototype.constructor = EditingPopup;
  * @param context the context needed to draw this popup
  * @param view the view this popup will be drawn in
  * @param bounds the bounds of the class' name box
+ * @param width the width of the class name box
+ * @param height the height of the class name box
  */
-EditingPopup.prototype.drawNameEdit = function(context, view, bounds) {
+EditingPopup.prototype.drawNameEdit = function(context, view, bounds, width, height) {
     context.beginPath();
-    context.fillStyle = "#000000";
-    context.strokeStyle = "#ffffff";
+    context.fillStyle = "#e7e8b0";
+    context.strokeStyle = "#000000";
     bounds.contextRect(context);
     context.fill();
+    context.stroke();
+    context.fillStyle = "#000000"
+    this.text.setInputElementDimensions(bounds.bottom, bounds.left, width, height);
+    this.text.setCoordinates(bounds.left + width/2,
+        bounds.bottom + height/2);
+    this.text.drawText(context, view, "center");
     context.stroke();
 }
 
@@ -44,19 +56,26 @@ EditingPopup.prototype.drawNameEdit = function(context, view, bounds) {
  */
 EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y, width, height) {
     context.beginPath();
-    context.fillStyle = "#000000";
-    context.strokeStyle = "#ffffff";
+    context.fillStyle = "#e7e8b0";
+    context.strokeStyle = "#000000";
     context.rect(x, y, width, height);
     context.fill();
+    context.stroke();
+    context.fillStyle = "#000000"
+    this.text.setInputElementDimensions(y, x, width, height);
+    this.text.setCoordinates(x + 5,
+        y + height/2);
+    this.text.drawText(context, view, "left");
     context.stroke();
 }
 
 EditingPopup.prototype.touch = function(x, y) {
-    if (x >= this.x - this.width/2 &&
-        x <= this.x + this.width/2 &&
-        y >= this.y - this.height/2 &&
-        y <= this.y + this.height/2) {
+    if (x > this.x - this.width/2 &&
+        x < this.x + this.width/2 &&
+        y > this.y - this.height/2 &&
+        y < this.y + this.height/2) {
         return this;
     }
+    this.text.inputElement.remove();
     return null;
 }
