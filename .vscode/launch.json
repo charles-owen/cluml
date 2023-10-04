@@ -2,9 +2,10 @@
     "configurations": [
         {
             "type": "chrome",
-            "name": "http://localhost:8080/",
+            "name": "Debug in Chrome",
             "request": "launch",
-            "url": "http://localhost:8080/"
+            "url": "http://localhost:8080/",
+            "preLaunchTask": "yarn_serve"
         }
     ]
 }
