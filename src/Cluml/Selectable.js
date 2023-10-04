@@ -120,6 +120,15 @@ Selectable.prototype.grab = function () {
 };
 
 /**
+ * Called when a selectable is right clicked.
+ * @param x {number}
+ * @param y {number}
+ */
+Selectable.prototype.rightClick = function (x, y) {
+
+}
+
+/**
  * Called when a double click is detected.
  * @param x {number}
  * @param y {number}

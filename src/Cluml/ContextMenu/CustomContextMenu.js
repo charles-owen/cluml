@@ -15,8 +15,9 @@ export class ContextEntry {
 
         this.button = document.createElement('input');
         this.button.type = 'button';
-        this.button.style.padding = '0';
+        this.button.style.padding = '5px';
         this.button.style.margin = '0';
+        this.button.style.width = '100%';
         this.button.style.border = 'none 0';
         this.button.style.cursor = 'pointer';
         const ce = this;
@@ -28,7 +29,7 @@ export class ContextEntry {
 
     selectEntry() {
         this.callback.call(this.menu.target);
-        this.menu.menuTable.remove();
+        this.menu.close();
     }
 }
 
@@ -43,6 +44,12 @@ export class CustomContextMenu {
      * @type {HTMLTableSectionElement}
      */
     menuBody;
+
+    /**
+     * The open context menus
+     * @type {CustomContextMenu[]}
+     */
+    static #instances = [];
 
     /**
      *
@@ -61,6 +68,7 @@ export class CustomContextMenu {
         this.menuBody = this.menuTable.createTBody();
 
         MainSingleton.currentTabDiv.append(this.menuTable);
+        CustomContextMenu.#instances.push(this);
     }
 
     /**
@@ -86,5 +94,17 @@ export class CustomContextMenu {
         cell.style.padding = '0';
         cell.style.margin = '0';
         cell.append(entree.button);
+    }
+
+    close() {
+        this.menuTable.remove();
+    }
+
+    static closeOpenMenus() {
+        for (const instance of CustomContextMenu.#instances) {
+            instance.close();
+        }
+
+        CustomContextMenu.#instances = [];
     }
 }

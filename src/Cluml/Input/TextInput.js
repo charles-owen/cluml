@@ -7,6 +7,12 @@ export class TextInput {
     #dimensions;
 
     /**
+     * The open text inputs.
+     * @type {TextInput[]}
+     */
+    static #instances = [];
+
+    /**
      * Defines a basic text input.
      * @constructor
      * @param callback {function} A function with a single parameter. Will be called once value is set.
@@ -31,10 +37,11 @@ export class TextInput {
 
         this.inputElement.addEventListener('focusout', (event) => {
             callback(this.inputElement.value);
-            this.inputElement.remove();
+            this.close();
         });
 
         MainSingleton.currentTabDiv.append(this.inputElement);
+        TextInput.#instances.push(this);
     }
 
     /**
@@ -55,5 +62,17 @@ export class TextInput {
         this.inputElement.style.left = value.left + "px";
         this.inputElement.style.width = (value.right - value.left) + "px";
         this.inputElement.style.height = (value.top - value.bottom) + "px";
+    }
+
+    close() {
+        this.inputElement.remove();
+    }
+
+    static closeAllInputs() {
+        for (const instance of TextInput.#instances) {
+            instance.close();
+        }
+
+        TextInput.#instances = [];
     }
 }

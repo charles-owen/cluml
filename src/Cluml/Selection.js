@@ -1,6 +1,8 @@
 import {Rect} from './Utility/Rect';
 import {Association} from "./Components/Association/Association";
 import {Class} from "./Components/Class";
+import {CustomContextMenu} from "./ContextMenu/CustomContextMenu";
+import {TextInput} from "./Input/TextInput";
 
 /**
  * The Selection object keeps track of what is currently
@@ -27,6 +29,10 @@ export const Selection = function (view) {
 
     this.rightClick = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
+
+        this.closeOpenMenus();
+
+        // TODO: Remove hard coded stuff.
         if (touched !== null) {
             if (touched instanceof Class) {
                 event.preventDefault();
@@ -45,10 +51,21 @@ export const Selection = function (view) {
 
             rect = new Rect(x, y, x, y);
         }
+
+        if (touched !== null) {
+            event.preventDefault();
+            this.selected = [touched];
+
+            touched.rightClick(x, y);
+
+            view.draw();
+        }
     }
 
     this.doubleTap = function (x, y, event) {
         const touched = view.diagram.touch(x, y);
+        this.closeOpenMenus();
+
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
@@ -63,6 +80,7 @@ export const Selection = function (view) {
     this.mouseDown = function (x, y, event) {
         down = true;
         firstMove = true;
+        this.closeOpenMenus();
 
         if (this.selected[0] != null) {
             // Last mouse down (right-click) was on a class
@@ -109,6 +127,11 @@ export const Selection = function (view) {
             this.selected[i].grab();
         }
     };
+
+    this.closeOpenMenus = function () {
+        CustomContextMenu.closeOpenMenus();
+        TextInput.closeAllInputs();
+    }
 
     this.mouseMove = function (x, y, dx, dy) {
         if (down) {
