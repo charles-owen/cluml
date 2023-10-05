@@ -81,6 +81,7 @@ export class MainSingleton {
      * might not be picked up by the system.
      */
     backup() {
+        console.log('Backup');
         this.#main.backup();
     }
 

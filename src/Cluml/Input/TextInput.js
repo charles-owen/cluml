@@ -13,9 +13,16 @@ export class TextInput {
     static #instances = [];
 
     /**
+     * The initial value.
+     * @type {string}
+     */
+    #initialValue;
+
+    /**
      * Defines a basic text input.
      * @constructor
      * @param dimensions {Rect} Dimensions of this text input.
+     * @param initialValue {string} The original value of the input, if any.
      * @param font {string} Font to use with the input.
      * @param onExit {function} A function with a single parameter
      * (the value of the text box). Will be called once focus is lost.
@@ -23,8 +30,9 @@ export class TextInput {
      * (the value of the text box). Will be called if the user presses
      * Enter or Tab. Called after onExit.
      */
-    constructor(dimensions, font = "14px Times", onExit, onNext) {
+    constructor(onExit, onNext, dimensions, initialValue= '', font = "14px Times") {
         this.font = font;
+        this.#initialValue = initialValue;
 
         /**
          * The input element. You may edit this to add more styling data, for example.
@@ -35,6 +43,7 @@ export class TextInput {
         this.inputElement.autocomplete = 'on';
         this.inputElement.style.font = font;
         this.inputElement.style.position = 'absolute';
+        this.inputElement.value = initialValue;
 
         this.dimensions = dimensions;
 
@@ -76,6 +85,11 @@ export class TextInput {
     }
 
     close() {
+        if (this.#initialValue !== this.inputElement.value) {
+            // Value has been changed.
+            MainSingleton.singleton.backup();
+        }
+
         this.inputElement.remove();
     }
 

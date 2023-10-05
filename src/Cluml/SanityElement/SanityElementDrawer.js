@@ -59,6 +59,22 @@ export class SanityElementDrawer extends Selectable {
     }
 
     /**
+     * The value of the encapsulated element.
+     * @return {string} Value of the element value.
+     */
+    get elementValue() {
+        return this.encapsulatedElement.elementValue;
+    }
+
+    /**
+     * The value of the encapsulated element.
+     * @param value {string}
+     */
+    set elementValue(value) {
+        this.encapsulatedElement.elementValue = value;
+    }
+
+    /**
      * Draws this thing.
      * @param context {CanvasRenderingContext2D}
      * @param view {View}

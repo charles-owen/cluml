@@ -90,7 +90,10 @@ export class TerminationNodeDlg extends Dialog {
 
         Dialog.prototype.ok.call(this);
 
-        // Force a redraw.
+        console.log('ok');
+
+        // Force a redraw and backup.
         MainSingleton.singleton.currentView.draw();
+        MainSingleton.singleton.backup();
     }
 }

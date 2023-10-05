@@ -77,6 +77,17 @@ TerminationNode.prototype.htmlDesc = '<h2>Termination Node</h2><p>The start and 
 TerminationNode.prototype.paletteOrder = -1;
 
 //region Selectable Methods
+/**
+ *
+ * @param other {TerminationNode}
+ */
+TerminationNode.prototype.copyFrom = function (other) {
+    LineNode.prototype.copyFrom.call(this, other);
+
+    this.multiplicityValue.elementValue = other.multiplicityValue.elementValue;
+    this.tagValue.elementValue = other.tagValue.elementValue;
+}
+
 TerminationNode.prototype.drop = function () {
     // Do not replace with LineNode.prototype.drop. That would destroy
     // the end nodes (bad).
@@ -174,6 +185,9 @@ TerminationNode.prototype.saveNode = function () {
         obj.side = this.side;
     }
 
+    obj.multiplicity = this.multiplicityValue.elementValue;
+    obj.tag = this.tagValue.elementValue;
+
     return obj;
 }
 
@@ -185,6 +199,11 @@ TerminationNode.prototype.loadNode = function (obj, association) {
 
         this.attachToClass(at, obj.position, obj.side);
     }
+
+    this.multiplicityValue = new SanityElementDrawer(new Multiplicity(obj.multiplicity), this);
+    this.multiplicityValue.y = 15;
+    this.tagValue = new SanityElementDrawer(new TNodeTag(obj.tag), this);
+    this.tagValue.y = -15;
 }
 
 /**
