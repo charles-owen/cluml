@@ -29,7 +29,7 @@ EditableClassText.prototype.setCoordinates = function(x, y) {
 EditableClassText.prototype.setInputElementDimensions = function (top, left, width, height) {
     this.inputElement.style.top = top + "px";
     this.inputElement.style.left = left + "px";
-    this.inputElement.style.width = width - 8 + "px";
+    this.inputElement.style.width = width - 8+ "px";
     this.inputElement.style.height = height - 6 + "px";
 }
 

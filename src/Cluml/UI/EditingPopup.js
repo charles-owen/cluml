@@ -70,12 +70,6 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y, width
 }
 
 EditingPopup.prototype.touch = function(x, y) {
-    if (x > this.x - this.width/2 &&
-        x < this.x + this.width/2 &&
-        y > this.y - this.height/2 &&
-        y < this.y + this.height/2) {
-        return this;
-    }
     this.text.inputElement.remove();
     return null;
 }
