@@ -215,10 +215,6 @@ export const View = function(main, canvas, diagram) {
 
             const dv = setMousePos(pageX, pageY);
 
-            // main.testTextInput.dimensions = Rect.fromCenterAndExtents(
-            //     mouse, new Vector(15, 15)
-            // );
-
             this.selection.mouseMove(mouse.x, mouse.y, dv.x, dv.y);
 
             this.ensureSize();

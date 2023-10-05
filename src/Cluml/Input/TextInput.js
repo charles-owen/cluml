@@ -15,12 +15,15 @@ export class TextInput {
     /**
      * Defines a basic text input.
      * @constructor
-     * @param callback {function} A function with a single parameter. Will be called once value is set.
      * @param dimensions {Rect} Dimensions of this text input.
      * @param font {string} Font to use with the input.
+     * @param onExit {function} A function with a single parameter
+     * (the value of the text box). Will be called once focus is lost.
+     * @param onNext {function} A function with a single parameter
+     * (the value of the text box). Will be called if the user presses
+     * Enter or Tab. Called after onExit.
      */
-    constructor(callback, dimensions, font = "14px Times") {
-        this.callback = callback;
+    constructor(dimensions, font = "14px Times", onExit, onNext) {
         this.font = font;
 
         /**
@@ -36,8 +39,16 @@ export class TextInput {
         this.dimensions = dimensions;
 
         this.inputElement.addEventListener('focusout', (event) => {
-            callback(this.inputElement.value);
+            onExit(this.inputElement.value);
             this.close();
+        });
+
+        this.inputElement.addEventListener('onkeypress', (event) => {
+            if (event.key === 'Enter' || event.key === 'Tab') {
+                onExit(this.inputElement.value);
+                this.close();
+                onNext(this.inputElement.value);
+            }
         });
 
         MainSingleton.currentTabDiv.append(this.inputElement);

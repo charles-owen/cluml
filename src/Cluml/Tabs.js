@@ -1,8 +1,5 @@
 import {View} from './View';
 import {Tools} from './DOM/Tools';
-import {TextInput} from "./Input/TextInput";
-import {Rect} from "./Utility/Rect";
-import {CustomContextMenu} from "./ContextMenu/CustomContextMenu";
 
 
 /**

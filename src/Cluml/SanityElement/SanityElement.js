@@ -62,4 +62,26 @@ export class SanityElement {
     processSanityCheck() {
         return '';
     }
+
+    /**
+     * Saves the element value of the sanity element.
+     * @param obj {Any}
+     * @param name {string}
+     */
+    saveSanityElement(obj, name) {
+        obj[name] = this.elementValue;
+        return obj;
+    }
+
+    /**
+     * Saves multiple sanity elements into a structure that can be
+     * added to a saving structure.
+     * @param elements {Array<SanityElement>} Array of sanity elements.
+     * @return {*}
+     */
+    static saveMultiple(elements) {
+        return elements.map(
+            (elem) => elem.elementValue
+        );
+    }
 }

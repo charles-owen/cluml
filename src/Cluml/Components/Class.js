@@ -9,6 +9,7 @@ import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
 import {Property} from "../SanityElement/Property";
+import {SanityElement} from "../SanityElement/SanityElement";
 
 export const Class = function () {
     Component.call(this);
@@ -45,7 +46,7 @@ export const Class = function () {
 
     /**
      * The array of attributes.
-     * @type{Array<*>}
+     * @type{Array<Property>}
      */
     this.attributes = [new Property('-', 'attribute', '')];
 
@@ -383,7 +384,7 @@ Class.prototype.draw = function (context, view) {
 
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
-    obj.attributes = this.attributes;
+    obj.attributes = SanityElement.saveMultiple(this.attributes);
     obj.operations = this.operations;
     obj.width = this.width;
     return obj;
