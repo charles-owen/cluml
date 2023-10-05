@@ -3,7 +3,6 @@ import {Association} from "./Components/Association/Association";
 import {Class} from "./Components/Class";
 import {CustomContextMenu} from "./ContextMenu/CustomContextMenu";
 import {TextInput} from "./Input/TextInput";
-import {EditableClassText} from "./Input/EditableClassText";
 
 /**
  * The Selection object keeps track of what is currently

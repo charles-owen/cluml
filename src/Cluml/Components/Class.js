@@ -206,7 +206,30 @@ Class.prototype.tryTouchAddPopup = function (x, y) {
 
 Class.prototype.tryTouchEditingPopup = function (x, y) {
     if (this.editingPopup != null) {
-        return this.editingPopup.touch(x, y);
+        let newText = this.editingPopup.touch(x, y);
+        // Only update the text field if the user enters something
+        if(newText !== "") {
+            // Editing the name field
+            if (this.editingPopup.editingWhat === "name") {
+                this.naming = newText
+            }
+            // Editing an attribute field
+            else if (this.editingPopup.editingWhat === "attribute") {
+                // Determine what attribute needs to be changed first, then change it
+                let boxHeight = this.attributesHeight / this.attributes.length;
+                let selectedAttributeNumber = Math.floor((this.lastSelectedY
+                    - this.attributesBounds.bottom) / boxHeight)
+                this.attributes[selectedAttributeNumber].name = newText
+            }
+            // Editing an operation field
+            else if (this.editingPopup.editingWhat === "operation") {
+                // Determine what operation needs to be changed first, then change it
+                let boxHeight = this.operationsHeight / this.operations.length;
+                let selectedOperationNumber = Math.floor((this.lastSelectedY
+                    - this.operationsBounds.bottom) / boxHeight)
+                this.operations[selectedOperationNumber] = newText
+            }
+        }
     }
     return null;
 }
@@ -319,7 +342,7 @@ Class.prototype.draw = function (context, view) {
         // name box
         if(this.lastSelectedY < this.attributesBounds.bottom) {
             this.editingPopup.drawNameEdit(context, view, this.nameBounds,
-                this.width, this.nameHeight);
+                this.width, this.nameHeight, this.naming);
         }
         // attribute box
         else if(this.lastSelectedY < this.operationsBounds.bottom) {
@@ -333,7 +356,9 @@ Class.prototype.draw = function (context, view) {
                 this.x - this.width/2,
                 selectedAttributeHeight,
                 this.width,
-                boxHeight);
+                boxHeight,
+                "attribute",
+                this.attributes[selectedAttributeNumber].name);
         }
         // operation box
         else if(this.lastSelectedY < this.operationsBounds.top) {
@@ -347,7 +372,9 @@ Class.prototype.draw = function (context, view) {
                 this.x - this.width/2,
                 selectedOperationHeight,
                 this.width,
-                boxHeight);
+                boxHeight,
+                "operation",
+                this.operations[selectedOperationNumber]);
         }
     }
 
