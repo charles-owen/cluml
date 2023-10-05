@@ -56,11 +56,11 @@ export class SanityElement {
 
     /**
      * Processes the sanity check for this element.
-     * @return {string} The error, if there is one, or
-     * an empty string if no errors were detected.
+     * @return {string[]} The list of errors, or an empty
+     * list if there are none.
      */
     processSanityCheck() {
-        return '';
+        return [];
     }
 
     /**

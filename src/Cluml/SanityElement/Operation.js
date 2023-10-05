@@ -1,32 +1,58 @@
 import {Property} from "./Property";
+import {SanityElement} from "./SanityElement";
 
-export class Operation extends Property {
-    parameters = [];
+const VISIBILITY_RX = /^[+#-]/g
+const NAME_RX = /\w+(?=\()/g
+const PAREM_RX = /\(.*\)/g
 
-    /**
-     *
-     * @param parent the class of the operation
-     * @param visibility {String} visibility of the operation {private(-), protected(#), public(+)}
-     * @param name {String} name of the operation
-     * @param type {String} return type
-     * @param parameters {Property[]} function parameters
-     */
-    constructor(parent, visibility, name, type, parameters)
-    {
-        super(parent, visibility, name, type);
-        this.parameters = parameters;
+export class Operation extends SanityElement {
+    constructor(stringValue) {
+        super(stringValue);
+        this.processSanityCheck();
     }
 
     processSanityCheck() {
         const messages = super.processSanityCheck();
 
-        for (const parameter of this.parameters)
-        {
-            for (const message of parameter.processSanityCheck())
-            {
-                messages.push(message);
+        const vMatch = this.elementValue.match(VISIBILITY_RX);
+        if (vMatch.length < 1) {
+            messages.push('Operation missing visibility.');
+        } else {
+            this.visibility = vMatch[0];
+        }
+
+        const nameMatch = this.elementValue.match(NAME_RX);
+        let nameFound = false;
+        if (nameMatch.length < 1) {
+            messages.push('Operation name missing or malformed.');
+        } else {
+            this.name = nameMatch[0];
+            nameFound = true;
+        }
+
+        const paramMatch = this.elementValue.match(PAREM_RX);
+        if (paramMatch.length < 1) {
+            messages.push('Operation parentheses missing or deformed.');
+        } else if (paramMatch.length > 1) {
+            messages.push('Operation has too many parentheses.')
+        } else {
+            if (nameFound) {
+                // See if the name and parenthesis exists next ot each other.
+                const nameParamRX = new RegExp(this.name + PAREM_RX.source, 'g');
+
+                if (!nameParamRX.test(this.elementValue)) {
+                    const npWhitespaceRX = new RegExp(this.name + '\s+' + PAREM_RX.source, 'g');
+                    if (npWhitespaceRX.test(this.elementValue)) {
+                        // There's a space between the name and parenthesis.
+                        messages.push('Operation has whitespace between name and parenthesis.');
+                    } else {
+                        // Some other error.
+                        messages.push('Operation parenthesis malformed.');
+                    }
+                }
             }
         }
+
         return messages;
     }
 }

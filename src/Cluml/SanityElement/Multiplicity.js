@@ -43,6 +43,8 @@ export class Multiplicity extends SanityElement {
     //endregion
 
     processSanityCheck() {
+        const errors = super.processSanityCheck();
+
         if (numberToNumber.test(this.elementValue)) {
             this.multiplicityType = Multiplicity.MultiplicityType.NumberToNumber;
         } else if (numberToAny.test(this.elementValue)) {
@@ -53,9 +55,9 @@ export class Multiplicity extends SanityElement {
             this.multiplicityType = Multiplicity.MultiplicityType.AnyOnly;
         } else {
             this.multiplicityType = Multiplicity.MultiplicityType.Invalid;
-            return [`Multiplicity "${this.elementValue}" formatted incorrectly.`];
+            errors.push(`Multiplicity "${this.elementValue}" formatted incorrectly.`);
         }
 
-        return [];
+        return errors;
     }
 }

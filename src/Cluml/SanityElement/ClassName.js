@@ -23,21 +23,17 @@ export class ClassName extends SanityElement {
     }
 
     processSanityCheck() {
-        const messages = [];
+        const errors = [];
         if (this.elementValue[0].toUpperCase() !== this.elementValue[0]) {
-            messages.push(this.messageTemplate + "not capitalized.");
+            errors.push(this.messageTemplate + "not capitalized.");
         }
         if (spaces.test(this.elementValue)) {
-            messages.push(this.messageTemplate + "contains spaces.")
+            errors.push(this.messageTemplate + "contains spaces.")
         }
         if (nonAlphanumeric.test(this.elementValue)) {
-            messages.push(this.messageTemplate + "contains non-alphanumeric characters.");
+            errors.push(this.messageTemplate + "contains non-alphanumeric characters.");
         }
 
-        if (messages.length === 0)
-            return "";
-        if (messages.length === 1)
-            return messages[0];
-        return messages;
+        return errors;
     }
 }

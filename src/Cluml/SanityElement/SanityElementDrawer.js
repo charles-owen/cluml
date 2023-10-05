@@ -83,8 +83,8 @@ export class SanityElementDrawer extends Selectable {
         super.draw(context, view);
         const oldColor = context.strokeStyle;
 
-        const passes = this.encapsulatedElement.processSanityCheck();
-        context.fillStyle = passes === '' ? this.validColor : this.invalidColor;
+        const errors = this.encapsulatedElement.processSanityCheck();
+        context.fillStyle = errors.length <= 0 ? this.validColor : this.invalidColor;
 
         const pos = Vector.sub(this.relativePosition, this.position);
 

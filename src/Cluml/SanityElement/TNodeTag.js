@@ -8,6 +8,6 @@ export class TNodeTag extends SanityElement {
 
     processSanityCheck() {
         // Checks go here.
-        return '';
+        return super.processSanityCheck();
     }
 }

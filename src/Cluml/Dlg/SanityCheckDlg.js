@@ -15,7 +15,7 @@ export const SanityCheckDlg = function(main) {
         let content = '<h1>Sanity Check</h1>';
 
         let errorCount = 0;
-        let errors = '';
+        let errorHtml = '';
 
         // error check the diagram in view
         const diagram = main.currentView().diagram;
@@ -74,41 +74,33 @@ export const SanityCheckDlg = function(main) {
 
                 if (/\s/.test(operationName))
                 {
-                    errors += `<li>${operationTemplate}: name contains spaces.</li>`;
+                    errorHtml += `<li>${operationTemplate}: name contains spaces.</li>`;
                     errorCount++;
                 }
                 if (/[^A-Za-z0-9]/.test(operationName))
                 {
-                    errors += `<li>${operationTemplate}: name contains non-alphanumeric characters.</li>`;
+                    errorHtml += `<li>${operationTemplate}: name contains non-alphanumeric characters.</li>`;
                     errorCount++;
                 }
                 if (operationName[0].toLowerCase() !== operationName[0])
                 {
-                    errors += `<li>${operationTemplate}: name not in camelCase format.</li>`;
+                    errorHtml += `<li>${operationTemplate}: name not in camelCase format.</li>`;
                     errorCount++;
                 }
             }
         }
 
-
-        const testComps = MainSingleton.singleton.allCurrentComponents;
-
         for (const element of SanityElement.getAllSanityElements()) {
-            const msg = element.processSanityCheck()
-            if (typeof msg === 'string' && msg !== '') {
-                errors += `<li>${msg}</li>`;
-                errorCount++;
-            } else {
-                for (const message of msg)
-                {
-                    errors += `<li>${message}</li>`;
-                    errorCount++;
-                }
+            const sanityElemErrors = element.processSanityCheck();
+
+            for (const error of sanityElemErrors) {
+                errorHtml += `<li>${error}</li>`;
+                errorCount += 1;
             }
         }
 
         content += `<h2>(${errorCount}) errors have been detected</h2>`;
-        content += `<ul>${errors}</ul>`;
+        content += `<ul>${errorHtml}</ul>`;
 
         this.contents(content, "Cluml Sanity Check");
         Dialog.prototype.open.call(this);

@@ -16,10 +16,8 @@ export const Class = function () {
 
     this.forwardSanityCheck = function* () {
         yield new ClassName(this.naming);
-        for (const attribute of this.attributes)
-        {
-            yield attribute;
-        }
+        yield * this.attributes;
+        yield * this.operations;
     }
 
     /**
