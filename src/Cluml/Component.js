@@ -266,7 +266,6 @@ Component.prototype.saveComponent = function () {
         "x": this.x,
         "y": this.y,
         "name": naming,
-        "placed": this.placedOnCanvas,
         "paletteDesc": this.paletteDesc,
         "htmlDesc": this.htmlDesc,
         "paletteLbl": this.paletteLbl,
@@ -295,7 +294,7 @@ Component.prototype.loadComponent = function (obj) {
     this.moveX = this.x;
     this.moveY = this.y;
     let naming = obj["name"];
-    this.placedOnCanvas = obj.placed;
+    this.placedOnCanvas = true;
     if (naming !== null) {
         this.naming = this.sanitize(naming).toString().replace(/`/g, "'");
     } else {
