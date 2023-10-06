@@ -210,9 +210,9 @@ Class.prototype.boundsOfAttribute = function (attribute) {
  * @param component {Class}
  */
 Class.prototype.copyFrom = function (component) {
+    this.className = component.className;
     this.operations = component.operations;
     this.attributes = component.attributes;
-    this.width = component.width;
     Component.prototype.copyFrom.call(this, component);
 }
 
@@ -385,23 +385,12 @@ Class.prototype.draw = function (context, view) {
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
     // Attributes text
-    // for (const attribute of this.attributes) {
-    //     attribute.textAlign = 'left';
-    //     attribute.position = new Vector(-this.width / 2, 0);
-    //     attribute.draw(context, view);
-    // }
-
     let fromTop = this.nameHeight - this.lineHeight / 2;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
         attribute.textAlign = 'left';
         attribute.position = new Vector(-this.width / 4, fromTop + i * this.lineHeight / 2);
         attribute.draw(context, view);
-        // const attributeText = attribute.elementValue.substring(visibility ? 0 : 1);
-        // context.fillText(attributeText,
-        //     this.x - this.width / 2 + 5,
-        //     this.y + fromTop + i * this.lineHeight,
-        //     this.width)
     }
 
     // Operations text
@@ -462,18 +451,18 @@ Class.prototype.draw = function (context, view) {
 
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
+    obj.className = this.className.saveSanityElement();
     obj.attributes = SanityElement.saveMultiple(this.attributes);
-    obj.operations = this.operations;
-    obj.width = this.width;
+    obj.operations = SanityElement.saveMultiple(this.operations);
     return obj;
 }
 
 Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 
-    this.attributes = obj.attributes;
-    this.operations = obj.operations;
-    this.width = +obj["width"];
+    this.className = SanityElement.loadSanityElement(ClassName, obj.className, this);
+    this.attributes = SanityElement.loadMultiple(Attribute, 'attributes', obj, this);
+    this.operations = SanityElement.loadMultiple(Operation, 'operations', obj, this);
 }
 
 /**
