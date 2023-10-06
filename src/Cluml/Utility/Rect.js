@@ -68,6 +68,15 @@ Rect.prototype.contains = function (x, y) {
 };
 
 /**
+ * Returns true if this rect contains point.
+ * @param point {Vector}
+ * @return {boolean}
+ */
+Rect.prototype.containsPoint = function (point) {
+    return this.contains(point.x, point.y);
+}
+
+/**
  * Expand this rect to include all of some other rect.
  * @param rect Other rect to include
  */

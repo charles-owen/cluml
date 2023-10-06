@@ -2,21 +2,21 @@ import {MainSingleton} from "../MainSingleton";
 
 export class TextInput {
     /**
-     * The size and position of this text input.
-     */
-    #dimensions;
-
-    /**
      * The open text inputs.
      * @type {TextInput[]}
      */
     static #instances = [];
-
+    /**
+     * The size and position of this text input.
+     */
+    #dimensions;
     /**
      * The initial value.
      * @type {string}
      */
     #initialValue;
+
+    #closed = false;
 
     /**
      * Defines a basic text input.
@@ -30,7 +30,7 @@ export class TextInput {
      * (the value of the text box). Will be called if the user presses
      * Enter or Tab. Called after onExit.
      */
-    constructor(onExit, onNext, dimensions, initialValue= '', font = "14px Times") {
+    constructor(onExit, onNext, dimensions, initialValue = '', font = "14px Times") {
         this.font = font;
         this.#initialValue = initialValue;
 
@@ -41,26 +41,54 @@ export class TextInput {
         this.inputElement = document.createElement('input');
         this.inputElement.type = 'text';
         this.inputElement.autocomplete = 'on';
+        this.inputElement.style.padding = '0';
+        this.inputElement.style.margin = '0';
+        this.inputElement.style.border = 'none';
         this.inputElement.style.font = font;
         this.inputElement.style.position = 'absolute';
         this.inputElement.value = initialValue;
 
         this.dimensions = dimensions;
 
-        this.inputElement.addEventListener('focusout', (event) => {
-            onExit(this.inputElement.value);
-            this.close();
-        });
+        this.onUnfocusClose = (event) => {
+            if (!this.#closed) {
+                this.#closed = true;
 
-        this.inputElement.addEventListener('onkeypress', (event) => {
-            if (event.key === 'Enter' || event.key === 'Tab') {
-                onExit(this.inputElement.value);
-                this.close();
-                onNext(this.inputElement.value);
+                if (onExit !== undefined) {
+                    onExit(this.inputElement.value);
+                }
+
+                if (this.#initialValue !== this.inputElement.value) {
+                    // Value has been changed.
+                    MainSingleton.singleton.backup();
+
+                    MainSingleton.singleton.currentView.draw();
+                }
+
+                this.inputElement.remove();
             }
-        });
+        };
+
+        this.onTabbedClose = (event) => {
+            if (!this.#closed) {
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                    this.onUnfocusClose(event);
+                    if (onNext !== undefined) {
+                        onNext(this.inputElement.value);
+                    }
+                }
+            }
+        }
+
+        this.inputElement.addEventListener('focusout', this.onUnfocusClose);
+
+        this.inputElement.addEventListener('keypress', this.onTabbedClose);
 
         MainSingleton.currentTabDiv.append(this.inputElement);
+
+        this.inputElement.focus();
+        this.inputElement.select();
+
         TextInput.#instances.push(this);
     }
 
@@ -77,25 +105,66 @@ export class TextInput {
      * @param value {Rect}
      */
     set dimensions(value) {
+        const height = value.top - value.bottom;
         this.#dimensions = value;
-        this.inputElement.style.top = value.top + "px";
+
+        this.inputElement.style.top = value.top - height + "px";
         this.inputElement.style.left = value.left + "px";
         this.inputElement.style.width = (value.right - value.left) + "px";
-        this.inputElement.style.height = (value.top - value.bottom) + "px";
+        this.inputElement.style.height = height + "px";
     }
 
-    close() {
-        if (this.#initialValue !== this.inputElement.value) {
-            // Value has been changed.
-            MainSingleton.singleton.backup();
+    /**
+     * Creates a text input from the provided SanityElement.
+     * @param sanityElement {SanityElement}
+     * @return {TextInput}
+     */
+    static createFromSanityElement(sanityElement) {
+        return new TextInput(
+            (value) => {
+                sanityElement.elementValue = value;
+            },
+            undefined,
+            sanityElement.bounds(),
+            sanityElement.elementValue
+        );
+    }
+
+    /**
+     * Tries to create a text input from the provided mouse input and SanityElement.
+     * @param mouseX {number}
+     * @param mouseY {number}
+     * @param sanityElement {SanityElement}
+     * @param next
+     * @return {TextInput}
+     */
+    static createFromMouseClick(mouseX, mouseY, sanityElement, next) {
+        const bounds = sanityElement.bounds();
+
+        if (bounds.contains(mouseX, mouseY)) {
+            let onNext = undefined;
+            // if (next !== undefined) {
+            //     onNext = (value) => {
+            //         TextInput.createFromSanityElement(next);
+            //     };
+            // }
+
+            return new TextInput(
+                (value) => {
+                    sanityElement.elementValue = value;
+                },
+                onNext,
+                bounds,
+                sanityElement.elementValue
+            );
         }
 
-        this.inputElement.remove();
+        return undefined;
     }
 
     static closeAllInputs() {
         for (const instance of TextInput.#instances) {
-            instance.close();
+            instance.onUnfocusClose(undefined);
         }
 
         TextInput.#instances = [];

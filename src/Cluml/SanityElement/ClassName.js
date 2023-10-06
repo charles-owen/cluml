@@ -12,14 +12,18 @@ export class ClassName extends SanityElement {
     /**
      * Creates a new class name from the provided string.
      * @param stringValue {string} The string value.
+     * @param relativeTo
      */
-
-    constructor(stringValue) {
-        super(stringValue);
+    constructor(stringValue, relativeTo) {
+        super(stringValue, relativeTo);
         this.messageTemplate = `Class <a>${stringValue}</a>: name `;
 
         // Run the sanity check to update the multiplicity types.
         //this.processSanityCheck();
+    }
+
+    bounds() {
+        return this.relativeTo.nameBounds;
     }
 
     processSanityCheck() {
