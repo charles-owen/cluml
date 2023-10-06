@@ -18,10 +18,13 @@ export class Operation extends SanityElement {
 
     processSanityCheck() {
         const messages = super.processSanityCheck();
+        const prefixMatch = /\w+/g.exec(this.elementValue);
+        const prefixTitle = prefixMatch.length > 0 ? prefixMatch[0] : this.elementValue;
+        const prefix = `Operation <a>${prefixTitle}</a>: `;
 
         const vMatch = this.elementValue.match(VISIBILITY_RX);
         if (vMatch === null || vMatch.length < 1) {
-            messages.push('Operation missing visibility.');
+            messages.push(prefix + 'missing visibility.');
         } else {
             this.visibility = vMatch[0];
         }
@@ -29,7 +32,7 @@ export class Operation extends SanityElement {
         const nameMatch = this.elementValue.match(NAME_RX);
         let nameFound = false;
         if (nameMatch === null || nameMatch.length < 1) {
-            messages.push('Operation name missing or malformed.');
+            messages.push(prefix + 'name missing or malformed.');
         } else {
             this.name = nameMatch[0];
             nameFound = true;
@@ -37,7 +40,7 @@ export class Operation extends SanityElement {
 
         const paramMatch = this.elementValue.match(PAREM_RX);
         if (paramMatch === null || paramMatch.length !== 1) {
-            messages.push('Operation parentheses missing or deformed.');
+            messages.push(prefix + 'parentheses missing or deformed.');
         } else {
             if (nameFound) {
                 // See if the name and parenthesis exists next ot each other.
@@ -47,10 +50,10 @@ export class Operation extends SanityElement {
                     const npWhitespaceRX = new RegExp(this.name + '\s+' + PAREM_RX.source, 'g');
                     if (npWhitespaceRX.test(this.elementValue)) {
                         // There's a space between the name and parenthesis.
-                        messages.push('Operation has whitespace between name and parenthesis.');
+                        messages.push(prefix + 'has whitespace between name and parenthesis.');
                     } else {
                         // Some other error.
-                        messages.push('Operation parenthesis malformed.');
+                        messages.push(prefix + 'parenthesis malformed.');
                     }
                 }
 
