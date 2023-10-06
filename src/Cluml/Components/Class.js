@@ -232,6 +232,7 @@ Class.prototype.touch = function (x, y) {
 Class.prototype.move = function (dx, dy, x, y) {
     Component.prototype.move.call(this, dx, dy, x, y);
 
+    // Not strictly needed, but helps smooth out the moving.
     for (const node of this.attachedTNodes) {
         node.move(dx, dy, x, y);
     }
@@ -240,22 +241,14 @@ Class.prototype.move = function (dx, dy, x, y) {
 Class.prototype.doubleClick = function (x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
 
-    const nTxtIn = TextInput.createFromMouseClick(x, y, this.className, undefined);
-    if (nTxtIn !== undefined) {
-        nTxtIn.inputElement.style.textAlign = 'center';
-        return;
-    }
+    for (const elem of [this.className, ...this.attributes, ...this.operations]) {
+        const txtIn = TextInput.createFromMouseClick(x, y, this, elem, undefined,
+            this.autoremove, undefined);
 
-    for (const attribute of this.attributes) {
-        const txtIn = TextInput.createFromMouseClick(x, y, attribute, undefined);
         if (txtIn !== undefined) {
-            return;
-        }
-    }
-
-    for (const operation of this.operations) {
-        const txtIn = TextInput.createFromMouseClick(x, y, operation, undefined);
-        if (txtIn !== undefined) {
+            if (elem === this.className) {
+                txtIn.inputElement.style.textAlign = 'center';
+            }
             return;
         }
     }
@@ -298,6 +291,15 @@ Class.prototype.bounds = function () {
     return Rect.fromTopAndSize(
         this.position, this.size
     );
+}
+
+/**
+ * Refreshes the positions of all the nodes in the attached associations.
+ */
+Class.prototype.refreshNodePositions = function () {
+    for (const node of this.attachedTNodes) {
+        node.refreshPosition();
+    }
 }
 
 /**
@@ -405,6 +407,8 @@ Class.prototype.draw = function (context, view) {
         }
     }
 
+    this.refreshNodePositions();
+
     Component.prototype.draw.call(this, context, view);
 }
 
@@ -462,6 +466,29 @@ Class.prototype.paletteImage = function () {
 }
 
 /**
+ * Removes all empty attributes and operations.
+ */
+Class.prototype.autoremove = function () {
+    const emptyRX = /^\s*$/;
+
+    for (let i = 0; i < this.attributes.length; i++){
+        const attribute = this.attributes[i];
+        if (attribute.elementValue === null || emptyRX.test(attribute.elementValue)) {
+            // Empty. Remove thing.
+            this.attributes.splice(i, 1);
+        }
+    }
+
+    for (let i = 0; i < this.operations.length; i++){
+        const operation = this.operations[i];
+        if (operation.elementValue === null || emptyRX.test(operation.elementValue)) {
+            // Empty. Remove thing.
+            this.operations.splice(i, 1);
+        }
+    }
+}
+
+/**
  * Add an attribute to this Class
  */
 Class.prototype.addAttribute = function (attribute) {
@@ -470,7 +497,7 @@ Class.prototype.addAttribute = function (attribute) {
         this.attributes.push(attribute);
 
         MainSingleton.singleton.redraw();
-        TextInput.createFromSanityElement(this, attribute, undefined);
+        TextInput.createFromSanityElement(this, attribute, undefined, this.autoremove, undefined);
     } else {
         this.attributes.push(attribute);
     }
@@ -492,7 +519,7 @@ Class.prototype.addOperation = function (operation) {
         this.operations.push(operation);
 
         MainSingleton.singleton.redraw();
-        TextInput.createFromSanityElement(this, operation, undefined);
+        TextInput.createFromSanityElement(this, operation, undefined, this.autoremove, undefined);
     } else {
         this.operations.push(operation);
     }
