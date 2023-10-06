@@ -54,7 +54,7 @@ export const Class = function () {
         }
     })
 
-    this.className = new ClassName("Class1", this);
+    this.className = new ClassName('', this);
 
     /**
      * The array of attributes.
@@ -67,8 +67,6 @@ export const Class = function () {
      * @type{Array<Operation>}
      */
     this.operations = [new Operation('+operation1(param : type) : returnType', this)];
-
-    this.addPopup = null;
 
     /**
      * The editing popup for this class when editing the class
@@ -328,18 +326,14 @@ Class.prototype.draw = function (context, view) {
     context.fill();
     context.stroke();
 
-    // Defaults the name to ClassName: UniqueName if no name is given
-    if (this.naming == null) {
-        this.naming = "ClassName:" + Unique.uniqueName();
-    }
-
-
     // Naming text
     if (this.abstract) {
         this.className.font = ITALICS_FONT;
     } else {
         this.className.font = NAME_FONT;
     }
+
+    // this.naming = this.className.elementValue;
 
     this.className.position = new Vector(0, this.lineHeight / 2);
     this.className.draw(context, view);
@@ -369,10 +363,6 @@ Class.prototype.draw = function (context, view) {
         operation.position = new Vector(-size.x / 4, fromTop);
 
         operation.draw(context, view);
-    }
-
-    if (this.addPopup != null) {
-        this.addPopup.draw(context, view, this.x, this.y);
     }
 
     if (this.editingPopup != null) {
@@ -444,6 +434,11 @@ Class.prototype.drop = function () {
 
     if (this.y < 0) {
         this.y = 0;
+    }
+
+    if (this.className.elementValue === '') {
+        // Need new name.
+        this.className = new ClassName(Unique.uniqueClassedName('Class'), this)
     }
 };
 
