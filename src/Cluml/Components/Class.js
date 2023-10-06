@@ -16,7 +16,7 @@ export const Class = function () {
     Component.call(this);
 
     this.forwardSanityCheck = function* () {
-        yield this.className;
+        // yield this.className;
         yield* this.attributes;
         yield* this.operations;
     }
@@ -31,11 +31,22 @@ export const Class = function () {
         }
     })
 
-    /**
-     * Component width.
-     * @type {number}
-     */
-    this.width = 200;
+    Object.defineProperty(this, 'width', {
+        get: function () {
+            let widest = this.className.minBounds().width;
+
+            for (const element of [...this.attributes, ...this.operations]) {
+                const w = element.minBounds().width;
+                if (widest < w) {
+                    widest = w;
+                }
+            }
+
+            return Math.max(200, widest + 5);
+        }
+    })
+
+
 
     Object.defineProperty(this, 'size', {
         get: function () {
@@ -375,26 +386,31 @@ Class.prototype.draw = function (context, view) {
 
     // Attributes text
     // for (const attribute of this.attributes) {
+    //     attribute.textAlign = 'left';
+    //     attribute.position = new Vector(-this.width / 2, 0);
     //     attribute.draw(context, view);
     // }
 
-    let fromTop = this.nameHeight + this.fontHeight;
+    let fromTop = this.nameHeight - this.lineHeight / 2;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
-        const attributeText = attribute.elementValue.substring(visibility ? 0 : 1);
-        context.fillText(attributeText,
-            this.x - this.width / 2 + 5,
-            this.y + fromTop + i * this.lineHeight,
-            this.width)
+        attribute.textAlign = 'left';
+        attribute.position = new Vector(-this.width / 4, fromTop + i * this.lineHeight / 2);
+        attribute.draw(context, view);
+        // const attributeText = attribute.elementValue.substring(visibility ? 0 : 1);
+        // context.fillText(attributeText,
+        //     this.x - this.width / 2 + 5,
+        //     this.y + fromTop + i * this.lineHeight,
+        //     this.width)
     }
 
     // Operations text
-    fromTop += this.attributesHeight;
+    fromTop += this.attributesHeight - this.lineHeight / 2;
     for (let j = 0; j < this.operations.length; j++) {
-        context.fillText(this.operations[j].elementValue.substring(visibility ? 0 : 1),
-            this.x - this.width / 2 + 5,
-            this.y + fromTop + j * this.lineHeight,
-            this.width)
+        const operation = this.operations[j];
+        operation.textAlign = 'left';
+        operation.position = new Vector(-this.width / 4, fromTop + j * this.lineHeight / 2);
+        operation.draw(context, view);
     }
 
     if (this.addPopup != null) {
