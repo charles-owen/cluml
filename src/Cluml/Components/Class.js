@@ -7,7 +7,6 @@ import {ClassName} from "../SanityElement/ClassName";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
-import {Property} from "../SanityElement/Property";
 import {SanityElement} from "../SanityElement/SanityElement";
 import {Operation} from "../SanityElement/Operation";
 import {TextInput} from "../Input/TextInput";
@@ -219,6 +218,14 @@ Class.prototype.touch = function (x, y) {
         return this;
     }
     return null;
+}
+
+Class.prototype.move = function (dx, dy, x, y) {
+    Component.prototype.move.call(this, dx, dy, x, y);
+
+    for (const node of this.attachedTNodes) {
+        node.move(dx, dy, x, y);
+    }
 }
 
 Class.prototype.doubleClick = function (x, y) {
