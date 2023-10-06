@@ -120,6 +120,47 @@ TerminationNode.prototype.rightClick = function (x, y) {
 TerminationNode.prototype.draw = function (context, view) {
     LineNode.prototype.draw.call(this, context, view);
 
+    const side = Math.floor(this.side);
+
+    switch (side) {
+        case 1:
+        case 3:
+            this.multiplicityValue.y = -7;
+            this.tagValue.y = 10;
+            break;
+        default:
+            this.multiplicityValue.x = -5;
+            this.tagValue.x = 5;
+            break;
+    }
+
+    switch (side) {
+        case 0:
+            this.multiplicityValue.textAlign = 'right';
+            this.tagValue.textAlign = 'left';
+            this.multiplicityValue.y = 7;
+            this.tagValue.y = 7;
+            break;
+        case 1:
+            this.multiplicityValue.textAlign = 'left';
+            this.tagValue.textAlign = 'left';
+            this.multiplicityValue.x = 5;
+            this.tagValue.x = 5;
+            break;
+        case 2:
+            this.multiplicityValue.textAlign = 'right';
+            this.tagValue.textAlign = 'left';
+            this.multiplicityValue.y = -5;
+            this.tagValue.y = -5;
+            break;
+        case 3:
+            this.multiplicityValue.textAlign = 'right';
+            this.tagValue.textAlign = 'right';
+            this.multiplicityValue.x = -5;
+            this.tagValue.x = -5;
+            break;
+    }
+
     this.multiplicityValue.draw(context, view);
     this.tagValue.draw(context, view);
 }
