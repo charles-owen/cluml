@@ -57,7 +57,7 @@ export class Multiplicity extends SanityElement {
             this.multiplicityType = Multiplicity.MultiplicityType.AnyOnly;
         } else {
             this.multiplicityType = Multiplicity.MultiplicityType.Invalid;
-            errors.push(`Multiplicity "${this.elementValue}" formatted incorrectly.`);
+            errors.push(`Multiplicity <a>${this.elementValue}</a> formatted incorrectly.`);
         }
 
         return errors;
