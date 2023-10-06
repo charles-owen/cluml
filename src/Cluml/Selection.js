@@ -82,15 +82,15 @@ export const Selection = function (view) {
         firstMove = true;
         this.closeOpenMenus();
 
-        if (this.selected[0] != null) {
-            // Last mouse down (right-click) was on a class
-            if (this.selected[0] instanceof Class) {
-                this.selected[0].tryTouchAddPopup(x, y);
-                this.selected[0].enableAddPopup(false);
-                this.selected[0].tryTouchEditingPopup(x, y);
-                this.selected[0].enableEditing(false);
-            }
-        }
+        // if (this.selected[0] != null) {
+        //     // Last mouse down (right-click) was on a class
+        //     if (this.selected[0] instanceof Class) {
+        //         this.selected[0].tryTouchAddPopup(x, y);
+        //         this.selected[0].enableAddPopup(false);
+        //         this.selected[0].tryTouchEditingPopup(x, y);
+        //         this.selected[0].enableEditing(false);
+        //     }
+        // }
 
         /**
          * @type {Component}

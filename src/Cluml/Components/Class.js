@@ -11,6 +11,7 @@ import {SanityElement} from "../SanityElement/SanityElement";
 import {Operation} from "../SanityElement/Operation";
 import {TextInput} from "../Input/TextInput";
 import {Attribute} from "../SanityElement/Attribute";
+import {CustomContextMenu} from "../ContextMenu/CustomContextMenu";
 
 export const Class = function () {
     Component.call(this);
@@ -45,7 +46,6 @@ export const Class = function () {
             return Math.max(200, widest + 5);
         }
     })
-
 
 
     Object.defineProperty(this, 'size', {
@@ -266,6 +266,24 @@ Class.prototype.doubleClick = function (x, y) {
     this.openProperties();
 
     //this.enableAddPopup(true);
+}
+
+Class.prototype.rightClick = function (x, y) {
+    Selectable.prototype.rightClick.call(this, x, y);
+
+    const menu = new CustomContextMenu(this, new Vector(x, y));
+    menu.addEntry('Add Attribute', () => {
+        this.addAttribute();
+    });
+    menu.addEntry('Add Operation', () => {
+        this.addOperation();
+    });
+    menu.addEntry('Properties', () => {
+        this.openProperties();
+    });
+    menu.addEntry('Delete', () => {
+        this.delete();
+    })
 }
 
 Class.prototype.openProperties = function () {
@@ -501,6 +519,11 @@ Class.prototype.paletteImage = function () {
  * Add an attribute to this Class
  */
 Class.prototype.addAttribute = function (attribute) {
+    if (attribute === undefined) {
+        attribute = new Attribute('', this);
+        TextInput.createFromSanityElement(this, attribute, undefined);
+    }
+
     this.attributes.push(attribute)
 }
 
@@ -515,6 +538,11 @@ Class.prototype.editAttribute = function (attributeIndex, newAttribute) {
  * Add an operation to this Class
  */
 Class.prototype.addOperation = function (operation) {
+    if (operation === undefined) {
+        operation = new Operation('', this);
+        TextInput.createFromSanityElement(this, operation, undefined);
+    }
+
     this.operations.push(operation)
 }
 

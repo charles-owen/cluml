@@ -114,17 +114,28 @@ export class TextInput {
         this.inputElement.style.height = height + "px";
     }
 
+    //region Static Constructor Functions
     /**
      * Creates a text input from the provided SanityElement.
+     * @param target {*}
      * @param sanityElement {SanityElement}
+     * @param getNext {function(target : *, sanityElement : SanityElement)}
      * @return {TextInput}
      */
-    static createFromSanityElement(sanityElement) {
+    static createFromSanityElement(target, sanityElement, getNext) {
         return new TextInput(
             (value) => {
                 sanityElement.elementValue = value;
             },
-            undefined,
+            (value) => {
+                if (getNext !== undefined) {
+                    const next = getNext(target, sanityElement);
+
+                    if (next !== undefined && next !== null) {
+                        TextInput.createFromSanityElement(target, next, getNext);
+                    }
+                }
+            },
             sanityElement.bounds(),
             sanityElement.elementValue
         );
@@ -161,6 +172,7 @@ export class TextInput {
 
         return undefined;
     }
+    //endregion
 
     static closeAllInputs() {
         for (const instance of TextInput.#instances) {
