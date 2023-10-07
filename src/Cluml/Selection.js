@@ -133,6 +133,10 @@ export const Selection = function (view) {
         TextInput.closeAllInputs();
     }
 
+    this.onLongTouch = function(x, y, event) {
+        this.selected[0].rightClick(x,y);
+    }
+
     this.mouseMove = function (x, y, dx, dy) {
         if (down) {
             if (firstMove) {
