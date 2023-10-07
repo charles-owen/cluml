@@ -62,32 +62,30 @@ export const ClassPropertiesDlg = function(component, main) {
                 '</div>';
         }
 
-        if (component instanceof Class) {
-            let abstractDiv = document.createElement("div");
-            abstractDiv.style.textAlign = 'center';
+        let abstractDiv = document.createElement("div");
+        abstractDiv.style.textAlign = 'center';
 
-            let abstractToggle = document.createElement('input');
-            abstractToggle.type = "checkbox";
-            abstractToggle.id = toggleId;
+        let abstractToggle = document.createElement('input');
+        abstractToggle.type = "checkbox";
+        abstractToggle.id = toggleId;
 
-            if (component.abstract)
-            {
-                abstractToggle.setAttribute("checked", "true");
-            }
-            else
-            {
-                abstractToggle.removeAttribute("checked");
-            }
-
-            let toggleLabel = document.createElement('label');
-            //toggleLabel.htmlFor = abstractToggle.id;
-            toggleLabel.appendChild(document.createTextNode('Abstract Class: '));
-
-            abstractDiv.appendChild(toggleLabel);
-            abstractDiv.append(abstractToggle);
-
-            dlg += abstractDiv.outerHTML;
+        if (component.abstract)
+        {
+            abstractToggle.setAttribute("checked", "true");
         }
+        else
+        {
+            abstractToggle.removeAttribute("checked");
+        }
+
+        let toggleLabel = document.createElement('label');
+        //toggleLabel.htmlFor = abstractToggle.id;
+        toggleLabel.appendChild(document.createTextNode('Abstract Class: '));
+
+        abstractDiv.appendChild(toggleLabel);
+        abstractDiv.append(abstractToggle);
+
+        dlg += abstractDiv.outerHTML;
 
         this.contents(dlg, "Cluml Component Properties");
         Dialog.prototype.open.call(this);
@@ -131,12 +129,8 @@ export const ClassPropertiesDlg = function(component, main) {
             }
 	        Tools.removeClass(nameElement, 'cluml-error');
 	        name = this.sanitize(name);
-
-            if (component instanceof Class)
-            {
-                const toggleElement = document.getElementById(toggleId);
-                isAbstract = toggleElement.checked;
-            }
+            const toggleElement = document.getElementById(toggleId);
+            isAbstract = toggleElement.checked;
         }
 
         var extraRet = extraValidate();
@@ -149,11 +143,7 @@ export const ClassPropertiesDlg = function(component, main) {
         if(component.prefix !== null) {
             component.naming = name.length > 0 ? name : null;
             component.className.elementValue = component.naming;
-
-            if (component instanceof Class)
-            {
-                component.abstract = isAbstract;
-            }
+            component.abstract = isAbstract;
         }
 
         extraTake();

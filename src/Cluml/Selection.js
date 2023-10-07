@@ -34,14 +34,9 @@ export const Selection = function (view) {
 
         // TODO: Remove hard coded stuff.
         if (touched !== null) {
-            if (touched instanceof Class) {
-                event.preventDefault();
-                this.selected = [touched];
-                this.selected[0].enableAddPopup(true);
-            }
-
             event.preventDefault();
             this.selected = [touched];
+            this.selected[0].enableAddPopup(true);
         } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle

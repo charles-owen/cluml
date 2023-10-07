@@ -232,10 +232,6 @@ Component.prototype.inRect = function (rect, collect) {
     // });
 };
 
-Component.prototype.enableAddPopup = function(enable) {
-
-}
-
 Component.prototype.delete = function () {
     // let i;
     // // Delete all connections
