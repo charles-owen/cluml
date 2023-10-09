@@ -269,8 +269,10 @@ export const Tabs = function (main) {
             // We need to know the undo version...
             current = current.prev;
 
-            for (const component of current.components) {
-                component.onUndo();
+            if (current !== null) {
+                for (const component of current.components) {
+                    component.onUndo();
+                }
             }
         }
 
