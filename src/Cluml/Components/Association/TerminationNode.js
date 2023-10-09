@@ -76,6 +76,8 @@ TerminationNode.prototype.paletteDesc = "The start and end nodes for an associat
 TerminationNode.prototype.htmlDesc = '<h2>Termination Node</h2><p>The start and end nodes for an association.</p>';
 TerminationNode.prototype.paletteOrder = -1;
 
+TerminationNode.prototype.isTail = false;
+
 //region Selectable Methods
 /**
  *
@@ -118,7 +120,11 @@ TerminationNode.prototype.rightClick = function (x, y) {
 }
 
 TerminationNode.prototype.draw = function (context, view) {
-    LineNode.prototype.draw.call(this, context, view);
+
+    //tail termination node doesn't call LineNode.draw
+    if(this.isTail === false){
+        LineNode.prototype.draw.call(this, context, view);
+    }
 
     const side = Math.floor(this.side);
 
@@ -161,6 +167,14 @@ TerminationNode.prototype.draw = function (context, view) {
             break;
     }
 
+    //draw the tail of the association
+    //in the future, will need to be able to work regardless of if the node is connected
+    //to a class yet
+    if(this.isTail){
+        this.association.drawTail(context, this.x, this.y, side);
+    }
+
+
     this.multiplicityValue.draw(context, view);
     this.tagValue.draw(context, view);
 }
@@ -178,6 +192,9 @@ TerminationNode.prototype.attachToClass = function (attachTo, position, side) {
     this.attachedTo.attachedTNodes.push(this);
     this.position = position;
     this.side = side;
+    // if(this.isTail){
+    //     console.log(side);
+    // }
 }
 
 /**

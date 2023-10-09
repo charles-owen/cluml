@@ -24,6 +24,59 @@ Inheritance.prototype.paletteOrder = 20;
 Inheritance.prototype.loadOrder = 20;
 //endregion
 
+Inheritance.prototype.drawTail = function(context, x, y, side){
+    //this will determine the size of the tail
+    let offsetVal = 8;
+    let val1 = offsetVal;
+    let val2 = offsetVal;
+    let val3 = offsetVal;
+    let val4 = offsetVal;
+
+    switch(side){
+        case 0:
+            //top
+            val1 = x - offsetVal;
+            val2 = y + offsetVal;
+            val3 = x + offsetVal;
+            val4 = y + offsetVal;
+            break;
+        case 1:
+            //right
+            val1 = x + offsetVal;
+            val2 = y + offsetVal;
+            val3 = x + offsetVal;
+            val4 = y - offsetVal;
+            break;
+        case 2:
+            //bottom
+            val1 = x + offsetVal;
+            val2 = y - offsetVal;
+            val3 = x - offsetVal;
+            val4 = y - offsetVal;
+            break;
+        case 3:
+            //left
+            val1 = x - offsetVal;
+            val2 = y - offsetVal;
+            val3 = x - offsetVal;
+            val4 = y + offsetVal;
+            break;
+        default:
+            val1 = x + offsetVal;
+            val2 = y - offsetVal;
+            val3 = x - offsetVal;
+            val4 = y - offsetVal;
+            break;
+    }
+
+    context.beginPath();
+    context.moveTo(x, y);
+    context.lineTo(val1, val2);
+    context.lineTo(val3, val4);
+    context.closePath();
+    context.stroke();
+}
+
 //Draw the paletteImage for the palette
 Inheritance.prototype.paletteImage = function() {
     let size=16;  // Box size
