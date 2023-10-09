@@ -64,11 +64,11 @@ export class SanityElement extends Selectable {
     // endregion
 
     // region Getters/Setters
-    get elementValue() {
+    getElementValue() {
         return this.#elementValue;
     }
 
-    set elementValue(value) {
+    setElementValue(value) {
         if (this.#elementValue !== value) {
             this.#elementValue = value;
             this.processSanityCheck();

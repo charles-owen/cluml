@@ -1,4 +1,5 @@
 import {SanityElement} from "./SanityElement";
+import {MainSingleton} from "../MainSingleton";
 
 export const VISIBILITY_RX = /^[+#-]/g
 export const NAME_RX = /\w+(?=\()/g
@@ -14,6 +15,19 @@ export class Operation extends SanityElement {
     bounds() {
         // Trust me, this is a class.
         return this.relativeTo.boundsOfOperation(this);
+    }
+
+    draw(context, view)
+    {
+        const temp = this.elementValue;
+        const vMatch = this.elementValue.match(VISIBILITY_RX);
+        const what = MainSingleton.singleton.options;
+        if(!what.showVisibility && vMatch !== null && vMatch.length > 0)
+        {
+            this.elementValue = this.elementValue.replace(vMatch[0], '');
+        }
+        super.draw(context, view);
+        this.elementValue = temp;
     }
 
     processSanityCheck() {

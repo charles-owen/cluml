@@ -1,4 +1,5 @@
 import {Tools} from '../DOM/Tools';
+import {MainSingleton} from "../MainSingleton";
 
 /**
  * The Options menu
@@ -20,8 +21,10 @@ export const OptionsMenu = function(menu, main) {
      */
     this.activate = function() {
 	    menu.click('.option-showvisibility', (event) => {
-            main.options.showVisibility = !main.options.showVisibility;
-            main.currentView().draw();
+            MainSingleton.singleton.options.showVisibility = !main.options.showVisibility;
+            //main.options.showVisibility = !main.options.showVisibility;
+            MainSingleton.singleton.redraw();
+            //main.currentView().draw();
 	    });
     }
 
