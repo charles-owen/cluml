@@ -46,6 +46,7 @@ export class TextInput {
         this.inputElement.style.border = 'none';
         this.inputElement.style.font = font;
         this.inputElement.style.position = 'absolute';
+        this.inputElement.style.backgroundColor = '#e7e8b0';
         this.inputElement.value = initialValue;
 
         this.dimensions = dimensions;
