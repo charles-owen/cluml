@@ -129,7 +129,10 @@ export const Selection = function (view) {
     }
 
     this.onLongTouch = function(x, y, event) {
-        this.selected[0].rightClick(x,y);
+        if (this.selected[0])
+        {
+            this.selected[0].rightClick(x,y);
+        }
     }
 
     this.mouseMove = function (x, y, dx, dy) {
