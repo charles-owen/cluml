@@ -93,32 +93,14 @@ export const View = function(main, canvas, diagram) {
             this.draw();
         }
 
-        let longTouchTimer = null;
-        let longTouchDuration = 500;
-        let doubleTapTimer = null;
-        let doubleTapDuration = 500;
+        let touchTimer;
+        let touchDuration = 500;
         let touchStartListener = (event) => {
-            //Check for double tap
-            if (doubleTapTimer == null) {
-                doubleTapTimer = setTimeout(function () {
-                    //single tap, continue
-                    doubleTapTimer = null;
-                }, doubleTapDuration)
-            } else {
-                //double tap
-                if (this.selection.selected.length === 1 &&
-                    (this.selection.selected[0] instanceof Selectable)) {
-                    this.selection.doubleTap(mouse.x, mouse.y, event, main);
-                }
-                doubleTapTimer = null;
-                return;
-            }
-
             event.preventDefault();
 
-            longTouchTimer = setTimeout(function() {
+            touchTimer = setTimeout(function() {
                 onLongTouchListener(event);
-            }, longTouchDuration);
+            }, touchDuration);
 
             let touch = event.changedTouches[0];
             downListener(touch.pageX, touch.pageY, true, event);
@@ -234,8 +216,8 @@ export const View = function(main, canvas, diagram) {
         let touchMoveListener = (event) => {
             event.preventDefault();
 
-            if (longTouchTimer)
-                clearTimeout(longTouchTimer);
+            if (touchTimer)
+                clearTimeout(touchTimer);
 
             let touch = event.changedTouches[0];
             moveListener(touch.pageX, touch.pageY, true);
@@ -279,8 +261,8 @@ export const View = function(main, canvas, diagram) {
         let touchEndListener = (event) => {
             event.preventDefault();
 
-            if (longTouchTimer)
-                clearTimeout(longTouchTimer);
+            if (touchTimer)
+                clearTimeout(touchTimer);
 
             let touch = event.changedTouches[0];
             upListener(touch.pageX, touch.pageY, true);
