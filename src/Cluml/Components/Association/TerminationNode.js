@@ -3,11 +3,11 @@ import Selectable from "../../Selectable";
 import { Class } from "../Class";
 import { MainSingleton } from "../../MainSingleton";
 import { Multiplicity } from "../../SanityElement/Multiplicity";
+import { SanityElementDrawer } from "../../SanityElement/SanityElementDrawer.js";
 import Vector from "../../Utility/Vector";
 import { CustomContextMenu } from "../../ContextMenu/CustomContextMenu";
 import { TerminationNodeDlg } from "../../Dlg/TerminationNodeDlg.js";
 import { TNodeTag } from "../../SanityElement/TNodeTag.js";
-import { SanityElement } from "../../SanityElement/SanityElement.js";
 
 
 /**
@@ -22,17 +22,17 @@ export const TerminationNode = function () {
     //region Fields
     /**
      * The multiplicity value.
-     * @type {Multiplicity}
+     * @type {SanityElementDrawer}
      */
-    this.multiplicityValue = new Multiplicity('*', this);
-    this.multiplicityValue.y = 10;
+    this.multiplicityValue = new SanityElementDrawer(new Multiplicity('*'), this);
+    this.multiplicityValue.y = 15;
 
     /**
      * The attribute label.
-     * @type {TNodeTag}
+     * @type {SanityElementDrawer}
      */
-    this.tagValue = new TNodeTag('tag', this);
-    this.tagValue.y = -7;
+    this.tagValue = new SanityElementDrawer(new TNodeTag('tag'), this);
+    this.tagValue.y = -15;
 
     /**
      * The class this is attached to.
@@ -185,8 +185,8 @@ TerminationNode.prototype.saveNode = function () {
         obj.side = this.side;
     }
 
-    obj.multiplicity = this.multiplicityValue.saveSanityElement();
-    obj.tag = this.tagValue.saveSanityElement();
+    obj.multiplicity = this.multiplicityValue.elementValue;
+    obj.tag = this.tagValue.elementValue;
 
     return obj;
 }
@@ -200,10 +200,10 @@ TerminationNode.prototype.loadNode = function (obj, association) {
         this.attachToClass(at, obj.position, obj.side);
     }
 
-    this.multiplicityValue = SanityElement.loadSanityElement(Multiplicity,
-        obj.multiplicity, this);
-    this.tagValue = SanityElement.loadSanityElement(TNodeTag,
-        obj.tag, this);
+    this.multiplicityValue = new SanityElementDrawer(new Multiplicity(obj.multiplicity), this);
+    this.multiplicityValue.y = 15;
+    this.tagValue = new SanityElementDrawer(new TNodeTag(obj.tag), this);
+    this.tagValue.y = -15;
 }
 
 /**

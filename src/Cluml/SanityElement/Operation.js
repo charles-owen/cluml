@@ -1,26 +1,21 @@
+import {Property} from "./Property";
 import {SanityElement} from "./SanityElement";
 
-export const VISIBILITY_RX = /^[+#-]/g
-export const NAME_RX = /\w+(?=\()/g
-export const PAREM_RX = /\(.*\)/g
-export const ARG_RX = /(\w+)( *: *)(\w+)/g
+const VISIBILITY_RX = /^[+#-]/g
+const NAME_RX = /\w+(?=\()/g
+const PAREM_RX = /\(.*\)/g
 
 export class Operation extends SanityElement {
-    constructor(stringValue, relativeTo) {
-        super(stringValue, relativeTo);
+    constructor(stringValue) {
+        super(stringValue);
         this.processSanityCheck();
-    }
-
-    bounds() {
-        // Trust me, this is a class.
-        return this.relativeTo.boundsOfOperation(this);
     }
 
     processSanityCheck() {
         const messages = super.processSanityCheck();
 
         const vMatch = this.elementValue.match(VISIBILITY_RX);
-        if (vMatch !== null && vMatch.length < 1) {
+        if (vMatch.length < 1) {
             messages.push('Operation missing visibility.');
         } else {
             this.visibility = vMatch[0];
@@ -28,7 +23,7 @@ export class Operation extends SanityElement {
 
         const nameMatch = this.elementValue.match(NAME_RX);
         let nameFound = false;
-        if (nameMatch !== null && nameMatch.length < 1) {
+        if (nameMatch.length < 1) {
             messages.push('Operation name missing or malformed.');
         } else {
             this.name = nameMatch[0];
@@ -36,8 +31,10 @@ export class Operation extends SanityElement {
         }
 
         const paramMatch = this.elementValue.match(PAREM_RX);
-        if (paramMatch !== null && paramMatch.length !== 1) {
+        if (paramMatch.length < 1) {
             messages.push('Operation parentheses missing or deformed.');
+        } else if (paramMatch.length > 1) {
+            messages.push('Operation has too many parentheses.')
         } else {
             if (nameFound) {
                 // See if the name and parenthesis exists next ot each other.
@@ -53,8 +50,6 @@ export class Operation extends SanityElement {
                         messages.push('Operation parenthesis malformed.');
                     }
                 }
-
-                const args = paramMatch[0].matchAll(ARG_RX);
             }
         }
 

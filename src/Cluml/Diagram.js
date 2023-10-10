@@ -144,9 +144,7 @@ Diagram.prototype.update = function () {
 
 Diagram.prototype.draw = function (context, view) {
     for (const component of this.components) {
-        if (component.placedOnCanvas) {
-            component.draw(context, view);
-        }
+        component.draw(context, view);
     }
 };
 

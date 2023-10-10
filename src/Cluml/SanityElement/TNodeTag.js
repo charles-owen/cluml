@@ -4,6 +4,11 @@ import { SPACES_RX, NON_ALPHANUMERIC_RX, NON_ALPHABETICAL_RX} from "../Utility/N
 const LOWERCASE_RX = /[a-z]/;
 
 export class TNodeTag extends SanityElement {
+
+    constructor(stringValue) {
+        super(stringValue);
+    }
+
     processSanityCheck() {
         // Checks go here.
         const errors =  super.processSanityCheck();

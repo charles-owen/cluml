@@ -4,22 +4,20 @@ import {PaletteImage} from "../Graphics/PaletteImage";
 import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
+import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
 import {Property} from "../SanityElement/Property";
 import {SanityElement} from "../SanityElement/SanityElement";
-import {Operation} from "../SanityElement/Operation";
-import {TextInput} from "../Input/TextInput";
-import {Attribute} from "../SanityElement/Attribute";
 
 export const Class = function () {
     Component.call(this);
 
     this.forwardSanityCheck = function* () {
-        yield this.className;
-        yield* this.attributes;
-        yield* this.operations;
+        yield new ClassName(this.naming);
+        yield * this.attributes;
+        yield * this.operations;
     }
 
     /**
@@ -44,19 +42,17 @@ export const Class = function () {
         }
     })
 
-    this.className = new ClassName("Class1", this);
-
     /**
      * The array of attributes.
-     * @type{Array<Attribute>}
+     * @type{Array<Property>}
      */
-    this.attributes = [new Attribute('+attribute1 : type', this)];
+    this.attributes = [new Property('-', 'attribute', '')];
 
     /**
      * The array of operations.
-     * @type{Array<Operation>}
+     * @type{Array<String>}
      */
-    this.operations = [new Operation('+operation1(param : type) : returnType', this)];
+    this.operations = ["+operation1() :"];
 
     this.addPopup = null;
 
@@ -89,7 +85,7 @@ export const Class = function () {
     this.lastSelectedY = 0;
 
     Object.defineProperty(this, 'lineHeight', {
-        get: function () {
+        get: function() {
             return this.fontHeight * 1.5;
         }
     });
@@ -152,50 +148,6 @@ Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
 Class.prototype.paletteOrder = 1;
 
 /**
- * Gets the bounds of the nth operation.
- * @param n {number}
- * @return {Rect}
- */
-Class.prototype.boundsOfNthOperation = function (n) {
-    const topStart = this.y + this.nameHeight + this.attributesHeight;
-    return Rect.fromTopAndSize(
-        new Vector(this.x, topStart + this.lineHeight * n),
-        new Vector(this.width, this.lineHeight)
-    );
-}
-
-/**
- * Returns the bounds of the specified operation.
- * @param operation {Operation}
- * @return {Rect}
- */
-Class.prototype.boundsOfOperation = function (operation) {
-    return this.boundsOfNthOperation(this.operations.indexOf(operation));
-}
-
-/**
- * Gets the bounds of the nth attribute.
- * @param n {number}
- * @return {Rect}
- */
-Class.prototype.boundsOfNthAttribute = function (n) {
-    const topStart = this.y + this.nameHeight;
-    return Rect.fromTopAndSize(
-        new Vector(this.x, topStart + this.lineHeight * n),
-        new Vector(this.width, this.lineHeight)
-    );
-}
-
-/**
- * Returns the bounds of the specified attribute.
- * @param attribute {Attribute}
- * @return {Rect}
- */
-Class.prototype.boundsOfAttribute = function (attribute) {
-    return this.boundsOfNthAttribute(this.attributes.indexOf(attribute));
-}
-
-/**
  * Copies from another component.
  * @param component {Class}
  */
@@ -221,36 +173,25 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
-Class.prototype.doubleClick = function (x, y) {
+Class.prototype.doubleClick = function(x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
+    this.lastSelectedX = x;
+    this.lastSelectedY = y;
 
-    const nTxtIn = TextInput.createFromMouseClick(x, y, this.className, undefined);
-    if (nTxtIn !== undefined) {
-        nTxtIn.inputElement.style.textAlign = 'center';
-        return;
+    //clicked on attribute or operation?
+    if(this.lastSelectedX < this.x) {
+        //yes? ok then edit the class
+        this.enableEditing(true);
     }
-
-    for (const attribute of this.attributes) {
-        const txtIn = TextInput.createFromMouseClick(x, y, attribute, undefined);
-        if (txtIn !== undefined) {
-            return;
-        }
+    else {
+        //no? ok then do class properties dialog box
+        this.openProperties();
     }
-
-    for (const operation of this.operations) {
-        const txtIn = TextInput.createFromMouseClick(x, y, operation, undefined);
-        if (txtIn !== undefined) {
-            return;
-        }
-    }
-
-    // Name/attributes/operation was not selected.
-    this.openProperties();
 
     //this.enableAddPopup(true);
 }
 
-Class.prototype.openProperties = function () {
+Class.prototype.openProperties = function() {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main);
     propertiesDlg.open();
 }
@@ -266,7 +207,7 @@ Class.prototype.tryTouchEditingPopup = function (x, y) {
     if (this.editingPopup != null) {
         let newText = this.editingPopup.touch(x, y);
         // Only update the text field if the user enters something
-        if (newText !== "") {
+        if(newText !== "") {
             // Editing the name field
             if (this.editingPopup.editingWhat === "name") {
                 this.naming = newText
@@ -311,11 +252,11 @@ Class.prototype.enableAddPopup = function (enable) {
 }
 
 Class.prototype.enableEditing = function (enable) {
-    // if (enable) {
-    //     this.editingPopup = new EditingPopup(this);
-    // } else {
-    //     this.editingPopup = null;
-    // }
+    if (enable) {
+        this.editingPopup = new EditingPopup(this);
+    } else {
+        this.editingPopup = null;
+    }
 }
 
 /**
@@ -352,14 +293,20 @@ Class.prototype.draw = function (context, view) {
 
     // Naming text
     context.fillStyle = "#000000";
-    if (this.abstract) {
-        this.className.font = ITALICS_FONT;
-    } else {
-        this.className.font = NAME_FONT;
+    if (this.abstract)
+    {
+        this.drawName(context,
+            0,
+            this.fontHeight * 1.5,
+            ITALICS_FONT);
     }
-
-    this.className.position = new Vector(0, this.lineHeight / 2);
-    this.className.draw(context, view);
+    else
+    {
+        this.drawName(context,
+            0,
+            this.fontHeight * 1.5,
+            NAME_FONT);
+    }
 
     context.textAlign = "left"
     context.font = NAME_FONT;
@@ -367,14 +314,10 @@ Class.prototype.draw = function (context, view) {
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
     // Attributes text
-    // for (const attribute of this.attributes) {
-    //     attribute.draw(context, view);
-    // }
-
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
-        const attributeText = attribute.elementValue.substring(visibility ? 0 : 1);
+        const attributeText = `${visibility ? attribute.visibility : ''}${attribute.name}: ${attribute.type}`;
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,
@@ -384,7 +327,7 @@ Class.prototype.draw = function (context, view) {
     // Operations text
     fromTop += this.attributesHeight;
     for (let j = 0; j < this.operations.length; j++) {
-        context.fillText(this.operations[j].elementValue.substring(visibility ? 0 : 1),
+        context.fillText(this.operations[j].substring(visibility ? 0 : 1),
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
             this.width)
@@ -396,20 +339,20 @@ Class.prototype.draw = function (context, view) {
 
     if (this.editingPopup != null) {
         // name box
-        if (this.lastSelectedY < this.attributesBounds.bottom) {
+        if(this.lastSelectedY < this.attributesBounds.bottom) {
             this.editingPopup.drawNameEdit(context, view, this.nameBounds,
                 this.width, this.nameHeight, this.naming);
         }
         // attribute box
-        else if (this.lastSelectedY < this.operationsBounds.bottom) {
-            let boxHeight = this.attributesHeight / this.attributes.length;
+        else if(this.lastSelectedY < this.operationsBounds.bottom) {
+            let boxHeight = this.attributesHeight/this.attributes.length;
             let selectedAttributeNumber = Math.floor((this.lastSelectedY
-                - this.attributesBounds.bottom) / boxHeight)
+                - this.attributesBounds.bottom)/boxHeight)
             let selectedAttributeHeight = this.attributesBounds.bottom
                 + (selectedAttributeNumber * boxHeight)
             this.editingPopup.drawAttributionEdit(context,
                 view,
-                this.x - this.width / 2,
+                this.x - this.width/2,
                 selectedAttributeHeight,
                 this.width,
                 boxHeight,
@@ -417,15 +360,15 @@ Class.prototype.draw = function (context, view) {
                 this.attributes[selectedAttributeNumber].name);
         }
         // operation box
-        else if (this.lastSelectedY < this.operationsBounds.top) {
-            let boxHeight = this.operationsHeight / this.operations.length;
+        else if(this.lastSelectedY < this.operationsBounds.top) {
+            let boxHeight = this.operationsHeight/this.operations.length;
             let selectedOperationNumber = Math.floor((this.lastSelectedY
-                - this.operationsBounds.bottom) / boxHeight)
+                - this.operationsBounds.bottom)/boxHeight)
             let selectedOperationHeight = this.operationsBounds.bottom
                 + (selectedOperationNumber * boxHeight)
             this.editingPopup.drawAttributionEdit(context,
                 view,
-                this.x - this.width / 2,
+                this.x - this.width/2,
                 selectedOperationHeight,
                 this.width,
                 boxHeight,
