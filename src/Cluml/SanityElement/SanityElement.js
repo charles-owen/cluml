@@ -23,12 +23,6 @@ export class SanityElement extends Selectable {
     font = CONTENT_FONT
 
     /**
-     * The alignment of the text.
-     * @type {CanvasTextAlign}
-     */
-    textAlign = 'center';
-
-    /**
      * Color to use if this passes the sanity check.
      * @type {string}
      */
@@ -94,7 +88,7 @@ export class SanityElement extends Selectable {
 
         const pos = this.absolutePosition;
 
-        this.drawText(context, this.elementValue, pos.x, pos.y, this.font, this.textAlign);
+        this.drawText(context, this.elementValue, pos.x, pos.y, this.font);
 
         this.#fontMetrics = context.measureText(this.font);
 

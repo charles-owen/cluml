@@ -217,12 +217,11 @@ Selectable.prototype.draw = function (context, view) {
  * @param x {number} X location
  * @param y {number} Y location
  * @param font {string} Optional font to use
- * @param textAlign {CanvasTextAlign}
  */
-Selectable.prototype.drawText = function (context, text, x, y, font = CONTENT_FONT, textAlign = 'center') {
+Selectable.prototype.drawText = function (context, text, x, y, font = CONTENT_FONT) {
     context.beginPath();
     context.font = font !== undefined ? font : CONTENT_FONT;
-    context.textAlign = textAlign;
+    context.textAlign = "center";
     context.fillText(text, this.x + x, this.y + y);
     context.stroke();
 }
