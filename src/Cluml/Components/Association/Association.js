@@ -310,7 +310,7 @@ Association.prototype.saveComponent = function () {
 }
 
 Association.prototype.loadComponent = function (obj) {
-    Component.prototype.loadComponent.call(this, obj);
+    Component.prototype.loadComponent(obj);
     this.serializedNodeData = obj.nodeData;
     this.onUndo();
 
