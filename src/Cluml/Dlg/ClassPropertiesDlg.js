@@ -58,7 +58,7 @@ export const ClassPropertiesDlg = function(component, main) {
             nameId = Unique.uniqueName();
             toggleId = Unique.uniqueName();
             dlg += '<div class="control1 center gap"><label for="' + nameId + '">Name: </label>' +
-                '<input type="text" name="' + nameId + '" id="' + nameId + '" value="' + component.className.elementValue + '" spellcheck="false" class="compname text ui-widget-content ui-corner-all">' +
+                '<input type="text" name="' + nameId + '" id="' + nameId + '" value="' + name + '" spellcheck="false" class="compname text ui-widget-content ui-corner-all">' +
                 '</div>';
         }
 
@@ -148,7 +148,6 @@ export const ClassPropertiesDlg = function(component, main) {
         main.backup();
         if(component.prefix !== null) {
             component.naming = name.length > 0 ? name : null;
-            component.className.elementValue = component.naming;
 
             if (component instanceof Class)
             {
