@@ -10,6 +10,8 @@ import {Rect} from "./Utility/Rect";
 export const Component = function () {
     Selectable.call(this);
 
+    this.main = null;
+
     /**
      * The diagram.
      * @type {Diagram}
@@ -42,10 +44,6 @@ export const Component = function () {
      * @type {string | null}
      */
     this.naming = null;
-
-    this.abstract = false;
-
-    this.main = null;
 };
 
 Component.prototype = Object.create(Selectable.prototype);
@@ -148,7 +146,6 @@ Component.maxId = 1000;
 Component.prototype.copyFrom = function (component) {
     this.prev = component.prev;
     this.naming = component.naming;
-    this.abstract = component.abstract;
     this.id = component.id;
     this.placedOnCanvas = component.placedOnCanvas;
     component.prev = this;
@@ -274,8 +271,7 @@ Component.prototype.saveComponent = function () {
         "paletteLbl": this.paletteLbl,
         "fileLbl": this.fileLbl,
         "helpLbl": this.helpLbl,
-        "loadOrder": this.loadOrder,
-        "abstract" : this.abstract
+        "loadOrder": this.loadOrder
     };
 };
 
@@ -310,7 +306,6 @@ Component.prototype.loadComponent = function (obj) {
     this.paletteLbl = obj["paletteLbl"];
     this.fileLbl = obj["fileLbl"];
     this.helpLbl = obj["helpLbl"];
-    this.abstract = obj["abstract"];
 };
 
 /*

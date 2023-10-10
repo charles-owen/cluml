@@ -7,7 +7,6 @@ import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
 import Vector from "./Utility/Vector";
 import {Rect} from "./Utility/Rect";
 import Selectable from "./Selectable";
-import {Class} from "./Components/Class";
 
 /**
  * View of a diagram
@@ -93,22 +92,10 @@ export const View = function(main, canvas, diagram) {
             this.draw();
         }
 
-        let touchTimer;
-        let touchDuration = 500;
         let touchStartListener = (event) => {
             event.preventDefault();
-
-            touchTimer = setTimeout(function() {
-                onLongTouchListener(event);
-            }, touchDuration);
-
             let touch = event.changedTouches[0];
             downListener(touch.pageX, touch.pageY, true, event);
-        }
-
-        let onLongTouchListener = (event) => {
-            this.selection.onLongTouch(mouse.x, mouse.y, event);
-            this.draw();
         }
 
         let lastTap;
@@ -216,9 +203,6 @@ export const View = function(main, canvas, diagram) {
         let touchMoveListener = (event) => {
             event.preventDefault();
 
-            if (touchTimer)
-                clearTimeout(touchTimer);
-
             let touch = event.changedTouches[0];
             moveListener(touch.pageX, touch.pageY, true);
         }
@@ -254,16 +238,12 @@ export const View = function(main, canvas, diagram) {
 
             if (this.selection.selected.length === 1 &&
                 (this.selection.selected[0] instanceof Selectable)) {
-                this.selection.doubleTap(mouse.x, mouse.y, event, main);
+                this.selection.doubleTap(mouse.x, mouse.y, event);
             }
         }
 
         let touchEndListener = (event) => {
             event.preventDefault();
-
-            if (touchTimer)
-                clearTimeout(touchTimer);
-
             let touch = event.changedTouches[0];
             upListener(touch.pageX, touch.pageY, true);
         }
