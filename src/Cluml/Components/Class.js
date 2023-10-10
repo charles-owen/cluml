@@ -69,11 +69,6 @@ export const Class = function () {
     this.operations = [new Operation('+operation1(param : type) : returnType', this)];
 
     /**
-     * The editing popup for this class when editing the class
-     */
-    this.editingPopup = null;
-
-    /**
      * Attached termination nodes.
      * @type {TerminationNode[]}
      */
@@ -324,7 +319,6 @@ Class.prototype.draw = function (context, view) {
     // Operations rect
     this.operationsBounds.contextRect(context);
 
-
     context.fill();
     context.stroke();
 
@@ -337,6 +331,7 @@ Class.prototype.draw = function (context, view) {
 
     // this.naming = this.className.elementValue;
 
+    this.className.relativeTo = this;
     this.className.position = new Vector(0, this.lineHeight / 2);
     this.className.draw(context, view);
 
@@ -352,6 +347,7 @@ Class.prototype.draw = function (context, view) {
         attribute.textAlign = 'left';
 
         fromTop += this.lineHeight / 2;
+        attribute.relativeTo = this;
         attribute.position = new Vector(-size.x / 4, fromTop);
 
         attribute.draw(context, view);
@@ -362,49 +358,10 @@ Class.prototype.draw = function (context, view) {
         operation.textAlign = 'left';
 
         fromTop += this.lineHeight / 2;
+        operation.relativeTo = this;
         operation.position = new Vector(-size.x / 4, fromTop);
 
         operation.draw(context, view);
-    }
-
-    if (this.editingPopup != null) {
-        // name box
-        if (this.lastSelectedY < this.attributesBounds.bottom) {
-            this.editingPopup.drawNameEdit(context, view, this.nameBounds,
-                this.width, this.nameHeight, this.naming);
-        }
-        // attribute box
-        else if (this.lastSelectedY < this.operationsBounds.bottom) {
-            let boxHeight = this.attributesHeight / this.attributes.length;
-            let selectedAttributeNumber = Math.floor((this.lastSelectedY
-                - this.attributesBounds.bottom) / boxHeight)
-            let selectedAttributeHeight = this.attributesBounds.bottom
-                + (selectedAttributeNumber * boxHeight)
-            this.editingPopup.drawAttributionEdit(context,
-                view,
-                this.x - this.width / 2,
-                selectedAttributeHeight,
-                this.width,
-                boxHeight,
-                "attribute",
-                this.attributes[selectedAttributeNumber].name);
-        }
-        // operation box
-        else if (this.lastSelectedY < this.operationsBounds.top) {
-            let boxHeight = this.operationsHeight / this.operations.length;
-            let selectedOperationNumber = Math.floor((this.lastSelectedY
-                - this.operationsBounds.bottom) / boxHeight)
-            let selectedOperationHeight = this.operationsBounds.bottom
-                + (selectedOperationNumber * boxHeight)
-            this.editingPopup.drawAttributionEdit(context,
-                view,
-                this.x - this.width / 2,
-                selectedOperationHeight,
-                this.width,
-                boxHeight,
-                "operation",
-                this.operations[selectedOperationNumber]);
-        }
     }
 
     this.refreshNodePositions();
