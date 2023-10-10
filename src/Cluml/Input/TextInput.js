@@ -121,30 +121,20 @@ export class TextInput {
      * @param target {*}
      * @param sanityElement {SanityElement}
      * @param getNext {function(target : *, sanityElement : SanityElement)}
-     * @param addlOnExit {function} Additional callback for onExit.
-     * @param addlOnNext {function} Additional callback for onNext.
      * @return {TextInput}
      */
-    static createFromSanityElement(target, sanityElement, getNext, addlOnExit, addlOnNext) {
+    static createFromSanityElement(target, sanityElement, getNext) {
         return new TextInput(
             (value) => {
                 sanityElement.elementValue = value;
-
-                if (addlOnExit !== undefined) {
-                    addlOnExit.call(target);
-                }
             },
             (value) => {
                 if (getNext !== undefined) {
                     const next = getNext(target, sanityElement);
 
                     if (next !== undefined && next !== null) {
-                        TextInput.createFromSanityElement(target, next, getNext, addlOnExit, addlOnNext);
+                        TextInput.createFromSanityElement(target, next, getNext);
                     }
-                }
-
-                if (addlOnNext !== undefined) {
-                    addlOnNext.call(target);
                 }
             },
             sanityElement.bounds(),
@@ -156,18 +146,29 @@ export class TextInput {
      * Tries to create a text input from the provided mouse input and SanityElement.
      * @param mouseX {number}
      * @param mouseY {number}
-     * @param target {*}
      * @param sanityElement {SanityElement}
-     * @param getNext {function(target : *, sanityElement : SanityElement)}
-     * @param addlOnExit {function} Additional callback for onExit.
-     * @param addlOnNext {function} Additional callback for onNext.
+     * @param next
      * @return {TextInput}
      */
-    static createFromMouseClick(mouseX, mouseY, target, sanityElement, getNext, addlOnExit, addlOnNext) {
+    static createFromMouseClick(mouseX, mouseY, sanityElement, next) {
         const bounds = sanityElement.bounds();
 
         if (bounds.contains(mouseX, mouseY)) {
-            return TextInput.createFromSanityElement(target, sanityElement, getNext, addlOnExit, addlOnNext);
+            let onNext = undefined;
+            // if (next !== undefined) {
+            //     onNext = (value) => {
+            //         TextInput.createFromSanityElement(next);
+            //     };
+            // }
+
+            return new TextInput(
+                (value) => {
+                    sanityElement.elementValue = value;
+                },
+                onNext,
+                bounds,
+                sanityElement.elementValue
+            );
         }
 
         return undefined;
