@@ -211,29 +211,15 @@ export class SanityElement extends Selectable {
     /**
      *
      * @param {function} type The constructor for the SanityElement.
-     * @param {{value: string, x: number, y: number}} sanitySaveObj The save object for the sanity element.
+     * @param {{value: string, x: number, y: number}} saveObj The save object.
      * @param {Selectable} relativeTo The selectable this is positioned relative
      * to.
-     * @returns {*}
+     * @returns {SanityElement}
      */
-    static loadSanityElement(type, sanitySaveObj, relativeTo) {
-        const elem = new type(sanitySaveObj.value, relativeTo);
-        elem.x = sanitySaveObj.x;
-        elem.y = sanitySaveObj.y;
+    static loadSanityElement(type, saveObj, relativeTo) {
+        const elem = new type(saveObj.value, relativeTo);
+        elem.x = saveObj.x;
+        elem.y = saveObj.y;
         return elem;
-    }
-
-    /**
-     *
-     * @param type {function} Type of element.
-     * @param name {string} Filename of element.
-     * @param saveObj {*} The save object.
-     * @param relativeTo {Selectable}
-     * @return {*[]}
-     */
-    static loadMultiple(type, name, saveObj, relativeTo) {
-        const elemObjs = saveObj[name];
-
-        return elemObjs.map((e) => SanityElement.loadSanityElement(type, e, relativeTo));
     }
 }
