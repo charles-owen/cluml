@@ -91,12 +91,5 @@ export class MainSingleton {
     clone() {
         this.backup();
     }
-
-    /**
-     * Redraws the current view.
-     */
-    redraw() {
-        this.currentView.draw();
-    }
     //endregion
 }

@@ -94,6 +94,6 @@ export class TerminationNodeDlg extends Dialog {
         Dialog.prototype.ok.call(this);
 
         // Force a redraw.
-        MainSingleton.singleton.redraw();
+        MainSingleton.singleton.currentView.draw();
     }
 }

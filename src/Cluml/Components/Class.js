@@ -1,6 +1,7 @@
 import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
 import {PaletteImage} from "../Graphics/PaletteImage";
+import {AddPopup} from "../UI/AddPopup";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
@@ -11,7 +12,6 @@ import {Operation} from "../SanityElement/Operation";
 import {TextInput} from "../Input/TextInput";
 import {Attribute} from "../SanityElement/Attribute";
 import {CustomContextMenu} from "../ContextMenu/CustomContextMenu";
-import {MainSingleton} from "../MainSingleton";
 
 export const Class = function () {
     Component.call(this);
@@ -291,6 +291,42 @@ Class.prototype.openProperties = function () {
     propertiesDlg.open();
 }
 
+Class.prototype.tryTouchAddPopup = function (x, y) {
+    if (this.addPopup != null) {
+        return this.addPopup.touch(x, y);
+    }
+    return null;
+}
+
+Class.prototype.tryTouchEditingPopup = function (x, y) {
+    if (this.editingPopup != null) {
+        let newText = this.editingPopup.touch(x, y);
+        // Only update the text field if the user enters something
+        if (newText !== "") {
+            // Editing the name field
+            if (this.editingPopup.editingWhat === "name") {
+                this.naming = newText
+            }
+            // Editing an attribute field
+            else if (this.editingPopup.editingWhat === "attribute") {
+                // Determine what attribute needs to be changed first, then change it
+                let boxHeight = this.attributesHeight / this.attributes.length;
+                let selectedAttributeNumber = Math.floor((this.lastSelectedY
+                    - this.attributesBounds.bottom) / boxHeight)
+                this.attributes[selectedAttributeNumber].name = newText
+            }
+            // Editing an operation field
+            else if (this.editingPopup.editingWhat === "operation") {
+                // Determine what operation needs to be changed first, then change it
+                let boxHeight = this.operationsHeight / this.operations.length;
+                let selectedOperationNumber = Math.floor((this.lastSelectedY
+                    - this.operationsBounds.bottom) / boxHeight)
+                this.operations[selectedOperationNumber] = newText
+            }
+        }
+    }
+    return null;
+}
 /**
  * Returns the bounds of the Class, used to ensure the
  * object remains on screen.
@@ -300,6 +336,22 @@ Class.prototype.bounds = function () {
     return Rect.fromTopAndSize(
         this.position, this.size
     );
+}
+
+Class.prototype.enableAddPopup = function (enable) {
+    if (enable) {
+        this.addPopup = new AddPopup(this);
+    } else {
+        this.addPopup = null;
+    }
+}
+
+Class.prototype.enableEditing = function (enable) {
+    // if (enable) {
+    //     this.editingPopup = new EditingPopup(this);
+    // } else {
+    //     this.editingPopup = null;
+    // }
 }
 
 /**
@@ -335,6 +387,7 @@ Class.prototype.draw = function (context, view) {
 
 
     // Naming text
+    context.fillStyle = "#000000";
     if (this.abstract) {
         this.className.font = ITALICS_FONT;
     } else {
@@ -350,24 +403,20 @@ Class.prototype.draw = function (context, view) {
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
     // Attributes text
-    const size = this.size;
-    let fromTop = this.nameHeight - this.lineHeight;
-    for (const attribute of this.attributes) {
+    let fromTop = this.nameHeight - this.lineHeight / 2;
+    for (let i = 0; i < this.attributes.length; i++) {
+        const attribute = this.attributes[i];
         attribute.textAlign = 'left';
-
-        fromTop += this.lineHeight / 2;
-        attribute.position = new Vector(-size.x / 4, fromTop);
-
+        attribute.position = new Vector(-this.width / 4, fromTop + i * this.lineHeight / 2);
         attribute.draw(context, view);
     }
 
     // Operations text
-    for (const operation of this.operations) {
+    fromTop += this.attributesHeight - this.lineHeight / 2;
+    for (let j = 0; j < this.operations.length; j++) {
+        const operation = this.operations[j];
         operation.textAlign = 'left';
-
-        fromTop += this.lineHeight / 2;
-        operation.position = new Vector(-size.x / 4, fromTop);
-
+        operation.position = new Vector(-this.width / 4, fromTop + j * this.lineHeight / 2);
         operation.draw(context, view);
     }
 
@@ -472,13 +521,10 @@ Class.prototype.paletteImage = function () {
 Class.prototype.addAttribute = function (attribute) {
     if (attribute === undefined) {
         attribute = new Attribute('', this);
-        this.attributes.push(attribute);
-
-        MainSingleton.singleton.redraw();
         TextInput.createFromSanityElement(this, attribute, undefined);
-    } else {
-        this.attributes.push(attribute);
     }
+
+    this.attributes.push(attribute)
 }
 
 /**
@@ -494,13 +540,10 @@ Class.prototype.editAttribute = function (attributeIndex, newAttribute) {
 Class.prototype.addOperation = function (operation) {
     if (operation === undefined) {
         operation = new Operation('', this);
-        this.operations.push(operation);
-
-        MainSingleton.singleton.redraw();
         TextInput.createFromSanityElement(this, operation, undefined);
-    } else {
-        this.operations.push(operation);
     }
+
+    this.operations.push(operation)
 }
 
 /**

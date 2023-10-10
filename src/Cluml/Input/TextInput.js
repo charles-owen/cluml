@@ -63,7 +63,7 @@ export class TextInput {
                     // Value has been changed.
                     MainSingleton.singleton.backup();
 
-                    MainSingleton.singleton.redraw();
+                    MainSingleton.singleton.currentView.draw();
                 }
 
                 this.inputElement.remove();

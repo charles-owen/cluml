@@ -264,7 +264,6 @@ Diagram.prototype.delete = function (toDelete) {
     for (let i = 0; i < this.components.length; i++) {
         if (this.components[i] === toDelete) {
             this.components.splice(i, 1);
-            MainSingleton.singleton.redraw();
             break;
         }
     }

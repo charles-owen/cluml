@@ -72,7 +72,7 @@ export class SanityElement extends Selectable {
         if (this.#elementValue !== value) {
             this.#elementValue = value;
             this.processSanityCheck();
-            MainSingleton.singleton.redraw();
+            MainSingleton.singleton.currentView.draw();
         }
     }
 
@@ -109,7 +109,7 @@ export class SanityElement extends Selectable {
 
         context.fillStyle = oldColor;
 
-        // this.bounds();
+        this.bounds();
     }
 
     bounds() {
