@@ -55,8 +55,8 @@ export class SanityElement extends Selectable {
      */
     constructor(stringValue, relativeTo) {
         super();
-        this.relativeTo = relativeTo;
         this.elementValue = stringValue;
+        this.relativeTo = relativeTo;
 
         // Run the sanity check to update the types.
         //this.processSanityCheck();
@@ -71,7 +71,6 @@ export class SanityElement extends Selectable {
     set elementValue(value) {
         if (this.#elementValue !== value) {
             this.#elementValue = value;
-            this.processSanityCheck();
             MainSingleton.singleton.currentView.draw();
         }
     }
@@ -81,14 +80,6 @@ export class SanityElement extends Selectable {
             return this.position;
         } else {
             return Vector.add(this.position, this.relativeTo.position);
-        }
-    }
-
-    set absolutePosition(value) {
-        if (this.relativeTo === undefined || this.relativeTo === null) {
-            this.position = value;
-        } else {
-            this.position = Vector.sub(value, this.relativeTo.position);
         }
     }
     // endregion
@@ -105,7 +96,7 @@ export class SanityElement extends Selectable {
 
         this.drawText(context, this.elementValue, pos.x, pos.y, this.font, this.textAlign);
 
-        this.#fontMetrics = context.measureText(this.elementValue);
+        this.#fontMetrics = context.measureText(this.font);
 
         context.fillStyle = oldColor;
 
@@ -113,10 +104,6 @@ export class SanityElement extends Selectable {
     }
 
     bounds() {
-        return this.minBounds();
-    }
-
-    minBounds() {
         if (this.#fontMetrics !== undefined) {
             const pos = this.absolutePosition;
             const max = new Vector(

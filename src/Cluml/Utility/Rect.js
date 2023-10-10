@@ -34,24 +34,6 @@ export const Rect = function (left = 0, top = 0, right = 0, bottom = 0) {
             return new Vector(this.left, this.bottom);
         }
     })
-
-    Object.defineProperties(this, {
-        width: {
-            get: function () {
-                return this.right - this.left;
-            }
-        },
-        height: {
-            get: function () {
-                return this.top - this.bottom;
-            }
-        },
-        size: {
-            get: function () {
-                return new Vector(this.width, this.height);
-            }
-        }
-    })
 };
 
 Rect.prototype.setRightBottom = function (right, bottom) {
