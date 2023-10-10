@@ -49,14 +49,6 @@ export class MainSingleton {
     }
 
     /**
-     * Returns the current options.
-     * @returns {*}
-     */
-    get options() {
-        return this.#main.options;
-    }
-
-    /**
      * Returns the current selected tab's div.
      * @return {Element}
      */
