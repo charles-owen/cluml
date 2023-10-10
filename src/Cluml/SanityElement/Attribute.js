@@ -17,7 +17,7 @@ export class Attribute extends SanityElement {
     processSanityCheck() {
         const messages = super.processSanityCheck();
         const prefixMatch = /\w+/g.exec(this.elementValue);
-        const prefixTitle = prefixMatch !== null ? prefixMatch[0] : this.elementValue;
+        const prefixTitle = prefixMatch.length > 0 ? prefixMatch[0] : this.elementValue;
         const prefix = `Attribute <a>${prefixTitle}</a>: `;
 
         const vMatch = this.elementValue.match(VISIBILITY_RX);

@@ -53,7 +53,7 @@ export class CustomContextMenu {
 
     /**
      *
-     * @param target {*} What to pass to the callback?
+     * @param target {*}
      * @param mousePos {Vector}
      */
     constructor(target, mousePos) {
