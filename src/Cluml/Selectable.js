@@ -1,7 +1,6 @@
 import vector, {Vector} from "./Utility/Vector";
 import {Line} from "./Utility/Line";
 import {Rect} from "./Utility/Rect";
-import {Component} from "./Component";
 
 //region Constants
 /**
@@ -126,10 +125,6 @@ Selectable.prototype.grab = function () {
  * @param y {number}
  */
 Selectable.prototype.rightClick = function (x, y) {
-
-}
-
-Selectable.prototype.enableAddPopup = function(enable) {
 
 }
 
