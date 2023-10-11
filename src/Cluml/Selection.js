@@ -32,16 +32,10 @@ export const Selection = function (view) {
 
         this.closeOpenMenus();
 
-        // TODO: Remove hard coded stuff.
         if (touched !== null) {
-            if (touched instanceof Class) {
-                event.preventDefault();
-                this.selected = [touched];
-                this.selected[0].enableAddPopup(true);
-            }
-
             event.preventDefault();
             this.selected = [touched];
+            this.selected[0].enableAddPopup(true);
         } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle
@@ -131,6 +125,13 @@ export const Selection = function (view) {
     this.closeOpenMenus = function () {
         CustomContextMenu.closeOpenMenus();
         TextInput.closeAllInputs();
+    }
+
+    this.onLongTouch = function(x, y, event) {
+        if (this.selected[0])
+        {
+            this.selected[0].rightClick(x,y);
+        }
     }
 
     this.mouseMove = function (x, y, dx, dy) {
