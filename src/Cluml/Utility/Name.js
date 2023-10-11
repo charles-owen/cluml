@@ -21,15 +21,15 @@ Name.Check = function(string)
     let messages = [];
     if (SPACES_RX.test(string))
     {
-        messages.push(`Name ${string} contains spaces.`);
+        messages.push(`Name <a>${string}</a> contains spaces.`);
     }
     if (NON_ALPHABETICAL_RX.test(string[0]))
     {
-        messages.push(`Name ${string} first character is not alphabetical.`);
+        messages.push(`Name <a>${string}</a> first character is not alphabetical.`);
     }
     if (NON_ALPHANUMERIC_RX.test(string))
     {
-        messages.push(`Name ${string} contains non alphanumeric characters.`);
+        messages.push(`Name <a>${string}</a> contains non-alphanumeric characters.`);
     }
     return messages;
 }
