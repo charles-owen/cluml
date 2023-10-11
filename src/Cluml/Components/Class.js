@@ -8,8 +8,8 @@ import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
-import {Property} from "../SanityElement/Property";
 import {SanityElement} from "../SanityElement/SanityElement";
+import {Attribute} from "../SanityElement/Attribute";
 
 export const Class = function () {
     Component.call(this);
@@ -44,9 +44,9 @@ export const Class = function () {
 
     /**
      * The array of attributes.
-     * @type{Array<Property>}
+     * @type{Array<Attribute>}
      */
-    this.attributes = [new Property('-', 'attribute', '')];
+    this.attributes = [new Attribute('-attribute: String')];
 
     /**
      * The array of operations.
@@ -221,7 +221,7 @@ Class.prototype.tryTouchEditingPopup = function (x, y) {
                 let boxHeight = this.attributesHeight / this.attributes.length;
                 let selectedAttributeNumber = Math.floor((this.lastSelectedY
                     - this.attributesBounds.bottom) / boxHeight)
-                this.attributes[selectedAttributeNumber].name = newText
+                this.attributes[selectedAttributeNumber] = new Attribute(newText);
             }
             // Editing an operation field
             else if (this.editingPopup.editingWhat === "operation") {
@@ -229,7 +229,7 @@ Class.prototype.tryTouchEditingPopup = function (x, y) {
                 let boxHeight = this.operationsHeight / this.operations.length;
                 let selectedOperationNumber = Math.floor((this.lastSelectedY
                     - this.operationsBounds.bottom) / boxHeight)
-                this.operations[selectedOperationNumber] = newText
+                this.operations[selectedOperationNumber] = newText;
             }
         }
     }

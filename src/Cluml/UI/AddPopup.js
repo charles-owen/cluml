@@ -1,5 +1,5 @@
 import {Class} from "../Components/Class";
-import {Property} from "../SanityElement/Property";
+import {Attribute} from "../SanityElement/Attribute";
 
 export const AddPopup = function (component) {
     Object.defineProperty(this, 'popup', {
@@ -83,7 +83,7 @@ AddPopup.prototype.touch = function (x, y) {
 
         if (y < this.top + (this.height / 3))
         {
-            this.component.addAttribute(new Property('-', 'attribute', ''));
+            this.component.addAttribute(new Attribute('-attribute: String'));
         }
         else if (y > this.top + 2*(this.height / 3))
         {
