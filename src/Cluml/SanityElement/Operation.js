@@ -1,9 +1,6 @@
 import {Property} from "./Property";
 import {SanityElement} from "./SanityElement";
-
-const VISIBILITY_RX = /^[+#-]/g
-const NAME_RX = /\w+(?=\()/g
-const PAREM_RX = /\(.*\)/g
+import {VISIBILITY_RX, NAME_RX, PAREM_RX} from "./SanityRegExpressions";
 
 export class Operation extends SanityElement {
     constructor(stringValue) {
