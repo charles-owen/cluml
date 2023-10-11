@@ -31,7 +31,7 @@ export class Attribute extends SanityElement {
             return;
         }
         this.name = stringValue.substring(nameStart, colonIndex).trim();
-        this.type = stringValue.substring(colonIndex).trim().replace(':', '');
+        this.type = stringValue.substring(colonIndex).replace(':', '').trim();
     }
 
     processSanityCheck() {

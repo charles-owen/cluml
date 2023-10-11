@@ -360,7 +360,7 @@ Class.prototype.draw = function (context, view) {
                 this.width,
                 boxHeight,
                 "attribute",
-                this.attributes[selectedAttributeNumber].name);
+                this.attributes[selectedAttributeNumber].elementValue);
         }
         // operation box
         else if(this.lastSelectedY < this.operationsBounds.top) {
