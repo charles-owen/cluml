@@ -137,6 +137,10 @@ Selectable.prototype.doubleClick = function (x, y) {
 
 }
 
+Selectable.prototype.enableAddPopup = function(enable) {
+
+}
+
 /**
  * Moves this selectable.
  * @param dx {number} The cursor delta x position.

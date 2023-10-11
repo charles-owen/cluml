@@ -187,8 +187,11 @@ Class.prototype.doubleClick = function(x, y) {
         //no? ok then do class properties dialog box
         this.openProperties();
     }
+}
 
-    //this.enableAddPopup(true);
+Class.prototype.rightClick = function(x,y)
+{
+    this.enableAddPopup(true);
 }
 
 Class.prototype.openProperties = function() {
