@@ -52,7 +52,7 @@ export const Class = function () {
      * The array of operations.
      * @type{Array<String>}
      */
-    this.operations = ["+operation1() :"];
+    this.operations = ["+operation1()"];
 
     this.addPopup = null;
 
@@ -67,10 +67,11 @@ export const Class = function () {
      */
     this.attachedTNodes = [];
 
-    //this doesn't actually control font its just what it seemed to be hardcoded into
+    /**
+     * The font height for this class
+     * @type {number}
+     */
     this.fontHeight = 14;
-
-    this.abstract = false;
 
     /**
      * The x-value of the mouse the last time this class was selected
@@ -173,6 +174,11 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
+/**
+ * Double click event handler for Class boxes
+ * @param x touch position
+ * @param y touch postion
+ */
 Class.prototype.doubleClick = function(x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
     this.lastSelectedX = x;
@@ -189,16 +195,30 @@ Class.prototype.doubleClick = function(x, y) {
     }
 }
 
+/**
+ * Right click event handler for Class boxes
+ * @param x touch position
+ * @param y touch position
+ */
 Class.prototype.rightClick = function(x,y)
 {
     this.enableAddPopup(true);
 }
 
+/**
+ * Open a ClassPropertiesDlg box
+ */
 Class.prototype.openProperties = function() {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main);
     propertiesDlg.open();
 }
 
+/**
+ * Verify if the context menu was touched
+ * @param x touch position
+ * @param y touch position
+ * @returns {touched}
+ */
 Class.prototype.tryTouchAddPopup = function (x, y) {
     if (this.addPopup != null) {
         return this.addPopup.touch(x, y);
@@ -246,6 +266,10 @@ Class.prototype.bounds = function () {
     );
 }
 
+/**
+ * Open or close the context menu
+ * @param enable
+ */
 Class.prototype.enableAddPopup = function (enable) {
     if (enable) {
         this.addPopup = new AddPopup(this);
@@ -458,4 +482,12 @@ Class.prototype.addOperation = function (operation) {
  */
 Class.prototype.editOperation = function (operationIndex, newOperation) {
     this.attributes[operationIndex] = newOperation
+}
+
+/**
+ * Get attributes (component.attributes was giving me issues in a diff class)
+ * @returns {Array<Attribute>}
+ */
+Class.prototype.getAttributes = function() {
+    return this.attributes;
 }
