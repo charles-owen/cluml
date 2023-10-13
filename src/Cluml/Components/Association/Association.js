@@ -64,6 +64,7 @@ class NodeData {
         this.#start.position = new Vector(pos.x, pos.y);
         this.#end = new TerminationNode();
         this.#end.position = new Vector(pos.x + 50, pos.y);
+        this.#end.isTail = true;
         this.#start.linkToNext(this.#end);
         this.link(association);
     }
@@ -445,5 +446,12 @@ Association.prototype.paletteImage = function() {
     pi.drawLine(10, 20, 50, 20);
     return pi;
 }
+
+/**
+ * Default drawTail function, called by the #end TerminationNode
+ */
+Association.prototype.drawTail = function(context, x, y, side){
+}
+
 
 //endregion

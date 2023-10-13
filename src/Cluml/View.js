@@ -59,6 +59,19 @@ export const View = function(main, canvas, diagram) {
         event.preventDefault();
     });
 
+    //catch escape input to exit association mode
+    document.addEventListener('keydown', (event) =>{
+        var keyVal = event.key;
+        console.log(keyVal);
+
+        if(event.key === "Escape"){
+            main.selectionToggle = true;
+            main.toggleManager.toggledAssociation = null;
+            console.log(main.selectionToggle);
+        }
+    });
+
+
     this.initialize = () => {
         this.setSize();
 
