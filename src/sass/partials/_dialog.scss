@@ -240,6 +240,14 @@ div.cluml {
   .cluml-error {
     color: red;
   }
+
+  .cluml-sanity-check-row * {
+    margin: 0;
+    padding: 0;
+  }
+  .cluml-sanity-check-row img.clipboard-icon {
+    content: url("../../img/clipboard-regular.svg");
+  }
 }
 
 div.cluml-dialog {

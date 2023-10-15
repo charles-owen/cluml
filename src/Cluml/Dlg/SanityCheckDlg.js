@@ -16,6 +16,8 @@ export const SanityCheckDlg = function(main) {
 
         let errorCount = 0;
         let errorHtml = '';
+        const errorTbl = document.createElement('table');
+        errorTbl.className = 'cluml-sanity-check-tbl';
 
         // error check the diagram in view
         const diagram = main.currentView().diagram;
@@ -94,13 +96,20 @@ export const SanityCheckDlg = function(main) {
             const sanityElemErrors = element.processSanityCheck();
 
             for (const error of sanityElemErrors) {
-                errorHtml += `<li>${error}</li>`;
+                if (typeof error === "string") {
+                    errorHtml += `<li>${error}</li>`;
+                } else {
+                    // Use new format.
+                    errorTbl.appendChild(error.rowElement);
+                }
+
                 errorCount += 1;
             }
         }
 
         content += `<h2>(${errorCount}) errors have been detected</h2>`;
         content += `<ul>${errorHtml}</ul>`;
+        content += errorTbl.outerHTML;
 
         this.contents(content, "Cluml Sanity Check");
         Dialog.prototype.open.call(this);

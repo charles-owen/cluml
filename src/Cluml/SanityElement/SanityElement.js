@@ -56,7 +56,7 @@ export class SanityElement {
 
     /**
      * Processes the sanity check for this element.
-     * @return {string[]} The list of errors, or an empty
+     * @return {SanityErrorInfo[]} The list of errors, or an empty
      * list if there are none.
      */
     processSanityCheck() {

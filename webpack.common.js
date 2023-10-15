@@ -55,6 +55,10 @@ module.exports = {
                     to: 'cluml/img/[name][ext]'
                 },
                 {
+                    from: 'src/img/*.svg',
+                    to: 'cluml/img/[name][ext]'
+                },
+                {
                     from: 'src/help',
                     to: 'cluml/help'
                 }
@@ -75,7 +79,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(jpe?g|png|gif)$/i,
+                test: /\.(jpe?g|png|gif|svg)$/i,
                 loader:"file-loader",
                 options: {
                     name:'[name].[ext]',

@@ -41,14 +41,16 @@ export const EditMenu = function(menu, main) {
 	    });
 
 	    document.addEventListener('keydown', (event) => {
-            if(event.key === 'Delete') {
-                menu.closeAll();
-	            main.backup();
-	            main.currentView().delete();
-            } else if(event.key === 'z' && event.ctrlKey && !event.altKey && !event.shiftKey) {
-	            menu.closeAll();
-	            main.undo();
-            }
+			if (document.getElementsByClassName('dialog-cl').length === 0) {
+				if (event.key === 'Delete') {
+					menu.closeAll();
+					main.backup();
+					main.currentView().delete();
+				} else if (event.key === 'z' && event.ctrlKey && !event.altKey && !event.shiftKey) {
+					menu.closeAll();
+					main.undo();
+				}
+			}
         });
     }
 }
