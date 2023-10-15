@@ -236,7 +236,7 @@ Diagram.prototype.add = function (component) {
             // Add to either end or beginning.
             if (from === this.components.length - 1) {
                 this.components.push(component);
-            } else if (to === 0) {
+            } else if (to <= 0) {
                 this.components.splice(0, 0, component);
             } else {
                 throw new Error("Was not able to insert component.");

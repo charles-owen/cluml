@@ -75,6 +75,13 @@ export const Selectable = function () {
     this.unselectedStyle = '#000000';
 };
 
+/**
+ * Order of which the selectables will be drawn. Larger values
+ * will be drawn on top of smaller ones.
+ * @type {number}
+ */
+Selectable.prototype.drawOrder = 0;
+
 Selectable.prototype.copyFrom = function (selectable) {
     this.x = selectable.x;
     this.y = selectable.y;
@@ -221,11 +228,13 @@ Selectable.prototype.draw = function (context, view) {
  * @param x {number} X location
  * @param y {number} Y location
  * @param font {string} Optional font to use
+ * @param textAlign {CanvasTextAlign} The text align of the text.
  */
-Selectable.prototype.drawText = function (context, text, x, y, font = CONTENT_FONT) {
+Selectable.prototype.drawText = function (context, text, x, y,
+    font = CONTENT_FONT, textAlign = 'center') {
     context.beginPath();
     context.font = font !== undefined ? font : CONTENT_FONT;
-    context.textAlign = "center";
+    context.textAlign = textAlign;
     context.fillText(text, this.x + x, this.y + y);
     context.stroke();
 }

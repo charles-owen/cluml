@@ -6,8 +6,8 @@ const LOWERCASE_RX = /[a-z]/;
 
 export class TNodeTag extends SanityElement {
 
-    constructor(stringValue) {
-        super(stringValue);
+    constructor(stringValue, relativeTo) {
+        super(stringValue, relativeTo);
     }
 
     processSanityCheck() {

@@ -34,6 +34,24 @@ export const Rect = function (left = 0, top = 0, right = 0, bottom = 0) {
             return new Vector(this.left, this.bottom);
         }
     })
+
+    Object.defineProperties(this, {
+        width: {
+            get: function () {
+                return this.right - this.left;
+            }
+        },
+        height: {
+            get: function () {
+                return this.top - this.bottom;
+            }
+        },
+        size: {
+            get: function () {
+                return new Vector(this.width, this.height);
+            }
+        }
+    })
 };
 
 Rect.prototype.setRightBottom = function (right, bottom) {
@@ -66,6 +84,15 @@ Rect.prototype.contains = function (x, y) {
     return x >= this.left && x <= this.right &&
         y >= this.bottom && y <= this.top;
 };
+
+/**
+ * Returns true if this rect contains point.
+ * @param point {Vector}
+ * @return {boolean}
+ */
+Rect.prototype.containsPoint = function (point) {
+    return this.contains(point.x, point.y);
+}
 
 /**
  * Expand this rect to include all of some other rect.

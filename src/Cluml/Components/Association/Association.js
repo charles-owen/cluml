@@ -311,7 +311,7 @@ Association.prototype.saveComponent = function () {
 }
 
 Association.prototype.loadComponent = function (obj) {
-    Component.prototype.loadComponent(obj);
+    Component.prototype.loadComponent.call(this, obj);
     this.serializedNodeData = obj.nodeData;
     this.onUndo();
 
@@ -452,6 +452,4 @@ Association.prototype.paletteImage = function() {
  */
 Association.prototype.drawTail = function(context, x, y, side){
 }
-
-
 //endregion

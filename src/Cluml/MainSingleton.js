@@ -94,10 +94,10 @@ export class MainSingleton {
     }
 
     /**
-     * Alias for backup.
+     * Redraws the current view.
      */
-    clone() {
-        this.backup();
+    redraw() {
+        this.currentView.draw();
     }
     //endregion
 }

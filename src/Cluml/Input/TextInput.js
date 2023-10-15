@@ -2,16 +2,14 @@ import {MainSingleton} from "../MainSingleton";
 
 export class TextInput {
     /**
-     * The size and position of this text input.
-     */
-    #dimensions;
-
-    /**
      * The open text inputs.
      * @type {TextInput[]}
      */
     static #instances = [];
-
+    /**
+     * The size and position of this text input.
+     */
+    #dimensions;
     /**
      * The initial value.
      * @type {string}
@@ -30,7 +28,7 @@ export class TextInput {
      * (the value of the text box). Will be called if the user presses
      * Enter or Tab. Called after onExit.
      */
-    constructor(onExit, onNext, dimensions, initialValue= '', font = "14px Times") {
+    constructor(onExit, onNext, dimensions, initialValue = '', font = "14px Times") {
         this.font = font;
         this.#initialValue = initialValue;
 

@@ -35,9 +35,10 @@ export class Multiplicity extends SanityElement {
     /**
      * Creates a new multiplicity from the provided string.
      * @param stringValue {string} The string value.
+     * @param relativeTo {Selectable}
      */
-    constructor(stringValue) {
-        super(stringValue);
+    constructor(stringValue, relativeTo) {
+        super(stringValue, relativeTo);
         this.processSanityCheck();
     }
 
