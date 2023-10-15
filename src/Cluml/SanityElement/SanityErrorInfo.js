@@ -88,7 +88,10 @@ export class SanityErrorInfo {
         this.rowElement.appendChild(cell);
         cell = document.createElement('td');
 
-        cell.appendChild(document.createTextNode(description));
+        const pErrMsg = document.createElement('p');
+        pErrMsg.innerHTML = `${elementType} <b>${elementName}</b>: ${description}`;
+        
+        cell.appendChild(pErrMsg);
         this.rowElement.appendChild(cell);
 
         // document.getElementById('error-tbl');

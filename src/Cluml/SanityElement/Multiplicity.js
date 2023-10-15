@@ -1,4 +1,5 @@
 import {SanityElement} from "./SanityElement";
+import { SanityErrorInfo } from "./SanityErrorInfo";
 
 const numberToNumber = /^[0-9]+\.\.[0-9]+$/
 const numberToAny = /^[0-9]+\.\.\*$/
@@ -55,7 +56,12 @@ export class Multiplicity extends SanityElement {
             this.multiplicityType = Multiplicity.MultiplicityType.AnyOnly;
         } else {
             this.multiplicityType = Multiplicity.MultiplicityType.Invalid;
-            errors.push(`Multiplicity "${this.elementValue}" formatted incorrectly.`);
+            errors.push(new SanityErrorInfo(
+                '0010',
+                'Multiplicity',
+                this.elementValue,
+                'Incorrect formatting.'
+            ))
         }
 
         return errors;
