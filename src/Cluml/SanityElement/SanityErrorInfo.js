@@ -76,9 +76,12 @@ export class SanityErrorInfo {
 
         const errorBox = document.createElement('textarea');
         errorBox.readOnly = true;
-        errorBox.value = errorCode;
-        errorBox.style.width = '6em';
-        errorBox.style.height = '1lh';
+        errorBox.rows = 1;
+        errorBox.cols = 6;
+        errorBox.style.resize = 'none';
+        // errorBox.style.width = '6em';
+        // errorBox.style.marginTop = 'auto';
+        // errorBox.style.height = '100%';
         errorBox.appendChild(document.createTextNode(errorCode));
 
         cell.appendChild(errorBox);

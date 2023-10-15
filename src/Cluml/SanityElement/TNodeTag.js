@@ -17,7 +17,7 @@ export class TNodeTag extends SanityElement {
         if (SPACES_RX.test(this.elementValue))
         {
             errors.push(new SanityErrorInfo(
-                '[SUBJECT_TO_CHANGE]0001',
+                '0001',
                 'Role',
                 this.elementValue,
                 'Element contains spaces.'
@@ -26,7 +26,7 @@ export class TNodeTag extends SanityElement {
         if (NON_ALPHANUMERIC_RX.test(this.elementValue))
         {
             errors.push(new SanityErrorInfo(
-                '[SUBJECT_TO_CHANGE]0002',
+                '0002',
                 'Role',
                 this.elementValue,
                 'Element contains non-alphanumeric characters.'
@@ -37,7 +37,7 @@ export class TNodeTag extends SanityElement {
             const lowerCase = this.elementValue[0].match(LOWERCASE_RX);
             if (lowerCase === null || lowerCase.length === 0) {
                 errors.push(new SanityErrorInfo(
-                    '[SUBJECT_TO_CHANGE]0003',
+                    '0003',
                     'Role',
                     this.elementValue,
                     'Element is not in camelCase format.'
