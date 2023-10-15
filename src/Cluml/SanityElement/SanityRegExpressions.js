@@ -1,4 +1,4 @@
-export const VISIBILITY_RX = /^[+#-]/g;
+export const VISIBILITY_RX = /^[+#-]/;
 export const NAME_RX = /\w+(?=\()/g;
 export const PAREM_RX = /\(.*\)/g;
 export const SPACES_RX = /\s/;
