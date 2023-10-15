@@ -1,6 +1,7 @@
 import {SanityElement} from "./SanityElement";
 import {Name} from "../Utility/Name";
 import {MainSingleton} from "../MainSingleton";
+import {VISIBILITY_RX} from "./SanityRegExpressions";
 
 const spaces = /\s/;
 const nonAlphanumeric = /[^A-Za-z0-9]/;
@@ -20,7 +21,7 @@ export class Attribute extends SanityElement {
 
         // process the string value;
         let nameStart = 0;
-        if (/[+#\-]/.test(stringValue[0]))
+        if (VISIBILITY_RX.test(stringValue))
         {
             this.visibility = stringValue[0];
             nameStart = 1;
@@ -34,6 +35,9 @@ export class Attribute extends SanityElement {
         }
         this.name = stringValue.substring(nameStart, colonIndex).trim();
         this.type = stringValue.substring(colonIndex).replace(':', '').trim();
+
+        this.elementValue = this.visibility + this.name
+            + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type;
     }
 
     draw(context, view)

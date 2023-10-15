@@ -1,10 +1,44 @@
-import {Property} from "./Property";
 import {SanityElement} from "./SanityElement";
 import {VISIBILITY_RX, NAME_RX, PAREM_RX} from "./SanityRegExpressions";
 
 export class Operation extends SanityElement {
+    visibility = '';
+    name = "";
+    parameters = "";
+    type = "";
+
     constructor(stringValue) {
+        stringValue = stringValue.trim();
         super(stringValue);
+
+        // variables to keep track of certain indices
+        let nameStart = 0;
+        let parenStart = -1;
+        let parenEnd = -1;
+        let colonIndex = -1;
+
+        if (VISIBILITY_RX.test(stringValue)) {
+            this.visibility = stringValue[0];
+            nameStart = 1;
+        }
+        parenStart = stringValue.indexOf('(');
+
+        this.name = stringValue.substring(nameStart, parenStart !== -1 ? parenStart : stringValue.length).trim();
+
+        // add to parameters only if an open parenthesis exists
+        if (parenStart !== -1) {
+            parenEnd = stringValue.indexOf(')', parenStart);
+            this.parameters = stringValue.substring(parenStart + 1, parenEnd !== -1 ? parenEnd : stringValue.length);
+            this.#processParameters();
+        }
+
+        // set the type only if a close parenthesis exists
+        if (parenEnd !== -1) {
+            colonIndex = stringValue.indexOf(':', parenEnd);
+            this.type = colonIndex !== -1 ? stringValue.substring(colonIndex + 1).trim()
+                                          : stringValue.substring(parenEnd + 1).trim();
+        }
+
         this.processSanityCheck();
     }
 
@@ -49,7 +83,27 @@ export class Operation extends SanityElement {
                 }
             }
         }
-
         return messages;
+    }
+
+    /**
+     * Converts the parameters from a string into an array of tuples (name, type)
+     */
+    #processParameters()
+    {
+        // split the parameters and trim them
+        this.parameters = this.parameters.trim().split(',').map((value) => value.trim());
+
+        // remove empty parameters
+        this.parameters = this.parameters.filter((value) => value !== '');
+
+        for (let i = 0; i < this.parameters.length; i++) {
+            const param = this.parameters[i];
+            let parameterFinal = ["", ""];
+            const colonIndex = param.indexOf(':');
+            parameterFinal[0] = param.substring(0, colonIndex !== -1 ? colonIndex : param.length).trim();
+            parameterFinal[1] = colonIndex !== -1 ? param.substring(colonIndex + 1).trim() : "";
+            this.parameters[i] = parameterFinal;
+        }
     }
 }
