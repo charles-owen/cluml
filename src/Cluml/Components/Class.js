@@ -340,6 +340,9 @@ Class.prototype.draw = function (context, view) {
     // boolean to check if attributes/operations' visibility should be drawn
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
+    // Sort Attributes/Operations before drawing text to the class
+    this.sortAttributions();
+
     // Attributes text
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
@@ -460,7 +463,8 @@ Class.prototype.paletteImage = function () {
  * Add an attribute to this Class
  */
 Class.prototype.addAttribute = function (attribute) {
-    this.attributes.push(attribute)
+    this.attributes.push(attribute);
+
 }
 
 /**
@@ -490,4 +494,30 @@ Class.prototype.editOperation = function (operationIndex, newOperation) {
  */
 Class.prototype.getAttributes = function() {
     return this.attributes;
+}
+
+/**
+ * Sorts attributes/operations with regex so that operations appear
+ * in the operations box and attributes appear in the attributes box
+ */
+Class.prototype.sortAttributions = function() {
+    let pattern = /\(/i
+    // Get operations out of the attributes array and into the operations
+    // array
+    for(let i = 0; i < this.attributes.length; i++) {
+        if(pattern.test(this.attributes[i].name)) {
+            let operation = this.attributes.splice(i, 1);
+            // This code will need to be updated when Operations.js is
+            // implemented
+            this.operations.push(operation[0].name);
+        }
+    }
+    // Get attributes out of the operations array and into the attributes
+    // array
+    for(let j = 0; j < this.operations.length; j++) {
+        if(!pattern.test(this.operations[j])) {
+            let attribute = this.operations.splice(j, 1);
+            this.attributes.push(new Attribute(attribute[0]))
+        }
+    }
 }
