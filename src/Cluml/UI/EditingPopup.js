@@ -20,6 +20,8 @@ export const EditingPopup = function (component) {
 
     this.editingWhat = "";
 
+    this.enterClose = false;
+
     this.font = "14px Times";
     this.text = "";
     this.inputElement = document.createElement('input');
@@ -34,6 +36,7 @@ export const EditingPopup = function (component) {
 
     this.inputElement.addEventListener('keypress', (event) => {
         if(event.key === 'Enter') {
+            this.enterClose = true;
             this.close();
         }
     });
@@ -98,9 +101,15 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
 }
 
 EditingPopup.prototype.touch = function(x, y) {
-    this.close();
+    if(!this.enterClose) {
+        this.close();
+    }
 }
 
+/**
+ * A function that runs once this EditingPopup.js has been closed
+ * by the user through Enter or clicking off of the inputElement.
+ */
 EditingPopup.prototype.close = function() {
     this.text = this.inputElement.value;
     this.inputElement.remove();
@@ -108,6 +117,10 @@ EditingPopup.prototype.close = function() {
     this.component.draw(this.context, this.view);
 }
 
+/**
+ * Updates the class based on changes made by the inputElement inside
+ * this EditingPopup.js object
+ */
 EditingPopup.prototype.updateClass = function() {
     // Only update the text field if the user enters something
     if(this.text !== "") {

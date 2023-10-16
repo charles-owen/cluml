@@ -186,7 +186,7 @@ Class.prototype.doubleClick = function(x, y) {
     this.lastSelectedY = y;
 
     //clicked on attribute or operation?
-    if(this.lastSelectedX < this.x) {
+    if(this.lastSelectedX < this.x + this.width) {
         //yes? ok then edit the class
         this.enableEditing(true);
     }
