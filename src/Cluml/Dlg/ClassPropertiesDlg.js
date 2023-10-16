@@ -19,12 +19,16 @@ export const ClassPropertiesDlg = function(component, main) {
     let nameId = null;
 
     // A unique ID for the abstract toggle
-    let toggleId = null;
+    let abstractClassId = null;
 
     let extraHTML = '';
     let extraCreate = function() {};
     let extraValidate = function() {return null;};
     let extraTake = function() {return null;};
+
+    let abstractInputs = [];
+
+    let visibilityInputs = [];
 
     /**
      * Construct the Properties Box
@@ -62,64 +66,11 @@ export const ClassPropertiesDlg = function(component, main) {
 
         if(component.prefix !== null) {
             nameId = Unique.uniqueName();
-            toggleId = Unique.uniqueName();
             dlg += '<div class="control1 center gap"><label for="' + nameId + '">Name: </label>' +
                 '<input type="text" name="' + nameId + '" id="' + nameId + '" value="' + name + '" spellcheck="false" class="compname text ui-widget-content ui-corner-all">' +
                 '</div>';
         }
-
-        /*let abstractDiv = document.createElement("div");
-        abstractDiv.style.textAlign = 'center';
-
-        let abstractToggle = document.createElement('input');
-        abstractToggle.type = "checkbox";
-        abstractToggle.id = toggleId;
-
-        if (component.abstract)
-        {
-            abstractToggle.setAttribute("checked", "true");
-        }
-        else
-        {
-            abstractToggle.removeAttribute("checked");
-        }
-
-        let toggleLabel = document.createElement('label');
-        toggleLabel.appendChild(document.createTextNode('Abstract Class: '));
-
-        abstractDiv.appendChild(toggleLabel);
-        abstractDiv.append(abstractToggle);
-
-        dlg += abstractDiv.outerHTML;
-
-        for (let operation in component.operations)
-        {
-            let operationToggleId = Unique.uniqueName();
-            let abstractOperationDiv = document.createElement("div");
-            //abstractOperationDiv.style.textAlign = 'center';
-
-            let abstractOperationToggle = document.createElement('input');
-            abstractOperationToggle.style.textAlign = "right";
-            abstractOperationToggle.type = "checkbox";
-            abstractOperationToggle.id = operationToggleId;
-            if (component.operations[operation].abstract)
-            {
-                abstractOperationToggle.setAttribute("checked", "true");
-            }
-            else
-            {
-                abstractOperationToggle.removeAttribute("checked");
-            }
-
-            let toggleOperationLabel = document.createElement('label');
-            toggleOperationLabel.appendChild(document.createTextNode("Abstract " + component.operations[operation].toString() + ":"));
-
-            abstractOperationDiv.appendChild(toggleOperationLabel);
-            abstractOperationDiv.append(abstractOperationToggle);
-
-            dlg += abstractOperationDiv.outerHTML;
-        }*/
-
+        
         // Create container for the abstract &v visibility content
         let propertiesDiv = document.createElement("div");
 
@@ -150,10 +101,19 @@ export const ClassPropertiesDlg = function(component, main) {
 
         // Abstract Class Input and Label
         let abstractClassDiv = document.createElement("div");
+        abstractClassId = Unique.uniqueName();
         let classInput = document.createElement("input");
         classInput.type = "checkbox";
-        classInput.id = Unique.uniqueName();
+        classInput.id = abstractClassId;
         abstractClassDiv.append(classInput);
+        if (component.abstract)
+        {
+            classInput.setAttribute("checked", "true");
+        }
+        else
+        {
+        classInput.removeAttribute("checked");
+        }
 
         let classLabel = document.createElement("label");
         classLabel.appendChild(document.createTextNode("Class"));
@@ -170,10 +130,13 @@ export const ClassPropertiesDlg = function(component, main) {
             let visInput = document.createElement("input");
             visInput.type = "text";
             visInput.maxLength = 1;
+            visInput.placeholder = attribute.visibility;
+            visInput.value = attribute.visibility;
             visInput.style.width = "20px";
             visInput.style.height = "20px";
             visInput.id = Unique.uniqueName();
             visDiv.append(visInput);
+            visibilityInputs.push(visInput.id);
 
             let label = document.createElement("label");
             let attributeName = " " + attribute.name;
@@ -184,20 +147,26 @@ export const ClassPropertiesDlg = function(component, main) {
             visContentDiv.append(visDiv);
         }
 
-        for (let operation in component.operations)
+        // List Operations for Visibility and Abstraction
+        let operations = component.getOperations();
+        for (let i = 0; i < operations.length; i++)
         {
             // Visibility Operation Input and Name
+            let operation = operations[i];
             let visDiv = document.createElement("div");
             let visInput = document.createElement("input");
             visInput.type = "text";
             visInput.maxLength = 1;
+            visInput.placeholder = operation.visibility;
+            visInput.value = operation.visibility;
             visInput.style.width = "20px";
             visInput.style.height = "20px";
             visInput.id = Unique.uniqueName();
             visDiv.append(visInput);
+            visibilityInputs.push(visInput.id);
 
             let visLabel = document.createElement("label");
-            let operationName = " " + component.operations[operation].toString().replace(/(?!\w|\s)./g, '');
+            let operationName = " " + operation.name;
             visLabel.appendChild(document.createTextNode(operationName));
             visDiv.append(visLabel);
             visContentDiv.append(visDiv);
@@ -208,6 +177,15 @@ export const ClassPropertiesDlg = function(component, main) {
             absInput.type = "checkbox";
             absInput.id = Unique.uniqueName();
             abstractDiv.append(absInput);
+            abstractInputs.push(absInput.id);
+            if (operation.abstract)
+            {
+                absInput.setAttribute("checked", "true");
+            }
+            else
+            {
+                absInput.removeAttribute("checked");
+            }
 
             let absLabel = document.createElement("label");
             absLabel.appendChild(document.createTextNode(operationName));
@@ -242,10 +220,6 @@ export const ClassPropertiesDlg = function(component, main) {
         // Trim spaces on either end
 	    let name = '';
 
-        //Get abstract state
-        let isAbstract = false;
-
-
         if(component.prefix !== null) {
         	const nameElement = document.getElementById(nameId);
         	name = nameElement.value.replace(/^\s+|\s+$/gm,'');
@@ -260,9 +234,35 @@ export const ClassPropertiesDlg = function(component, main) {
             }
 	        Tools.removeClass(nameElement, 'cluml-error');
 	        name = this.sanitize(name);
+        }
 
-            //const toggleElement = document.getElementById(toggleId);
-            //isAbstract = toggleElement.checked;
+        // Save Visibility for Attributes and Operations
+        let attributes = component.getAttributes();
+        let operations = component.getOperations();
+        for (let i = 0; i < (attributes.length + operations.length); i++)
+        {
+            let object;
+            if (i < attributes.length)
+            {
+                object = attributes[i];
+            }
+            else
+            {
+                object = operations[i-attributes.length];
+            }
+            let element = document.getElementById(visibilityInputs[i]);
+            if (!element.value)
+            {
+                element.value = object.visibility;
+            }
+            object.visibility = element.value;
+        }
+
+        // Save Abstraction for Operations
+        for (let i = 0; i < operations.length; i++)
+        {
+            let element = document.getElementById(abstractInputs[i]);
+            operations[i].abstract = element.checked;
         }
 
         var extraRet = extraValidate();
@@ -275,7 +275,8 @@ export const ClassPropertiesDlg = function(component, main) {
         if(component.prefix !== null) {
             component.naming = name.length > 0 ? name : null;
 
-            //component.abstract = isAbstract;
+            const classToggle = document.getElementById(abstractClassId);
+            component.abstract = classToggle.checked;
         }
 
         extraTake();

@@ -132,8 +132,9 @@ EditingPopup.prototype.updateClass = function() {
                 this.component.operations.length;
             let selectedOperationNumber = Math.floor((this.component.lastSelectedY
                 - this.component.operationsBounds.bottom) / boxHeight)
-            this.component.operations[selectedOperationNumber] =
-                new Operation(this.text);
+            let newOperation = new Operation(this.text);
+            newOperation.abstract = this.component.operations[selectedOperationNumber].abstract;
+            this.component.operations[selectedOperationNumber] = newOperation;
         }
     }
 }

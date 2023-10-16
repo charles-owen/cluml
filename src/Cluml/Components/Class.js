@@ -289,7 +289,6 @@ Class.prototype.draw = function (context, view) {
     // Operations rect
     this.operationsBounds.contextRect(context);
 
-
     context.fill();
     context.stroke();
 
@@ -297,7 +296,6 @@ Class.prototype.draw = function (context, view) {
     if (this.naming == null) {
         this.naming = "ClassName:" + Unique.uniqueName();
     }
-
 
     // Naming text
     context.fillStyle = "#000000";
@@ -336,12 +334,23 @@ Class.prototype.draw = function (context, view) {
     // Operations text
     fromTop += this.attributesHeight;
     for (let j = 0; j < this.operations.length; j++) {
-        context.fillText(this.operations[j].elementValue,
+        if (this.operations[j].abstract)
+        {
+            context.font = ITALICS_FONT;
+        }
+        else
+        {
+            context.font = NAME_FONT;
+        }
+        const operation = this.operations[j];
+        const operationText = (visibility ? operation.visibility : '') + operation.name
+        + (operation.elementValue.indexOf(':') !== -1 ? ': ' : '') + operation.type;
+        context.fillText(operationText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
             this.width)
     }
-
+    context.font = NAME_FONT;
     if (this.addPopup != null) {
         this.addPopup.draw(context, view, this.x, this.y);
     }
@@ -473,6 +482,15 @@ Class.prototype.editOperation = function (operationIndex, newOperation) {
  */
 Class.prototype.getAttributes = function() {
     return this.attributes;
+}
+
+
+/**
+ * Get operations
+ * @returns {Array<Operation>}
+ */
+Class.prototype.getOperations = function() {
+    return this.operations;
 }
 
 /**

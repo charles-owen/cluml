@@ -6,6 +6,7 @@ export class Operation extends SanityElement {
     name = "";
     parameters = "";
     type = "";
+    abstract = false;
 
     constructor(stringValue) {
         stringValue = stringValue.trim();
