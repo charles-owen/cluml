@@ -1,9 +1,11 @@
 import {MainSingleton} from "../MainSingleton";
+import {Attribute} from "../SanityElement/Attribute";
+import {Operation} from "../SanityElement/Operation";
 
 export const EditingPopup = function (component) {
     Object.defineProperty(this, 'popup', {
-
     });
+
     this.component = component;
     this.margin = 5;
 
@@ -12,6 +14,11 @@ export const EditingPopup = function (component) {
 
     this.x = component.lastSelectedX;
     this.y = component.lastSelectedY;
+
+    this.context = null;
+    this.view = null;
+
+    this.editingWhat = "";
 
     this.font = "14px Times";
     this.text = "";
@@ -25,7 +32,11 @@ export const EditingPopup = function (component) {
     this.inputElement.style.padding = "0";
     this.inputElement.style.margin = "0";
 
-    this.editingWhat = "";
+    this.inputElement.addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+            this.close();
+        }
+    });
 };
 
 /**
@@ -44,6 +55,8 @@ EditingPopup.prototype.constructor = EditingPopup;
  * @param initialText the current name of the class
  */
 EditingPopup.prototype.drawNameEdit = function(context, view, bounds, width, height, initialText) {
+    this.context = context;
+    this.view = view;
     this.editingWhat = "name";
     this.inputElement.defaultValue = initialText;
     this.inputElement.selectionStart = initialText.length;
@@ -70,6 +83,8 @@ EditingPopup.prototype.drawNameEdit = function(context, view, bounds, width, hei
  */
 EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
                                                       width, height, type, initialText) {
+    this.context = context;
+    this.view = view;
     this.editingWhat = type;
     this.inputElement.defaultValue = initialText;
     this.inputElement.selectionStart = initialText.length;
@@ -83,7 +98,42 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
 }
 
 EditingPopup.prototype.touch = function(x, y) {
-    let newText = this.inputElement.value;
+    this.close();
+}
+
+EditingPopup.prototype.close = function() {
+    this.text = this.inputElement.value;
     this.inputElement.remove();
-    return newText;
+    this.updateClass();
+    this.component.draw(this.context, this.view);
+}
+
+EditingPopup.prototype.updateClass = function() {
+    // Only update the text field if the user enters something
+    if(this.text !== "") {
+        // Editing the name field
+        if (this.editingWhat === "name") {
+            this.component.naming = this.text
+        }
+        // Editing an attribute field
+        else if (this.editingWhat === "attribute") {
+            // Determine what attribute needs to be changed first, then change it
+            let boxHeight = this.component.attributesHeight /
+                this.component.attributes.length;
+            let selectedAttributeNumber = Math.floor((this.component.lastSelectedY
+                - this.component.attributesBounds.bottom) / boxHeight)
+            this.component.attributes[selectedAttributeNumber] =
+                new Attribute(this.text);
+        }
+        // Editing an operation field
+        else if (this.editingWhat === "operation") {
+            // Determine what operation needs to be changed first, then change it
+            let boxHeight = this.component.operationsHeight /
+                this.component.operations.length;
+            let selectedOperationNumber = Math.floor((this.component.lastSelectedY
+                - this.component.operationsBounds.bottom) / boxHeight)
+            this.component.operations[selectedOperationNumber] =
+                new Operation(this.text);
+        }
+    }
 }

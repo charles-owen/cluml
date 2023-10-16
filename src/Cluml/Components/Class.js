@@ -229,30 +229,7 @@ Class.prototype.tryTouchAddPopup = function (x, y) {
 
 Class.prototype.tryTouchEditingPopup = function (x, y) {
     if (this.editingPopup != null) {
-        let newText = this.editingPopup.touch(x, y);
-        // Only update the text field if the user enters something
-        if(newText !== "") {
-            // Editing the name field
-            if (this.editingPopup.editingWhat === "name") {
-                this.naming = newText
-            }
-            // Editing an attribute field
-            else if (this.editingPopup.editingWhat === "attribute") {
-                // Determine what attribute needs to be changed first, then change it
-                let boxHeight = this.attributesHeight / this.attributes.length;
-                let selectedAttributeNumber = Math.floor((this.lastSelectedY
-                    - this.attributesBounds.bottom) / boxHeight)
-                this.attributes[selectedAttributeNumber] = new Attribute(newText);
-            }
-            // Editing an operation field
-            else if (this.editingPopup.editingWhat === "operation") {
-                // Determine what operation needs to be changed first, then change it
-                let boxHeight = this.operationsHeight / this.operations.length;
-                let selectedOperationNumber = Math.floor((this.lastSelectedY
-                    - this.operationsBounds.bottom) / boxHeight)
-                this.operations[selectedOperationNumber] = new Operation(newText);
-            }
-        }
+        this.editingPopup.touch(x, y);
     }
     return null;
 }
@@ -295,6 +272,9 @@ Class.prototype.enableEditing = function (enable) {
  */
 Class.prototype.draw = function (context, view) {
     this.selectStyle(context, view);
+
+    // Sort Attributes/Operations before drawing text to the class
+    this.sortAttributions();
 
     context.beginPath();
     context.fillStyle = "#e7e8b0";
@@ -341,9 +321,6 @@ Class.prototype.draw = function (context, view) {
     // boolean to check if attributes/operations' visibility should be drawn
     const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
-    // Sort Attributes/Operations before drawing text to the class
-    this.sortAttributions();
-
     // Attributes text
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
@@ -370,45 +347,46 @@ Class.prototype.draw = function (context, view) {
     }
 
     if (this.editingPopup != null) {
-        // name box
-        if(this.lastSelectedY < this.attributesBounds.bottom) {
-            this.editingPopup.drawNameEdit(context, view, this.nameBounds,
-                this.width, this.nameHeight, this.naming);
-        }
-        // attribute box
-        else if(this.lastSelectedY < this.operationsBounds.bottom) {
-            let boxHeight = this.attributesHeight/this.attributes.length;
-            let selectedAttributeNumber = Math.floor((this.lastSelectedY
-                - this.attributesBounds.bottom)/boxHeight)
-            let selectedAttributeHeight = this.attributesBounds.bottom
-                + (selectedAttributeNumber * boxHeight)
-            this.editingPopup.drawAttributionEdit(context,
-                view,
-                this.x - this.width/2,
-                selectedAttributeHeight,
-                this.width,
-                boxHeight,
-                "attribute",
-                this.attributes[selectedAttributeNumber].elementValue);
-        }
-        // operation box
-        else if(this.lastSelectedY < this.operationsBounds.top) {
-            let boxHeight = this.operationsHeight/this.operations.length;
-            let selectedOperationNumber = Math.floor((this.lastSelectedY
-                - this.operationsBounds.bottom)/boxHeight)
-            let selectedOperationHeight = this.operationsBounds.bottom
-                + (selectedOperationNumber * boxHeight)
-            this.editingPopup.drawAttributionEdit(context,
-                view,
-                this.x - this.width/2,
-                selectedOperationHeight,
-                this.width,
-                boxHeight,
-                "operation",
-                this.operations[selectedOperationNumber].elementValue);
+        if (this.editingPopup.text === "") {
+            // name box
+            if (this.lastSelectedY < this.attributesBounds.bottom) {
+                this.editingPopup.drawNameEdit(context, view, this.nameBounds,
+                    this.width, this.nameHeight, this.naming);
+            }
+            // attribute box
+            else if (this.lastSelectedY < this.operationsBounds.bottom) {
+                let boxHeight = this.attributesHeight / this.attributes.length;
+                let selectedAttributeNumber = Math.floor((this.lastSelectedY
+                    - this.attributesBounds.bottom) / boxHeight)
+                let selectedAttributeHeight = this.attributesBounds.bottom
+                    + (selectedAttributeNumber * boxHeight)
+                this.editingPopup.drawAttributionEdit(context,
+                    view,
+                    this.x - this.width / 2,
+                    selectedAttributeHeight,
+                    this.width,
+                    boxHeight,
+                    "attribute",
+                    this.attributes[selectedAttributeNumber].elementValue);
+            }
+            // operation box
+            else if (this.lastSelectedY < this.operationsBounds.top) {
+                let boxHeight = this.operationsHeight / this.operations.length;
+                let selectedOperationNumber = Math.floor((this.lastSelectedY
+                    - this.operationsBounds.bottom) / boxHeight)
+                let selectedOperationHeight = this.operationsBounds.bottom
+                    + (selectedOperationNumber * boxHeight)
+                this.editingPopup.drawAttributionEdit(context,
+                    view,
+                    this.x - this.width / 2,
+                    selectedOperationHeight,
+                    this.width,
+                    boxHeight,
+                    "operation",
+                    this.operations[selectedOperationNumber].elementValue);
+            }
         }
     }
-
     Component.prototype.draw.call(this, context, view);
 }
 
