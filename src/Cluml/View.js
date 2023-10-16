@@ -62,12 +62,12 @@ export const View = function(main, canvas, diagram) {
     //catch escape input to exit association mode
     document.addEventListener('keydown', (event) =>{
         var keyVal = event.key;
-        console.log(keyVal);
+        //console.log(keyVal);
 
         if(event.key === "Escape"){
             main.selectionToggle = true;
             main.toggleManager.toggledAssociation = null;
-            console.log(main.selectionToggle);
+            //console.log(main.selectionToggle);
         }
     });
 
@@ -194,7 +194,7 @@ export const View = function(main, canvas, diagram) {
                 tempComp !== null && tempComp.fileLbl === 'Class'){
                 //create an association
                 const componentTemplate = main.toggleManager.toggledAssociation.template;
-                console.log(componentTemplate);
+                //console.log(componentTemplate);
                 if(main.toggleManager.toggledAssociation === undefined){
                     return;
                 }

@@ -91,9 +91,12 @@ export const Selection = function (view) {
          */
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
-            // Some selectables are singles, meaning we can
-            // only select one at a time.
+
+            console.log(this.selected.isTail);
+
             if (touched.single()) {
+                // Some selectables are singles, meaning we can
+                // only select one at a time.
                 this.selected = [touched];
             } else {
                 // If we touched something that was not
@@ -106,7 +109,6 @@ export const Selection = function (view) {
                     this.selected.push(touched);
                 }
             }
-
         } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle
@@ -239,7 +241,6 @@ export const Selection = function (view) {
 
     };
 
-
     /**
      * Provide support for association selection mode
      * Sets the end node of the created association as the current selected
@@ -249,11 +250,12 @@ export const Selection = function (view) {
      * @param y {MousePosY}
      */
     this.selectEndNode = function(association, x, y){
-        console.log("Testing that this does a thing");
+        //console.log("Testing that this does a thing");
         this.clear();
         this.selected = [association.nodes.end];
         association.nodes.end.x = x;
         association.nodes.end.y = y;
+        //console.log(association.nodes.end.isTail);
     }
 
     this.getSelection = function () {

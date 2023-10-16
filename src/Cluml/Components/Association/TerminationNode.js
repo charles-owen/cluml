@@ -102,6 +102,9 @@ TerminationNode.prototype.drop = function () {
         if (this.tryAttachToClass(cl, false))
             break;
     }
+
+    //console.log(this.isTail);
+    //console.log(this.association.paletteLbl);
 }
 
 TerminationNode.prototype.rightClick = function (x, y) {
@@ -190,6 +193,7 @@ TerminationNode.prototype.attachToClass = function (attachTo, position, side) {
     this.attachedTo.attachedTNodes.push(this);
     this.position = position;
     this.side = side;
+    //console.log(this.isTail);
 }
 
 /**

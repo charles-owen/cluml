@@ -106,6 +106,7 @@ class NodeData {
         }
 
         this.#end = node;
+        this.#end.isTail = true;
     }
 
     swapEnds() {
@@ -173,6 +174,7 @@ Association.prototype.drop = function () {
 
     this.x = 0;
     this.y = 0;
+    //console.log(this.paletteLbl);
 }
 
 /**
@@ -211,7 +213,7 @@ Association.prototype.touch = function (x, y) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         // Return a node instead of the association itself.
-        for (const node of this.nodeGenerator()) {
+        for (const node of this.reverseNodeGenerator()) {
             if (node.touch(x, y) !== null) {
                 return node;
             }
@@ -332,6 +334,20 @@ Association.prototype.nodeGenerator = function* () {
         const next = node.nextNode;
         yield node;
         node = next;
+    }
+}
+
+/**
+ * A generator that iterates through the nodes in reverse order
+ * used for initial creation of associations
+ */
+Association.prototype.reverseNodeGenerator = function* (){
+    let node = this.nodes.end;
+
+    while(node !== null){
+        const prev = node.previousNode;
+        yield node;
+        node = prev;
     }
 }
 

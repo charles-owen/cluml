@@ -186,6 +186,7 @@ LineNode.prototype.drop = function () {
         (this.hasPrevious && Vector.distance(this.position, this.previousNode.position) < 5)) {
         // Delete this node.
         this.delete();
+        //console.log("testing");
     }
 }
 
