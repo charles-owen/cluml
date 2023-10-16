@@ -48,8 +48,8 @@ export class Operation extends SanityElement {
         for (let i = 0; i < this.parameters.length; i++)
         {
             const param = this.parameters[i];
-            const paramText = param[0] + (param[1] !== '' ? ':' : '') + param[1]
-                                       + (i < this.parameters - 1 ? ", " : "");
+            const paramText = param[0] + (param[1] !== '' ? ': ' : '') + param[1]
+                                       + (i < this.parameters.length - 1 ? ", " : "");
             this.elementValue += paramText;
         }
         this.elementValue += (parenEnd !== -1 ? ")" : "") + (this.type !== '' ? ": " : "") + this.type;

@@ -343,8 +343,8 @@ Class.prototype.draw = function (context, view) {
             context.font = NAME_FONT;
         }
         const operation = this.operations[j];
-        const operationText = (visibility ? operation.visibility : '') + operation.name
-        + (operation.elementValue.indexOf(':') !== -1 ? ': ' : '') + operation.type;
+        const operationText = operation.elementValue.substring(
+            !visibility && operation.visibility !== '' ? 1 : 0);
         context.fillText(operationText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
