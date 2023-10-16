@@ -1,5 +1,7 @@
 import {SanityElement} from "./SanityElement";
 import {VISIBILITY_RX, NAME_RX, PAREM_RX} from "./SanityRegExpressions";
+import {Name} from "../Utility/Name";
+import {MainSingleton} from "../MainSingleton";
 
 export class Operation extends SanityElement {
     visibility = '';
@@ -39,50 +41,44 @@ export class Operation extends SanityElement {
                                           : stringValue.substring(parenEnd + 1).trim();
         }
 
+
+        // reformat the string
+        this.elementValue = this.visibility + this.name + (parenStart !== -1 ? '(' : '');
+        for (let i = 0; i < this.parameters.length; i++)
+        {
+            const param = this.parameters[i];
+            const paramText = param[0] + (param[1] !== '' ? ':' : '') + param[1]
+                                       + (i < this.parameters - 1 ? ", " : "");
+            this.elementValue += paramText;
+        }
+        this.elementValue += (parenEnd !== -1 ? ")" : "") + (this.type !== '' ? ": " : "") + this.type;
+
         this.processSanityCheck();
     }
 
     processSanityCheck() {
-        const messages = super.processSanityCheck();
+        let messages = Name.Check(this.name);
 
-        const vMatch = this.elementValue.match(VISIBILITY_RX);
-        if (vMatch === null || vMatch.length < 1) {
-            messages.push('Operation missing visibility.');
-        } else {
-            this.visibility = vMatch[0];
+        for (const message of Name.Check(this.type))
+        {
+            messages.push(message.replace("Name", "Type"));
         }
 
-        const nameMatch = this.elementValue.match(NAME_RX);
-        let nameFound = false;
-        if (nameMatch === null || nameMatch.length < 1) {
-            messages.push('Operation name missing or malformed.');
-        } else {
-            this.name = nameMatch[0];
-            nameFound = true;
+        const showVisibility = MainSingleton.singleton.options.showVisibility;
+        if (this.visibility === '' && showVisibility) {
+            messages.push(
+                `Operation <a>${this.elementValue}</a>: visibility missing`);
         }
+        if (this.name === '')
+            messages.push(
+                `Operation <a>${this.elementValue}</a>: name missing`);
+        if (this.type === '')
+            messages.push(
+                `Operation <a>${this.elementValue}</a>: type missing`);
 
-        const paramMatch = this.elementValue.match(PAREM_RX);
-        if (paramMatch === null || paramMatch.length < 1) {
-            messages.push('Operation parentheses missing or deformed.');
-        } else if (paramMatch.length > 1) {
-            messages.push('Operation has too many parentheses.')
-        } else {
-            if (nameFound) {
-                // See if the name and parenthesis exists next ot each other.
-                const nameParamRX = new RegExp(this.name + PAREM_RX.source, 'g');
+        const paramMessages = this.#checkParameters();
+        messages = messages.concat(paramMessages);
 
-                if (!nameParamRX.test(this.elementValue)) {
-                    const npWhitespaceRX = new RegExp(this.name + '\s+' + PAREM_RX.source, 'g');
-                    if (npWhitespaceRX.test(this.elementValue)) {
-                        // There's a space between the name and parenthesis.
-                        messages.push('Operation has whitespace between name and parenthesis.');
-                    } else {
-                        // Some other error.
-                        messages.push('Operation parenthesis malformed.');
-                    }
-                }
-            }
-        }
         return messages;
     }
 
@@ -106,4 +102,34 @@ export class Operation extends SanityElement {
             this.parameters[i] = parameterFinal;
         }
     }
+
+    /**
+     * Sanity checks the parameters
+     */
+    #checkParameters()
+    {
+        let messages = [];
+
+        for (const param of this.parameters)
+        {
+            const name = param[0];
+            const type = param[1];
+            if (name === '')
+                messages.push(`Operation <a>${this.elementValue}</a>: parameter name missing`);
+            if (type === '')
+                messages.push(`Operation <a>${this.elementValue}</a>: parameter type missing`);
+
+            for (const message of Name.Check(name))
+            {
+                messages.push(message.replace("Name", "Parameter name"));
+            }
+            for (const message of Name.Check(type))
+            {
+                messages.push(message.replace("Name", "Parameter type"));
+            }
+        }
+
+        return messages;
+    }
+
 }
