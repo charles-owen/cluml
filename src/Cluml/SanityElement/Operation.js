@@ -46,7 +46,7 @@ export class Operation extends SanityElement {
         const messages = super.processSanityCheck();
 
         const vMatch = this.elementValue.match(VISIBILITY_RX);
-        if (vMatch.length < 1) {
+        if (vMatch === null || vMatch.length < 1) {
             messages.push('Operation missing visibility.');
         } else {
             this.visibility = vMatch[0];
@@ -54,7 +54,7 @@ export class Operation extends SanityElement {
 
         const nameMatch = this.elementValue.match(NAME_RX);
         let nameFound = false;
-        if (nameMatch.length < 1) {
+        if (nameMatch === null || nameMatch.length < 1) {
             messages.push('Operation name missing or malformed.');
         } else {
             this.name = nameMatch[0];
@@ -62,7 +62,7 @@ export class Operation extends SanityElement {
         }
 
         const paramMatch = this.elementValue.match(PAREM_RX);
-        if (paramMatch.length < 1) {
+        if (paramMatch === null || paramMatch.length < 1) {
             messages.push('Operation parentheses missing or deformed.');
         } else if (paramMatch.length > 1) {
             messages.push('Operation has too many parentheses.')

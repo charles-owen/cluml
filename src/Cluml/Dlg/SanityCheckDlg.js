@@ -68,6 +68,7 @@ export const SanityCheckDlg = function(main) {
             }
             */
 
+            /*
             for (const operation of element["operations"])
             {
                 const operationTemplate = `${classTemplate}, operation <a>${operation}</a>`;
@@ -90,6 +91,7 @@ export const SanityCheckDlg = function(main) {
                     errorCount++;
                 }
             }
+            */
         }
 
         for (const element of SanityElement.getAllSanityElements()) {

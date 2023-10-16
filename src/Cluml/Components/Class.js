@@ -10,6 +10,7 @@ import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import Unique from "../Utility/Unique";
 import {SanityElement} from "../SanityElement/SanityElement";
 import {Attribute} from "../SanityElement/Attribute";
+import {Operation} from "../SanityElement/Operation";
 
 export const Class = function () {
     Component.call(this);
@@ -50,9 +51,9 @@ export const Class = function () {
 
     /**
      * The array of operations.
-     * @type{Array<String>}
+     * @type{Array<Operation>}
      */
-    this.operations = ["+operation1()"];
+    this.operations = [new Operation('-operation(): String')];
 
     this.addPopup = null;
 
@@ -249,7 +250,7 @@ Class.prototype.tryTouchEditingPopup = function (x, y) {
                 let boxHeight = this.operationsHeight / this.operations.length;
                 let selectedOperationNumber = Math.floor((this.lastSelectedY
                     - this.operationsBounds.bottom) / boxHeight)
-                this.operations[selectedOperationNumber] = newText;
+                this.operations[selectedOperationNumber] = new Operation(newText);
             }
         }
     }
@@ -358,7 +359,7 @@ Class.prototype.draw = function (context, view) {
     // Operations text
     fromTop += this.attributesHeight;
     for (let j = 0; j < this.operations.length; j++) {
-        context.fillText(this.operations[j].substring(visibility ? 0 : 1),
+        context.fillText(this.operations[j].elementValue,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
             this.width)
@@ -404,7 +405,7 @@ Class.prototype.draw = function (context, view) {
                 this.width,
                 boxHeight,
                 "operation",
-                this.operations[selectedOperationNumber]);
+                this.operations[selectedOperationNumber].elementValue);
         }
     }
 
@@ -505,19 +506,19 @@ Class.prototype.sortAttributions = function() {
     // Get operations out of the attributes array and into the operations
     // array
     for(let i = 0; i < this.attributes.length; i++) {
-        if(pattern.test(this.attributes[i].name)) {
+        if(pattern.test(this.attributes[i].elementValue)) {
             let operation = this.attributes.splice(i, 1);
             // This code will need to be updated when Operations.js is
             // implemented
-            this.operations.push(operation[0].name);
+            this.operations.push(new Operation(operation[0].elementValue));
         }
     }
     // Get attributes out of the operations array and into the attributes
     // array
     for(let j = 0; j < this.operations.length; j++) {
-        if(!pattern.test(this.operations[j])) {
+        if(!pattern.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
-            this.attributes.push(new Attribute(attribute[0]))
+            this.attributes.push(new Attribute(attribute[0].elementValue));
         }
     }
 }
