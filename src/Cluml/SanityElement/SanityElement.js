@@ -112,11 +112,11 @@ export class SanityElement extends Selectable {
     /**
      * Modifies the context, changing the fill style to be either the valid or
      * invalid color, based on whether this SanityElement has errors.
-     *
+     * <br/>-----<br/>
      * Usage:
      *
-     * const oldColor = modifyContextFill(context);
-     * thing.draw(context, view);
+     * const oldColor = modifyContextFill(context);<br/>
+     * thing.draw(context, view);<br/>
      * context.fillColor = oldColor;
      * @param context {RenderingContext}
      * @return {string}
