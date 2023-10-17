@@ -184,16 +184,7 @@ Class.prototype.doubleClick = function(x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
     this.lastSelectedX = x;
     this.lastSelectedY = y;
-
-    //clicked on attribute or operation?
-    if(this.lastSelectedX < this.x + this.width) {
-        //yes? ok then edit the class
-        this.enableEditing(true);
-    }
-    else {
-        //no? ok then do class properties dialog box
-        this.openProperties();
-    }
+    this.enableEditing(true);
 }
 
 /**

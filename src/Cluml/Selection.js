@@ -35,6 +35,7 @@ export const Selection = function (view) {
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
+            this.selected[0].movable = false;
             this.selected[0].enableAddPopup(true);
         } else {
             // If we touch outside, we are clearing the selected if

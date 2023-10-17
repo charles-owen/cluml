@@ -71,6 +71,8 @@ export const Selectable = function () {
 
     this.placedOnCanvas = false;
 
+    this.movable = true;
+
     this.selectedStyle = '#ff0000';
     this.unselectedStyle = '#000000';
 };
@@ -122,12 +124,13 @@ Selectable.prototype.selectStyle = function (context, view) {
  * Start of the dragging process
  */
 Selectable.prototype.grab = function () {
+    this.movable = true;
     this.moveX = 0;
     this.moveY = 0;
 };
 
 /**
- * Called when a selectable is right clicked.
+ * Called when a selectable is right-clicked.
  * @param x {number}
  * @param y {number}
  */
@@ -156,14 +159,16 @@ Selectable.prototype.enableAddPopup = function(enable) {
  * @param y {number} The cursor y position.
  */
 Selectable.prototype.move = function (dx, dy, x, y) {
-    this.moveX += dx;
-    this.moveY += dy;
+    if(this.movable) {
+        this.moveX += dx;
+        this.moveY += dy;
 
-    this.x += dx;
-    this.y += dy;
+        this.x += dx;
+        this.y += dy;
 
-    if (this.diagram !== null) {
-        this.diagram.snapIt(this);
+        if (this.diagram !== null) {
+            this.diagram.snapIt(this);
+        }
     }
 };
 
@@ -184,7 +189,7 @@ Selectable.prototype.delete = function () {
  * Called when this selectable is dropped.
  */
 Selectable.prototype.drop = function () {
-
+    this.movable = false;
 };
 
 /**
