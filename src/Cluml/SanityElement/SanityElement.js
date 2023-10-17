@@ -109,10 +109,24 @@ export class SanityElement extends Selectable {
     }
     // endregion
 
+    /**
+     * Modifies the context, changing the fill style to be either the valid or
+     * invalid color, based on whether this SanityElement has errors.
+     * @param context {RenderingContext}
+     * @return {string}
+     */
+    modifyContextFill(context) {
+        const oldColor = context.fillStyle;
+        const errors = this.processSanityCheck();
+        context.fillStyle = errors.length <= 0 ? this.validColor : this.invalidColor;
+
+        return oldColor;
+    }
+
     // region Selectable methods
     draw(context, view) {
         super.draw(context, view);
-        const oldColor = context.strokeStyle;
+        const oldColor = context.fillStyle;
 
         const errors = this.processSanityCheck();
         context.fillStyle = errors.length <= 0 ? this.validColor : this.invalidColor;
