@@ -26,8 +26,8 @@ export class TerminationNodeDlg extends Dialog {
     }
 
     open() {
-        const multiSE = this.node.multiplicityValue.encapsulatedElement;
-        const tagSE = this.node.tagValue.encapsulatedElement;
+        const multiSE = this.node.multiplicityValue;
+        const tagSE = this.node.tagValue;
 
         const div = document.createElement('div');
 
@@ -79,8 +79,8 @@ export class TerminationNodeDlg extends Dialog {
     }
 
     ok() {
-        const multiSE = this.node.multiplicityValue.encapsulatedElement;
-        const tagSE = this.node.tagValue.encapsulatedElement;
+        const multiSE = this.node.multiplicityValue;
+        const tagSE = this.node.tagValue;
 
         const mInput = document.getElementById(this.multiInputID);
         const tInput = document.getElementById(this.tagInputID);
