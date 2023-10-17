@@ -314,6 +314,7 @@ Class.prototype.draw = function (context, view) {
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
+        attribute.modifyContextFill(context);
         const attributeText = (visibility ? attribute.visibility : '') + attribute.name
             + (attribute.elementValue.indexOf(':') !== -1 ? ': ' : '') + attribute.type;
         context.fillText(attributeText,
