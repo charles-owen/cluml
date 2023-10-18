@@ -399,16 +399,16 @@ Class.prototype.draw = function (context, view) {
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
     obj.attributes = SanityElement.saveMultiple(this.attributes);
-    obj.operations = this.operations;
+    obj.operations = SanityElement.saveMultiple(this.operations);
     obj.width = this.width;
     return obj;
 }
 
 Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
-
-    this.attributes = obj.attributes;
-    this.operations = obj.operations;
+    
+    this.attributes = SanityElement.loadMultiple(Attribute, 'attributes', obj, this);
+    this.operations = SanityElement.loadMultiple(Operation, 'operations', obj, this);
     this.width = +obj["width"];
 }
 
