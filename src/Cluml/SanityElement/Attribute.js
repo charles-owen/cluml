@@ -76,4 +76,13 @@ export class Attribute extends SanityElement {
 
         return messages;
     }
+
+    /**
+     * Copy any attribute data needed for undo
+     * @param attribute to copy data from
+     */
+    copyFrom(attribute)
+    {
+        this.visibility = attribute.visibility;
+    }
 }

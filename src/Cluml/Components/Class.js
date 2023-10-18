@@ -154,8 +154,15 @@ Class.prototype.paletteOrder = 1;
  * @param component {Class}
  */
 Class.prototype.copyFrom = function (component) {
-    this.operations = component.operations;
-    this.attributes = component.attributes;
+    for (let i = 0; i < this.attributes.length; i++)
+    {
+        this.attributes[i].copyFrom(component.attributes[i]);
+    }
+    for (let i = 0; i < this.operations.length; i++)
+    {
+        this.operations[i].copyFrom(component.operations[i]);
+    }
+
     this.width = component.width;
     Component.prototype.copyFrom.call(this, component);
 }
@@ -285,7 +292,7 @@ Class.prototype.draw = function (context, view) {
 
     // Defaults the name to ClassName: UniqueName if no name is given
     if (this.naming == null) {
-        this.naming = "ClassName:" + Unique.uniqueName();
+        this.naming = "Class";
     }
 
     // Naming text

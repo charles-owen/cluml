@@ -133,4 +133,13 @@ export class Operation extends SanityElement {
         return messages;
     }
 
+    /**
+     * Copy any operation data needed for undo
+     * @param operation to copy
+     */
+    copyFrom(operation)
+    {
+        this.abstract = operation.abstract;
+        this.visibility = operation.visibility;
+    }
 }

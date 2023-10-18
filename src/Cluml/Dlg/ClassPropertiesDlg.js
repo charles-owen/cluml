@@ -236,6 +236,19 @@ export const ClassPropertiesDlg = function(component, main) {
 	        name = this.sanitize(name);
         }
 
+        var extraRet = extraValidate();
+        if(extraRet !== null) {
+            this.error(extraRet);
+            return;
+        }
+
+        main.backup();
+        if(component.prefix !== null) {
+            component.naming = name.length > 0 ? name : null;
+            const classToggle = document.getElementById(abstractClassId);
+            component.abstract = classToggle.checked;
+        }
+
         // Save Visibility for Attributes and Operations
         let attributes = component.getAttributes();
         let operations = component.getOperations();
@@ -263,20 +276,6 @@ export const ClassPropertiesDlg = function(component, main) {
         {
             let element = document.getElementById(abstractInputs[i]);
             operations[i].abstract = element.checked;
-        }
-
-        var extraRet = extraValidate();
-        if(extraRet !== null) {
-            this.error(extraRet);
-            return;
-        }
-
-        main.backup();
-        if(component.prefix !== null) {
-            component.naming = name.length > 0 ? name : null;
-
-            const classToggle = document.getElementById(abstractClassId);
-            component.abstract = classToggle.checked;
         }
 
         extraTake();
