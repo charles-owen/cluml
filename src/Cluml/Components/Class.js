@@ -290,6 +290,7 @@ Class.prototype.draw = function (context, view) {
 
     // Naming text
     context.fillStyle = "#000000";
+    let oldColor = new ClassName(this.naming).modifyContextFill(context);
     if (this.abstract)
     {
         this.drawName(context,
@@ -304,6 +305,7 @@ Class.prototype.draw = function (context, view) {
             this.fontHeight * 1.5,
             NAME_FONT);
     }
+    context.fillStyle = oldColor;
 
     context.textAlign = "left"
     context.font = NAME_FONT;
@@ -314,13 +316,14 @@ Class.prototype.draw = function (context, view) {
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
-        attribute.modifyContextFill(context);
+        oldColor = attribute.modifyContextFill(context);
         const attributeText = (visibility ? attribute.visibility : '') + attribute.name
             + (attribute.elementValue.indexOf(':') !== -1 ? ': ' : '') + attribute.type;
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,
             this.width)
+        context.fillStyle = oldColor;
     }
 
     // Operations text
@@ -335,12 +338,14 @@ Class.prototype.draw = function (context, view) {
             context.font = NAME_FONT;
         }
         const operation = this.operations[j];
+        oldColor = operation.modifyContextFill(context);
         const operationText = operation.elementValue.substring(
             !visibility && operation.visibility !== '' ? 1 : 0);
         context.fillText(operationText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
             this.width)
+        context.fillStyle = oldColor;
     }
     context.font = NAME_FONT;
     if (this.addPopup != null) {
