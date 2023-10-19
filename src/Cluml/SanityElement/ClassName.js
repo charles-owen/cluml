@@ -1,8 +1,6 @@
 import {SanityElement} from "./SanityElement";
-import {SPACES_RX, NON_ALPHANUMERIC_RX} from "./SanityRegExpressions";
-
-const spaces = /\s/;
-const nonAlphanumeric = /[^A-Za-z0-9]/;
+import {SPACES_RX, NON_ALPHANUMERIC_RX, NON_ALPHABETICAL_RX} from "./SanityRegExpressions";
+import {SanityErrorInfo} from "./SanityErrorInfo";
 
 // Sanity element for class names
 export class ClassName extends SanityElement {
@@ -16,6 +14,7 @@ export class ClassName extends SanityElement {
      */
 
     constructor(stringValue) {
+        stringValue = stringValue.trim();
         super(stringValue);
         this.messageTemplate = `Class <a>${stringValue}</a>: name `;
 
@@ -25,14 +24,26 @@ export class ClassName extends SanityElement {
 
     processSanityCheck() {
         const errors = [];
-        if (this.elementValue[0].toUpperCase() !== this.elementValue[0]) {
-            errors.push(this.messageTemplate + "not capitalized.");
+        if (this.elementValue === '') {
+            errors.push(new SanityErrorInfo("0400", "Class",
+                this.elementValue, "Name is missing"));
+            return errors;
         }
-        if (spaces.test(this.elementValue)) {
-            errors.push(this.messageTemplate + "contains spaces.")
+        if (NON_ALPHABETICAL_RX.test(this.elementValue[0])) {
+            errors.push(new SanityErrorInfo("0401", "Class",
+                this.elementValue, "Name's first character is not alphabetical"));
         }
-        if (nonAlphanumeric.test(this.elementValue)) {
-            errors.push(this.messageTemplate + "contains non-alphanumeric characters.");
+        else if (this.elementValue[0].toUpperCase() !== this.elementValue[0]) {
+            errors.push(new SanityErrorInfo("0402", "Class",
+                this.elementValue, "Name not capitalized"));
+        }
+        if (SPACES_RX.test(this.elementValue)) {
+            errors.push(new SanityErrorInfo("0403", "Class",
+                this.elementValue, "Name contains spaces"));
+        }
+        if (NON_ALPHANUMERIC_RX.test(this.elementValue)) {
+            errors.push(new SanityErrorInfo("0404", "Class",
+                this.elementValue, "Name contains non-alphanumeric characters"));
         }
 
         return errors;
