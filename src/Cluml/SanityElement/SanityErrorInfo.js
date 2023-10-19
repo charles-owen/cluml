@@ -1,3 +1,5 @@
+import {MainSingleton} from "../MainSingleton";
+
 export class SanityErrorInfo {
     /**
      * The error code for this error.
@@ -48,8 +50,7 @@ export class SanityErrorInfo {
         icon.className = 'clipboard-icon';
         // icon.src = 'src/img/clipboard-regular.svg';
         icon.title = 'Copy error code';
-        icon.style.width = '1em';
-        icon.style.height = '1lh';
+        icon.src = `${MainSingleton.singleton.root}cluml/img/clipboard-regular.svg`;
 
         let iconBtn = document.createElement('button');
         iconBtn.type = 'button';

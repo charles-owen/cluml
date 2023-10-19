@@ -56,6 +56,10 @@ export class MainSingleton {
         return this.#main.options;
     }
 
+    get root() {
+        return this.#main.cluml.root;
+    }
+
     /**
      * Returns the current selected tab's div.
      * @return {Element}
