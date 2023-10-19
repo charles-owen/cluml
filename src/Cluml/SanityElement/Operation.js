@@ -2,6 +2,7 @@ import {SanityElement} from "./SanityElement";
 import {VISIBILITY_RX, NAME_RX, PAREM_RX} from "./SanityRegExpressions";
 import {Name} from "../Utility/Name";
 import {MainSingleton} from "../MainSingleton";
+import {SanityErrorInfo} from "./SanityErrorInfo";
 
 export class Operation extends SanityElement {
     visibility = '';
@@ -58,24 +59,23 @@ export class Operation extends SanityElement {
     }
 
     processSanityCheck() {
-        let messages = Name.Check(this.name);
+        let messages = Name.Check(200, "Operation",
+            this.elementValue, this.name, "Name");
 
-        for (const message of Name.Check(this.type))
-        {
-            messages.push(message.replace("Name", "Type"));
-        }
+        messages = messages.concat(Name.Check(204, "Operation",
+            this.elementValue, this.type, "Type", true));
 
         const showVisibility = MainSingleton.singleton.options.showVisibility;
         if (this.visibility === '' && showVisibility) {
-            messages.push(
-                `Operation <a>${this.elementValue}</a>: visibility missing`);
+            messages.push(new SanityErrorInfo('0208',
+                "Operation", this.elementValue, "Visibility missing"));
         }
         if (this.name === '')
-            messages.push(
-                `Operation <a>${this.elementValue}</a>: name missing`);
+            messages.push(new SanityErrorInfo("0209",
+                "Operation", this.elementValue, "Name missing"));
         if (this.type === '')
-            messages.push(
-                `Operation <a>${this.elementValue}</a>: type missing`);
+            messages.push(new SanityErrorInfo("0210",
+                "Operation", this.elementValue, "Type missing"));
 
         const paramMessages = this.#checkParameters();
         messages = messages.concat(paramMessages);
@@ -116,18 +116,16 @@ export class Operation extends SanityElement {
             const name = param[0];
             const type = param[1];
             if (name === '')
-                messages.push(`Operation <a>${this.elementValue}</a>: parameter name missing`);
+                messages.push(new SanityErrorInfo("0211", "Operation",
+                    this.elementValue, "Parameter name missing"));
             if (type === '')
-                messages.push(`Operation <a>${this.elementValue}</a>: parameter type missing`);
+                messages.push(new SanityErrorInfo("0212", "Operation",
+                    this.elementValue, "Parameter type missing"));
 
-            for (const message of Name.Check(name))
-            {
-                messages.push(message.replace("Name", "Parameter name"));
-            }
-            for (const message of Name.Check(type))
-            {
-                messages.push(message.replace("Name", "Parameter type"));
-            }
+            messages = messages.concat(Name.Check(213, "Operation",
+                this.elementValue, name, "Parameter name"));
+            messages = messages.concat(Name.Check(217, "Operation",
+                this.elementValue, type, "Parameter type", true));
         }
 
         return messages;

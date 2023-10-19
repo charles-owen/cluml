@@ -1,5 +1,5 @@
 import { SanityElement } from "./SanityElement";
-import { SPACES_RX, NON_ALPHANUMERIC_RX, NON_ALPHABETICAL_RX} from "../Utility/Name";
+import { SPACES_RX, NON_ALPHANUMERIC_RX, NON_ALPHABETICAL_RX} from "./SanityRegExpressions";
 import {SanityErrorInfo} from "./SanityErrorInfo";
 
 const LOWERCASE_RX = /[a-z]/;

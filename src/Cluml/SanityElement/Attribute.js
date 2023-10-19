@@ -2,6 +2,7 @@ import {SanityElement} from "./SanityElement";
 import {Name} from "../Utility/Name";
 import {MainSingleton} from "../MainSingleton";
 import {VISIBILITY_RX} from "./SanityRegExpressions";
+import {SanityErrorInfo} from "./SanityErrorInfo";
 
 const spaces = /\s/;
 const nonAlphanumeric = /[^A-Za-z0-9]/;
@@ -40,39 +41,24 @@ export class Attribute extends SanityElement {
             + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type;
     }
 
-    draw(context, view)
-    {
-        const temp = this.elementValue;
-        const showVisibility = MainSingleton.singleton.options.showVisibility;
-        this.elementValue = (showVisibility ? this.visibility : '') + this.name
-            + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type;
-
-        // Uncomment when SanityElement draw function is added
-        // super.draw(context, view);
-
-        this.elementValue = temp;
-    }
-
-
     processSanityCheck() {
-        const messages = Name.Check(this.name);
+        let messages = Name.Check(100, "Attribute",
+            this.elementValue, this.name, "Name");
 
-        for (const message of Name.Check(this.type))
-        {
-            messages.push(message.replace("Name", "Type"));
-        }
+        messages = messages.concat(Name.Check(104, "Attribute",
+            this.elementValue, this.type, "Type", true));
 
         const showVisibility = MainSingleton.singleton.options.showVisibility;
         if (this.visibility === '' && showVisibility) {
-            messages.push(
-                `Attribute <a>${this.elementValue.replaceAll(' ', '_')}</a>: visibility missing`);
+            messages.push(new SanityErrorInfo("00108", "Attribute",
+                this.elementValue, "Visibility missing"));
         }
         if (this.name === '')
-            messages.push(
-                `Attribute <a>${this.elementValue.replaceAll(' ', '_')}</a>: name missing`);
+            messages.push(new SanityErrorInfo("0109", "Attribute",
+                this.elementValue, "Name missing"));
         if (this.type === '')
-            messages.push(
-                `Attribute <a>${this.elementValue.replaceAll(' ', '_')}</a>: type missing`);
+            messages.push(new SanityErrorInfo("0110", "Attribute",
+                this.elementValue, "Type missing"));
 
         return messages;
     }

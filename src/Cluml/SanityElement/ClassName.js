@@ -1,4 +1,5 @@
 import {SanityElement} from "./SanityElement";
+import {SPACES_RX, NON_ALPHANUMERIC_RX} from "./SanityRegExpressions";
 
 const spaces = /\s/;
 const nonAlphanumeric = /[^A-Za-z0-9]/;
