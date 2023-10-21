@@ -208,6 +208,11 @@ export class SanityElement extends Selectable {
         const elem = new type(sanitySaveObj.value, relativeTo);
         elem.x = sanitySaveObj.x;
         elem.y = sanitySaveObj.y;
+        elem.visibility = sanitySaveObj.visibility;
+        if (sanitySaveObj.abstract)
+        {
+            elem.abstract = sanitySaveObj.abstract;
+        }
         return elem;
     }
 

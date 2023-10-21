@@ -71,4 +71,17 @@ export class Attribute extends SanityElement {
     {
         this.visibility = attribute.visibility;
     }
+
+    /**
+     * Gets an object that contains the serializable data of the sanity element.
+     * @returns {{value: string, x: number, y: number}}
+     */
+    saveSanityElement() {
+        return {
+            value: this.elementValue,
+            x: this.x,
+            y: this.y,
+            visibility: this.visibility
+        };
+    }
 }

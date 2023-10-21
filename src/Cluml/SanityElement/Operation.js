@@ -140,4 +140,18 @@ export class Operation extends SanityElement {
         this.abstract = operation.abstract;
         this.visibility = operation.visibility;
     }
+
+    /**
+     * Gets an object that contains the serializable data of the sanity element.
+     * @returns {{value: string, x: number, y: number}}
+     */
+    saveSanityElement() {
+        return {
+            value: this.elementValue,
+            x: this.x,
+            y: this.y,
+            visibility: this.visibility,
+            abstract: this.abstract
+        };
+    }
 }
