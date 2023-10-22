@@ -241,13 +241,22 @@ div.cluml {
     color: red;
   }
 
-  .cluml-sanity-check-row * {
+  .cl-sc-row * {
     margin: 0;
     padding: 0;
   }
-  .cluml-sanity-check-row img.clipboard-icon {
+  .cl-sc-row img.clipboard-icon {
     width: 1em;
-    height: 1lh;
+    height: 1em;
+  }
+  .cl-sc-row .cl-copy-btn {
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+  }
+  .cl-sc-row textarea {
+    resize: none;
+    //width: 6em;
   }
 }
 
@@ -255,3 +264,4 @@ div.cluml-dialog {
   padding: 1em;
   font-size: 0.95em;
 }
+

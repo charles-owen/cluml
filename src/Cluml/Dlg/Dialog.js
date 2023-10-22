@@ -11,7 +11,7 @@ import DialogCL from 'dialog-cl';
  * @param classes Classes to add to the dialog box
  * @constructor
  */
-export const Dialog = function(classes) {
+export const Dialog = function (classes) {
     this.classes = classes !== undefined ? 'cluml ' + classes : 'cluml';
     this.buttonOk = "Ok";
     this.buttonCancel = "Cancel";
@@ -21,10 +21,10 @@ export const Dialog = function(classes) {
 
 /**
  * Set the dialog box contents
- * @param html HTML for the body
+ * @param html {string, HTMLElement} HTML for the body
  * @param title Title for the title bar
  */
-Dialog.prototype.contents = function(html, title) {
+Dialog.prototype.contents = function (html, title) {
     this.html = html;
     this.title = title;
 }
@@ -32,18 +32,31 @@ Dialog.prototype.contents = function(html, title) {
 /**
  * Open the dialog box
  */
-Dialog.prototype.open = function() {
+Dialog.prototype.open = function () {
     let form = document.createElement('form');
     let div = Tools.createClassedDiv('cluml-dlg-content');
     form.appendChild(div);
 
-    div.innerHTML = `${this.html}<p class="error"></p>
-<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">`;
+    if (typeof this.html === 'string') {
+        div.innerHTML = this.html;
+    } else {
+        div.appendChild(this.html);
+    }
+
+    const p = document.createElement('p');
+    p.className = 'error';
+    div.appendChild(p);
+
+    const inputSubmit = document.createElement('input');
+    inputSubmit.type = 'submit';
+    inputSubmit.tabIndex = -1;
+    inputSubmit.style.position = 'absolute';
+    inputSubmit.style.top = '-1000px';
 
     this.element = div;
 
     let buttons = [];
-    if(this.buttonOk !== null) {
+    if (this.buttonOk !== null) {
         buttons.push({
             contents: 'Ok',
             click: (dialog) => {
@@ -54,13 +67,13 @@ Dialog.prototype.open = function() {
         });
     }
 
-    if(this.buttonCancel !== null) {
+    if (this.buttonCancel !== null) {
         buttons.push({
             contents: 'Cancel',
             click: (dialog) => {
                 dialog.close();
             },
-	        'class': 'cs-cancel'
+            'class': 'cs-cancel'
         });
     }
 
@@ -77,47 +90,50 @@ Dialog.prototype.open = function() {
 
     this.onOpen();
 
-    this.close = function() {
+    this.close = function () {
         dialog.close();
     }
 
     form.addEventListener('submit', (event) => {
-    	event.preventDefault();
-    	this.ok();
+        event.preventDefault();
+
+        this.ok();
     });
 
-    this.buttonOk = function() {
-	    return this.dialog.div.querySelector('button.cs-ok');
+    this.buttonOk = function () {
+        return this.dialog.div.querySelector('button.cs-ok');
     }
 }
 
-Dialog.prototype.ok = function() {
+Dialog.prototype.ok = function () {
     this.close();
 }
 
 
-Dialog.prototype.error = function(msg) {
-    if(msg !== undefined) {
+Dialog.prototype.error = function (msg) {
+    if (msg !== undefined) {
         this.element.querySelector('.error').innerHTML = msg;
     }
 }
 
-Dialog.prototype.cancel = function() {}
+Dialog.prototype.cancel = function () {
+}
 
-Dialog.prototype.onOpen = function() {}
+Dialog.prototype.onOpen = function () {
+}
 
 /**
  * Sanitize text from user input to prevent XSS attacks.
  * @param text Text to sanitize
  * @returns Sanitized version
  */
-Dialog.prototype.sanitize = function(text) {
+Dialog.prototype.sanitize = function (text) {
     return DOMPurify.sanitize(text);
 }
 
 /**
  * Get a unique ID to use in dialog boxes
  */
-Dialog.prototype.uniqueId = function() {
+Dialog.prototype.uniqueId = function () {
     return Unique.uniqueName();
 }

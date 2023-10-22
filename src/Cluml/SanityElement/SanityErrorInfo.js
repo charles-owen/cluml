@@ -2,6 +2,8 @@ import {MainSingleton} from "../MainSingleton";
 
 const ERROR_PREFIX = 'CS';
 
+export const ICON_BTN_CLASS = 'cl-copy-btn';
+
 export class SanityErrorInfo {
     /**
      * The error code for this error.
@@ -45,10 +47,18 @@ export class SanityErrorInfo {
         this.elementName = elementName;
         this.elementType = elementType;
         this.description = description;
+    }
 
-        this.rowElement = document.createElement('tr');
-        this.rowElement.className = 'cluml-sanity-check-row';
+    get HTMLRepresentation() {
+        const rowElement = document.createElement('tr');
+        rowElement.className = 'cl-sc-row';
         let cell = document.createElement('td');
+
+        const errorBox = document.createElement('textarea');
+        errorBox.readOnly = true;
+        errorBox.rows = 1;
+        errorBox.cols = 6;
+        errorBox.appendChild(document.createTextNode(this.errorCode));
 
         const icon = document.createElement('img');
         icon.className = 'clipboard-icon';
@@ -56,50 +66,46 @@ export class SanityErrorInfo {
         icon.title = 'Copy error code';
         icon.src = `${MainSingleton.singleton.root}cluml/img/clipboard-regular.svg`;
 
-        let iconBtn = document.createElement('button');
+        const iconBtn = document.createElement('button');
+        iconBtn.className = ICON_BTN_CLASS;
         iconBtn.type = 'button';
-        iconBtn.disabled = true;
-        iconBtn.style.width = '2em';
-        iconBtn.addEventListener('click', () => {
-            // This isn't working right for some reason.
-            // Select the text field
-            errorBox.select();
-            errorBox.setSelectionRange(0, 99999); // For mobile devices
-
+        iconBtn.addEventListener('click', function (event) {
             // Copy the text inside the text field
-            navigator.clipboard.writeText(errorBox.innerText);
+            navigator.clipboard.writeText(errorBox.value).then(
+                () => {
+                    // On success.
 
-            console.log("Clicked");
+                },
+                () => {
+                    // On failure.
+                }
+            );
 
-            iconBtn.title = 'Copied';
+            // iconBtn.title = 'Copied';
         });
         iconBtn.appendChild(icon);
+        // iconBtn.textContent = "Copy";
+        // iconBtn.click();
+
+        this.iconBtnTest = iconBtn;
 
         cell.appendChild(iconBtn);
-        this.rowElement.appendChild(cell);
+        rowElement.appendChild(cell);
         cell = document.createElement('td');
 
-        const errorBox = document.createElement('textarea');
-        errorBox.readOnly = true;
-        errorBox.rows = 1;
-        errorBox.cols = 6;
-        errorBox.style.resize = 'none';
-        // errorBox.style.width = '6em';
-        // errorBox.style.marginTop = 'auto';
-        // errorBox.style.height = '100%';
-        errorBox.appendChild(document.createTextNode(errorCode));
-
         cell.appendChild(errorBox);
-        this.rowElement.appendChild(cell);
+        rowElement.appendChild(cell);
         cell = document.createElement('td');
 
         const pErrMsg = document.createElement('p');
-        pErrMsg.innerHTML = `${elementType} <b>${elementName}</b>: ${description}`;
-        
+        pErrMsg.innerHTML = `${this.elementType} <b>${this.elementName}</b>: ${this.description}`;
+
         cell.appendChild(pErrMsg);
-        this.rowElement.appendChild(cell);
+        rowElement.appendChild(cell);
 
         // document.getElementById('error-tbl');
         // document.body.appendChild(rowElement);
+
+        return rowElement;
     }
 }

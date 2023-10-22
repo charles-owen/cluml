@@ -5,7 +5,6 @@ import {ImportTabDialog} from "./Dlg/ImportTabDialog";
 import {Model} from "./Model";
 import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
 import Vector from "./Utility/Vector";
-import {Rect} from "./Utility/Rect";
 import Selectable from "./Selectable";
 
 /**
@@ -61,9 +60,6 @@ export const View = function(main, canvas, diagram) {
 
     //catch escape input to exit association mode
     document.addEventListener('keydown', (event) =>{
-        var keyVal = event.key;
-        //console.log(keyVal);
-
         if(event.key === "Escape"){
             main.selectionToggle = true;
             main.toggleManager.toggledAssociation = null;
@@ -313,7 +309,7 @@ export const View = function(main, canvas, diagram) {
             // canvasJ.parent().off("scroll");
             const dv = setMousePos(pageX, pageY);
             this.selection.mouseUp(dv.x, dv.y);
-            this.draw();
+            // this.draw();
         }
 
         // Install mouse handlers
