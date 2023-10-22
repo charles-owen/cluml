@@ -1,5 +1,7 @@
 import {MainSingleton} from "../MainSingleton";
 
+const ERROR_PREFIX = 'CS';
+
 export class SanityErrorInfo {
     /**
      * The error code for this error.
@@ -37,6 +39,8 @@ export class SanityErrorInfo {
      * @param description {string} Description of the error.
      */
     constructor(errorCode, elementType, elementName, description) {
+        // Extract error code number and prepend the prefix.
+        errorCode = ERROR_PREFIX + errorCode.match(/\d+/)[0];
         this.errorCode = errorCode;
         this.elementName = elementName;
         this.elementType = elementType;
@@ -56,7 +60,7 @@ export class SanityErrorInfo {
         iconBtn.type = 'button';
         iconBtn.disabled = true;
         iconBtn.style.width = '2em';
-        iconBtn.addEventListener('click', (event) => {
+        iconBtn.addEventListener('click', () => {
             // This isn't working right for some reason.
             // Select the text field
             errorBox.select();
@@ -97,9 +101,5 @@ export class SanityErrorInfo {
 
         // document.getElementById('error-tbl');
         // document.body.appendChild(rowElement);
-    }
-
-    testThingy(event) {
-        console.log("Tested");
     }
 }
