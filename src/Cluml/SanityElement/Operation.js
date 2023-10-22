@@ -54,8 +54,6 @@ export class Operation extends SanityElement {
             this.elementValue += paramText;
         }
         this.elementValue += (parenEnd !== -1 ? ")" : "") + (this.type !== '' ? ": " : "") + this.type;
-
-        this.processSanityCheck();
     }
 
     processSanityCheck() {
