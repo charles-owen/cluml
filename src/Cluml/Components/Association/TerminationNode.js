@@ -1,13 +1,13 @@
-import { LineNode } from "./LineNode.js"
+import {LineNode} from "./LineNode.js"
 import Selectable from "../../Selectable";
-import { Class } from "../Class";
-import { MainSingleton } from "../../MainSingleton";
-import { Multiplicity } from "../../SanityElement/Multiplicity";
+import {Class} from "../Class";
+import {MainSingleton} from "../../MainSingleton";
+import {Multiplicity} from "../../SanityElement/Multiplicity";
 import Vector from "../../Utility/Vector";
-import { CustomContextMenu } from "../../ContextMenu/CustomContextMenu";
-import { TerminationNodeDlg } from "../../Dlg/TerminationNodeDlg.js";
-import { TNodeTag } from "../../SanityElement/TNodeTag.js";
-import { SanityElement } from "../../SanityElement/SanityElement.js";
+import {CustomContextMenu} from "../../ContextMenu/CustomContextMenu";
+import {TerminationNodeDlg} from "../../Dlg/TerminationNodeDlg.js";
+import {TNodeTag} from "../../SanityElement/TNodeTag.js";
+import {SanityElement} from "../../SanityElement/SanityElement.js";
 
 
 /**
@@ -116,18 +116,12 @@ TerminationNode.prototype.rightClick = function (x, y) {
         const tNodeDlg = new TerminationNodeDlg(this);
         tNodeDlg.open();
     });
-    contextMenu.addEntry("Swap Start and End", function () {
-        this.association.swapEnds();
-    });
+    // contextMenu.addEntry("Swap Start and End", function () {
+    //     this.association.swapEnds();
+    // });
 }
 
 TerminationNode.prototype.draw = function (context, view) {
-
-    //tail termination node doesn't call LineNode.draw
-    if(this.isTail === false){
-        LineNode.prototype.draw.call(this, context, view);
-    }
-
     const side = Math.floor(this.side);
 
     switch (side) {
@@ -172,8 +166,11 @@ TerminationNode.prototype.draw = function (context, view) {
     //draw the tail of the association
     //in the future, will need to be able to work regardless of if the node is connected
     //to a class yet
-    if(this.isTail){
+    if (this.isTail) {
+        // Tail termination node doesn't call LineNode.draw
         this.association.drawTail(context, this.x, this.y, side);
+    } else {
+        LineNode.prototype.draw.call(this, context, view);
     }
 
     this.multiplicityValue.draw(context, view);
@@ -193,7 +190,6 @@ TerminationNode.prototype.attachToClass = function (attachTo, position, side) {
     this.attachedTo.attachedTNodes.push(this);
     this.position = position;
     this.side = side;
-    //console.log(this.isTail);
 }
 
 /**

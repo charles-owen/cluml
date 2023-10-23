@@ -466,6 +466,12 @@ Association.prototype.paletteImage = function() {
 /**
  * Default drawTail function, called by the #end TerminationNode
  */
-Association.prototype.drawTail = function(context, x, y, side){
+Association.prototype.drawTail = function(context, x, y, side) {
+    for (const tNode of [this.nodes.start, this.nodes.end]) {
+        if (tNode.isTail) {
+            LineNode.prototype.draw.call(tNode, context, MainSingleton.singleton.currentView);
+            break;
+        }
+    }
 }
 //endregion
