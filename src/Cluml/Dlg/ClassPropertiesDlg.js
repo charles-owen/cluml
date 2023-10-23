@@ -30,6 +30,8 @@ export const ClassPropertiesDlg = function(component, main) {
 
     let visibilityInputs = [];
 
+    let dropDowns = [];
+
     /**
      * Construct the Properties Box
      */
@@ -94,10 +96,12 @@ export const ClassPropertiesDlg = function(component, main) {
         let visContentDiv = document.createElement("div");
         visContentDiv.style.overflowY = "auto";
         visContentDiv.style.maxHeight = "100px";
+        visContentDiv.style.minHeight = "100px";
 
         let absContentDiv = document.createElement("div");
         absContentDiv.style.overflowY = "auto";
         absContentDiv.style.maxHeight = "100px";
+        absContentDiv.style.minHeight = "100px";
 
         // Abstract Class Input and Label
         let abstractClassDiv = document.createElement("div");
@@ -127,6 +131,9 @@ export const ClassPropertiesDlg = function(component, main) {
         {
             let attribute = attributes[i];
             let visDiv = document.createElement("div");
+            visDiv.class = "dropdown";
+            visDiv.style.position = "relative";
+            visDiv.style.display = "inline-block";
             let visInput = document.createElement("input");
             visInput.type = "text";
             visInput.maxLength = 1;
@@ -135,8 +142,35 @@ export const ClassPropertiesDlg = function(component, main) {
             visInput.style.width = "20px";
             visInput.style.height = "20px";
             visInput.id = Unique.uniqueName();
+            visInput.class = "dropinput";
             visDiv.append(visInput);
             visibilityInputs.push(visInput.id);
+
+            let dropDiv = document.createElement("div");
+            dropDiv.class = "dropdown-content";
+            dropDiv.style.position = "absolute";
+            dropDiv.style.display = "none";
+            dropDiv.id = Unique.uniqueName();
+            let o1 = document.createElement("a");
+            o1.text = "+ Public";
+            let o2 = document.createElement("a");
+            o2.text = "# Protected";
+            let o3 = document.createElement("a");
+            o3.text = "- Private";
+            dropDiv.append(o1);
+            dropDiv.append(o2);
+            dropDiv.append(o3);
+            let options = dropDiv.getElementsByTagName("a");
+            for (let i= 0; i < options.length; i ++)
+            {
+                options[i].style.display = "block";
+                options[i].style.background = "#f2f2f2";
+                options[i].style.borderStyle = "solid";
+                options[i].style.borderWidth = "thin";
+                options[i].style.border = "#00000";
+            }
+            dropDowns.push(dropDiv.id);
+            visDiv.append(dropDiv);
 
             let label = document.createElement("label");
             let attributeName = " " + attribute.name;
@@ -162,8 +196,35 @@ export const ClassPropertiesDlg = function(component, main) {
             visInput.style.width = "20px";
             visInput.style.height = "20px";
             visInput.id = Unique.uniqueName();
+            visInput.class = "dropinput";
             visDiv.append(visInput);
             visibilityInputs.push(visInput.id);
+
+            let dropDiv = document.createElement("div");
+            dropDiv.class = "dropdown-content";
+            dropDiv.style.position = "absolute";
+            dropDiv.style.display = "none";
+            dropDiv.id = Unique.uniqueName();
+            let o1 = document.createElement("a");
+            o1.text = "+ Public";
+            let o2 = document.createElement("a");
+            o2.text = "# Protected";
+            let o3 = document.createElement("a");
+            o3.text = "- Private";
+            dropDiv.append(o1);
+            dropDiv.append(o2);
+            dropDiv.append(o3);
+            let options = dropDiv.getElementsByTagName("a");
+            for (let i= 0; i < options.length; i ++)
+            {
+                options[i].style.display = "block";
+                options[i].style.background = "#f2f2f2";
+                options[i].style.borderStyle = "solid";
+                options[i].style.borderWidth = "thin";
+                options[i].style.border = "#00000";
+            }
+            dropDowns.push(dropDiv.id);
+            visDiv.append(dropDiv);
 
             let visLabel = document.createElement("label");
             let operationName = " " + operation.name;
@@ -198,6 +259,45 @@ export const ClassPropertiesDlg = function(component, main) {
 
         this.contents(dlg, "Cluml Component Properties");
         Dialog.prototype.open.call(this);
+
+        // Click event for Visibility Dropdown
+        for (let i = 0; i < attributes.length + operations.length; i++)
+        {
+            let element = document.getElementById(visibilityInputs[i]);
+            element.addEventListener('click', (event) => {
+                event.preventDefault();
+                let dropDown = document.getElementById(dropDowns[i]);
+                if (dropDown.style.display == "none")
+                {
+                    dropDown.style.display = "block";
+                    let options = dropDown.getElementsByTagName("a");
+                    for (let j= 0; j < options.length; j++)
+                    {
+                        options[j].addEventListener('click', (event) => {
+                            event.preventDefault();
+                            element.value = options[j].text.charAt();
+                        });
+                    }
+                }
+                else
+                {
+                    dropDown.style.display = "none";
+                }
+            });
+        }
+
+        document.addEventListener('click', (event) => {
+            for (let i = 0; i < attributes.length + operations.length; i++) {
+                if (!event.target.matches("input#"+visibilityInputs[i]))
+                {
+                    let dropDown = document.getElementById(dropDowns[i]);
+                    if (dropDown)
+                    {
+                        dropDown.style.display = "none";
+                    }
+                }
+            }
+        });
 
         extraCreate();
 
