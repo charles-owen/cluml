@@ -1,4 +1,5 @@
 import {Class} from "./Class";
+import {InterfaceClass} from "./InterfaceClass";
 import {Association} from "./Association/Association";
 import {Inheritance} from "./Association/Inheritance";
 import {Composition} from "./Association/Composition";
@@ -12,6 +13,7 @@ import {Containment} from "./Association/Containment";
  */
 export const All = function (components) {
     components.add(Class);
+    components.add(InterfaceClass);
     components.add(Association);
     components.add(Inheritance);
     components.add(Composition);
@@ -19,5 +21,5 @@ export const All = function (components) {
     components.add(Containment);
 
     //components.addPalette('all', [Class, Association, Inheritance, Composition]);
-    components.addPalette('all', [Class, Association, Inheritance, Composition, Aggregation, Containment]);
+    components.addPalette('all', [Class, InterfaceClass, Association, Inheritance, Composition, Aggregation, Containment]);
 }
