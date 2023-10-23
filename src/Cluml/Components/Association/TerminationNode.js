@@ -92,19 +92,21 @@ TerminationNode.prototype.copyFrom = function (other) {
 TerminationNode.prototype.drop = function () {
     // Do not replace with LineNode.prototype.drop. That would destroy
     // the end nodes (bad).
-    LineNode.prototype.drop.call(this);
+    Selectable.prototype.drop.call(this);
 
     // Determine if we are near a class. For now, just go
     // through every class.
     const classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
 
     for (const cl of classes) {
+        // Attach to the first class we see.
         if (this.tryAttachToClass(cl, false))
-            break;
+            return;
     }
 
-    //console.log(this.isTail);
-    //console.log(this.association.paletteLbl);
+    // Not attached to any class. Make sure to remove the class
+    // we would be attached to.
+    this.detachFromClass();
 }
 
 TerminationNode.prototype.rightClick = function (x, y) {
@@ -186,10 +188,16 @@ TerminationNode.prototype.draw = function (context, view) {
  * @param side {number}
  */
 TerminationNode.prototype.attachToClass = function (attachTo, position, side) {
+    // Make sure we aren't attached to anything already.
+    this.detachFromClass();
+
     this.attachedTo = attachTo;
     this.attachedTo.attachedTNodes.push(this);
     this.position = position;
     this.side = side;
+
+    // Redraw the association.
+    MainSingleton.singleton.redraw();
 }
 
 /**
@@ -209,6 +217,25 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
         // Actually attach the class.
         this.attachToClass(attachTo, someGoodTea.atPoint, someGoodTea.side);
 
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Detaches this termination node from the class it is attached to.
+ * @return {boolean} True if the detachment from class is successful, false otherwise.
+ */
+TerminationNode.prototype.detachFromClass = function () {
+    if (this.attachedTo) {
+        const i = this.attachedTo.attachedTNodes.indexOf(this);
+
+        if (i >= 0) {
+            this.attachedTo.attachedTNodes.splice(i, 1);
+        }
+
+        this.attachedTo = null;
         return true;
     }
 
