@@ -62,32 +62,38 @@ export class SanityErrorInfo {
 
         const icon = document.createElement('img');
         icon.className = 'clipboard-icon';
-        // icon.src = 'src/img/clipboard-regular.svg';
-        icon.title = 'Copy error code';
         icon.src = `${MainSingleton.singleton.root}cluml/img/clipboard-regular.svg`;
 
+        const iconTooltip = document.createElement('span');
+        iconTooltip.className = "tooltip";
+        iconTooltip.textContent = 'Copy error code';
+        iconTooltip.style.left = '-50%';    // Avoid cutting off tooltip
+
+        const tooltipCenter = document.createElement('div');
+        tooltipCenter.className = 'tooltip-centerer';
+        tooltipCenter.appendChild(iconTooltip);
+
         const iconBtn = document.createElement('button');
-        iconBtn.className = ICON_BTN_CLASS;
+        iconBtn.classList.add(ICON_BTN_CLASS, 'tooltip-target');
         iconBtn.type = 'button';
         iconBtn.addEventListener('click', function (event) {
             // Copy the text inside the text field
             navigator.clipboard.writeText(errorBox.value).then(
                 () => {
                     // On success.
-
+                    iconTooltip.textContent = "Copied";
                 },
                 () => {
                     // On failure.
+                    iconTooltip.textContent = "Your browser does not support clipboard access"
                 }
             );
-
-            // iconBtn.title = 'Copied';
         });
-        iconBtn.appendChild(icon);
-        // iconBtn.textContent = "Copy";
-        // iconBtn.click();
-
-        this.iconBtnTest = iconBtn;
+        iconBtn.addEventListener('pointerleave', function (event) {
+            iconTooltip.textContent = 'Copy error code';
+        });
+        tooltipCenter.appendChild(icon);
+        iconBtn.appendChild(tooltipCenter);
 
         cell.appendChild(iconBtn);
         rowElement.appendChild(cell);
