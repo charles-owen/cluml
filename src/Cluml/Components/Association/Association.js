@@ -133,6 +133,7 @@ class NodeData {
     //     this.#end.id = other.#end.id;
     // }
 }
+
 /**
  * @type {Component}
  */
@@ -341,10 +342,10 @@ Association.prototype.nodeGenerator = function* () {
  * A generator that iterates through the nodes in reverse order
  * used for initial creation of associations
  */
-Association.prototype.reverseNodeGenerator = function* (){
+Association.prototype.reverseNodeGenerator = function* () {
     let node = this.nodes.end;
 
-    while(node !== null){
+    while (node !== null) {
         const prev = node.previousNode;
         yield node;
         node = prev;
@@ -448,12 +449,11 @@ Association.prototype.createNodeNear = function (near) {
 }
 
 /**
- * //Draw the paletteImage for the palette
+ * Draw the paletteImage for the palette
  * @return {PaletteImage}
  */
 
-Association.prototype.paletteImage = function() {
-    let size=16;  // Box size
+Association.prototype.paletteImage = function () {
     let width = 60;       // Image width
     let height = 40;      // Image height
     const pi = new PaletteImage(width, height);
@@ -466,7 +466,7 @@ Association.prototype.paletteImage = function() {
 /**
  * Default drawTail function, called by the #end TerminationNode
  */
-Association.prototype.drawTail = function(context, x, y, side) {
+Association.prototype.drawTail = function (context, x, y, side) {
     for (const tNode of [this.nodes.start, this.nodes.end]) {
         if (tNode.isTail) {
             LineNode.prototype.draw.call(tNode, context, MainSingleton.singleton.currentView);

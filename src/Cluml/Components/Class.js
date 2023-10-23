@@ -7,7 +7,6 @@ import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
 import Selectable, {ITALICS_FONT, NAME_FONT} from "../Selectable";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
-import Unique from "../Utility/Unique";
 import {SanityElement} from "../SanityElement/SanityElement";
 import {Attribute} from "../SanityElement/Attribute";
 import {Operation} from "../SanityElement/Operation";
@@ -182,10 +181,19 @@ Class.prototype.touch = function (x, y) {
     return null;
 }
 
+Class.prototype.move = function (dx, dy, x, y) {
+    Selectable.prototype.move.call(this, dx, dy, x, y);
+
+    // Make sure any attached tNodes are moved with this class.
+    for (const tNode of this.attachedTNodes) {
+        tNode.refreshPosition();
+    }
+}
+
 /**
  * Double click event handler for Class boxes
  * @param x touch position
- * @param y touch postion
+ * @param y touch position
  */
 Class.prototype.doubleClick = function(x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
