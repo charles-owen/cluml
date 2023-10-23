@@ -49,6 +49,11 @@ export class SanityErrorInfo {
         this.description = description;
     }
 
+    /**
+     * Generates and returns the HTML table row representation for this
+     * SanityErrorInfo.
+     * @return {HTMLTableRowElement}
+     */
     get HTMLRepresentation() {
         const rowElement = document.createElement('tr');
         rowElement.className = 'cl-sc-row';
