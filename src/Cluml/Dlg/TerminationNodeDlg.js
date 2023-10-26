@@ -32,7 +32,7 @@ export class TerminationNodeDlg extends Dialog {
         const div = document.createElement('div');
 
         const multiDiv = document.createElement('div');
-        multiDiv.style.float = 'left';
+        multiDiv.style.float = 'right';
         multiDiv.style.width = "45%";
 
         const multiLbl = document.createElement('label');
@@ -50,28 +50,28 @@ export class TerminationNodeDlg extends Dialog {
         multiDiv.append(multiLbl, multiInput);
 
 
-        const tagDiv = document.createElement('div');
-        tagDiv.style.float = 'right';
-        tagDiv.style.width = '45%';
+        const roleDiv = document.createElement('div');
+        roleDiv.style.float = 'left';
+        roleDiv.style.width = '45%';
 
-        const tagLbl = document.createElement('label');
-        tagLbl.innerText = "Role";
+        const roleLbl = document.createElement('label');
+        roleLbl.innerText = "Role";
 
-        const tagInput = document.createElement('input');
-        tagInput.id = Unique.uniqueName();
-        tagInput.type = 'text';
-        tagInput.defaultValue = roleSE.elementValue;
-        tagInput.value = roleSE.elementValue;
-        tagInput.autocomplete = 'on';
-        tagInput.style.width = "100%";
+        const roleInput = document.createElement('input');
+        roleInput.id = Unique.uniqueName();
+        roleInput.type = 'text';
+        roleInput.defaultValue = roleSE.elementValue;
+        roleInput.value = roleSE.elementValue;
+        roleInput.autocomplete = 'on';
+        roleInput.style.width = "100%";
 
-        tagLbl.htmlFor = tagInput.id;
-        tagDiv.append(tagLbl, tagInput);
+        roleLbl.htmlFor = roleInput.id;
+        roleDiv.append(roleLbl, roleInput);
 
 
-        div.append(multiDiv, tagDiv);
+        div.append(roleDiv, multiDiv);
 
-        this.tagInputID = tagInput.id;
+        this.tagInputID = roleInput.id;
         this.multiInputID = multiInput.id;
 
         const endType = this.node.isTail ? 'Arrow' : 'End';

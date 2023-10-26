@@ -133,15 +133,15 @@ TerminationNode.prototype.draw = function (context, view) {
             this.roleValue.y = 10;
             break;
         default:
-            this.multiplicityValue.x = -5;
-            this.roleValue.x = 5;
+            this.multiplicityValue.x = 5;
+            this.roleValue.x = -5;
             break;
     }
 
     switch (side) {
         case 0:
-            this.multiplicityValue.textAlign = 'right';
-            this.roleValue.textAlign = 'left';
+            this.multiplicityValue.textAlign = 'left';
+            this.roleValue.textAlign = 'right';
             this.multiplicityValue.y = 7;
             this.roleValue.y = 7;
             break;
@@ -152,8 +152,8 @@ TerminationNode.prototype.draw = function (context, view) {
             this.roleValue.x = 5;
             break;
         case 2:
-            this.multiplicityValue.textAlign = 'right';
-            this.roleValue.textAlign = 'left';
+            this.multiplicityValue.textAlign = 'left';
+            this.roleValue.textAlign = 'right';
             this.multiplicityValue.y = -5;
             this.roleValue.y = -5;
             break;
