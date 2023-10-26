@@ -124,36 +124,35 @@ EditingPopup.prototype.close = function() {
 EditingPopup.prototype.updateClass = function() {
     // Only update the text field if the user enters something
     if(this.text !== "") {
-        // Only update the text field if the text that the user
-        // entered is less than or equal to 30 characters
-        if(this.text.length <= 30) {
-            // Create a backup of the class before making edits
-            this.component.main.backup();
-            // Editing the name field
-            if (this.editingWhat === "name") {
-                this.component.naming = this.text
-            }
-            // Editing an attribute field
-            else if (this.editingWhat === "attribute") {
-                // Determine what attribute needs to be changed first, then change it
-                let boxHeight = this.component.attributesHeight /
-                    this.component.attributes.length;
-                let selectedAttributeNumber = Math.floor((this.component.lastSelectedY
-                    - this.component.attributesBounds.bottom) / boxHeight)
-                this.component.attributes[selectedAttributeNumber] =
-                    new Attribute(this.text);
-            }
-            // Editing an operation field
-            else if (this.editingWhat === "operation") {
-                // Determine what operation needs to be changed first, then change it
-                let boxHeight = this.component.operationsHeight /
-                    this.component.operations.length;
-                let selectedOperationNumber = Math.floor((this.component.lastSelectedY
-                    - this.component.operationsBounds.bottom) / boxHeight)
-                let newOperation = new Operation(this.text);
-                newOperation.abstract = this.component.operations[selectedOperationNumber].abstract;
-                this.component.operations[selectedOperationNumber] = newOperation;
-            }
+        if(this.text.length > 30) {
+            this.text = this.text.substring(0, 30);
+        }
+        // Create a backup of the class before making edits
+        this.component.main.backup();
+        // Editing the name field
+        if (this.editingWhat === "name") {
+            this.component.naming = this.text
+        }
+        // Editing an attribute field
+        else if (this.editingWhat === "attribute") {
+            // Determine what attribute needs to be changed first, then change it
+            let boxHeight = this.component.attributesHeight /
+                this.component.attributes.length;
+            let selectedAttributeNumber = Math.floor((this.component.lastSelectedY
+                - this.component.attributesBounds.bottom) / boxHeight)
+            this.component.attributes[selectedAttributeNumber] =
+                new Attribute(this.text);
+        }
+        // Editing an operation field
+        else if (this.editingWhat === "operation") {
+            // Determine what operation needs to be changed first, then change it
+            let boxHeight = this.component.operationsHeight /
+                this.component.operations.length;
+            let selectedOperationNumber = Math.floor((this.component.lastSelectedY
+                - this.component.operationsBounds.bottom) / boxHeight)
+            let newOperation = new Operation(this.text);
+            newOperation.abstract = this.component.operations[selectedOperationNumber].abstract;
+            this.component.operations[selectedOperationNumber] = newOperation;
         }
     }
 }
