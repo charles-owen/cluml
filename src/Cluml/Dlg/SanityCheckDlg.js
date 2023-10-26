@@ -68,6 +68,9 @@ export const SanityCheckDlg = function(main) {
 
         this.contents(html, "Cluml Sanity Check");
         Dialog.prototype.open.call(this);
+
+        // This is how to change the width.
+        this.dialog.div.style.width = '48em';
     }
 
 

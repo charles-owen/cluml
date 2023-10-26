@@ -23,9 +23,6 @@ export class TerminationNodeDlg extends Dialog {
     constructor(node) {
         super('association_tnode');
         this.node = node;
-
-        // console.log(this.div);
-        // this.div.style.width = '4080px';
     }
 
     open() {
