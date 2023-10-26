@@ -6,7 +6,7 @@ import {Multiplicity} from "../../SanityElement/Multiplicity";
 import Vector from "../../Utility/Vector";
 import {CustomContextMenu} from "../../ContextMenu/CustomContextMenu";
 import {TerminationNodeDlg} from "../../Dlg/TerminationNodeDlg.js";
-import {TNodeTag} from "../../SanityElement/TNodeTag.js";
+import {TNodeRole} from "../../SanityElement/TNodeRole.js";
 import {SanityElement} from "../../SanityElement/SanityElement.js";
 
 
@@ -29,10 +29,10 @@ export const TerminationNode = function () {
 
     /**
      * The attribute label.
-     * @type {TNodeTag}
+     * @type {TNodeRole}
      */
-    this.tagValue = new TNodeTag('tag', this);
-    this.tagValue.y = -7;
+    this.roleValue = new TNodeRole('role', this);
+    this.roleValue.y = -7;
 
     /**
      * The class this is attached to.
@@ -86,7 +86,7 @@ TerminationNode.prototype.copyFrom = function (other) {
     LineNode.prototype.copyFrom.call(this, other);
 
     this.multiplicityValue.elementValue = other.multiplicityValue.elementValue;
-    this.tagValue.elementValue = other.tagValue.elementValue;
+    this.roleValue.elementValue = other.roleValue.elementValue;
 }
 
 TerminationNode.prototype.drop = function () {
@@ -130,38 +130,38 @@ TerminationNode.prototype.draw = function (context, view) {
         case 1:
         case 3:
             this.multiplicityValue.y = -7;
-            this.tagValue.y = 10;
+            this.roleValue.y = 10;
             break;
         default:
             this.multiplicityValue.x = -5;
-            this.tagValue.x = 5;
+            this.roleValue.x = 5;
             break;
     }
 
     switch (side) {
         case 0:
             this.multiplicityValue.textAlign = 'right';
-            this.tagValue.textAlign = 'left';
+            this.roleValue.textAlign = 'left';
             this.multiplicityValue.y = 7;
-            this.tagValue.y = 7;
+            this.roleValue.y = 7;
             break;
         case 1:
             this.multiplicityValue.textAlign = 'left';
-            this.tagValue.textAlign = 'left';
+            this.roleValue.textAlign = 'left';
             this.multiplicityValue.x = 5;
-            this.tagValue.x = 5;
+            this.roleValue.x = 5;
             break;
         case 2:
             this.multiplicityValue.textAlign = 'right';
-            this.tagValue.textAlign = 'left';
+            this.roleValue.textAlign = 'left';
             this.multiplicityValue.y = -5;
-            this.tagValue.y = -5;
+            this.roleValue.y = -5;
             break;
         case 3:
             this.multiplicityValue.textAlign = 'right';
-            this.tagValue.textAlign = 'right';
+            this.roleValue.textAlign = 'right';
             this.multiplicityValue.x = -5;
-            this.tagValue.x = -5;
+            this.roleValue.x = -5;
             break;
     }
 
@@ -176,7 +176,7 @@ TerminationNode.prototype.draw = function (context, view) {
     }
 
     this.multiplicityValue.draw(context, view);
-    this.tagValue.draw(context, view);
+    this.roleValue.draw(context, view);
 }
 //endregion
 
@@ -266,7 +266,7 @@ TerminationNode.prototype.saveNode = function () {
     }
 
     obj.multiplicity = this.multiplicityValue.saveSanityElement();
-    obj.tag = this.tagValue.saveSanityElement();
+    obj.role = this.roleValue.saveSanityElement();
 
     return obj;
 }
@@ -282,8 +282,8 @@ TerminationNode.prototype.loadNode = function (obj, association) {
 
     this.multiplicityValue = SanityElement.loadSanityElement(Multiplicity,
         obj.multiplicity, this);
-    this.tagValue = SanityElement.loadSanityElement(TNodeTag,
-        obj.tag, this);
+    this.roleValue = SanityElement.loadSanityElement(TNodeRole,
+        obj.role, this);
 }
 
 /**

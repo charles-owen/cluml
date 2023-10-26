@@ -23,12 +23,12 @@ export const Association = function () {
         if (this.nodes !== undefined) {
             if (this.nodes.start !== null) {
                 yield this.nodes.start.multiplicityValue;
-                yield this.nodes.start.tagValue;
+                yield this.nodes.start.roleValue;
             }
 
             if (this.nodes.end !== null) {
                 yield this.nodes.end.multiplicityValue;
-                yield this.nodes.end.tagValue;
+                yield this.nodes.end.roleValue;
             }
         }
     }

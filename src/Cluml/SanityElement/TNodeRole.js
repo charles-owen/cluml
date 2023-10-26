@@ -4,7 +4,7 @@ import {SanityErrorInfo} from "./SanityErrorInfo";
 
 const LOWERCASE_RX = /[a-z]/;
 
-export class TNodeTag extends SanityElement {
+export class TNodeRole extends SanityElement {
 
     constructor(stringValue, relativeTo) {
         super(stringValue, relativeTo);

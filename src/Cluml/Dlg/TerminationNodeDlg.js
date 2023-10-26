@@ -23,11 +23,14 @@ export class TerminationNodeDlg extends Dialog {
     constructor(node) {
         super('association_tnode');
         this.node = node;
+
+        // console.log(this.div);
+        // this.div.style.width = '4080px';
     }
 
     open() {
         const multiSE = this.node.multiplicityValue;
-        const tagSE = this.node.tagValue;
+        const roleSE = this.node.roleValue;
 
         const div = document.createElement('div');
 
@@ -55,13 +58,13 @@ export class TerminationNodeDlg extends Dialog {
         tagDiv.style.width = '45%';
 
         const tagLbl = document.createElement('label');
-        tagLbl.innerText = "Tag";
+        tagLbl.innerText = "Role";
 
         const tagInput = document.createElement('input');
         tagInput.id = Unique.uniqueName();
         tagInput.type = 'text';
-        tagInput.defaultValue = tagSE.elementValue;
-        tagInput.value = tagSE.elementValue;
+        tagInput.defaultValue = roleSE.elementValue;
+        tagInput.value = roleSE.elementValue;
         tagInput.autocomplete = 'on';
         tagInput.style.width = "100%";
 
@@ -74,19 +77,23 @@ export class TerminationNodeDlg extends Dialog {
         this.tagInputID = tagInput.id;
         this.multiInputID = multiInput.id;
 
-        super.contents(div.outerHTML, 'Edit Association Termination');
+        const endType = this.node.isTail ? 'Arrow' : 'End';
+        super.contents(
+            div.outerHTML,
+            `Edit ${this.node.association.paletteLbl} ${endType}`
+        );
         Dialog.prototype.open.call(this);
     }
 
     ok() {
         const multiSE = this.node.multiplicityValue;
-        const tagSE = this.node.tagValue;
+        const roleSE = this.node.roleValue;
 
         const mInput = document.getElementById(this.multiInputID);
         const tInput = document.getElementById(this.tagInputID);
 
         multiSE.elementValue = mInput.value;
-        tagSE.elementValue = tInput.value;
+        roleSE.elementValue = tInput.value;
 
         Dialog.prototype.ok.call(this);
 
