@@ -48,8 +48,8 @@ Inheritance.prototype.helpLbl = 'inheritance';
 Inheritance.prototype.paletteLbl = "Inheritance";
 Inheritance.prototype.paletteDesc = "Inheritance component.";
 Inheritance.prototype.htmlDesc = '<h2>Inheritance</h2><p>Inheritance between 2 classes.</p>';
-Inheritance.prototype.paletteOrder = 20;
-Inheritance.prototype.loadOrder = 20;
+Inheritance.prototype.paletteOrder = 10;
+Inheritance.prototype.loadOrder = 10;
 //endregion
 
 Inheritance.prototype.drawTail = function(context, x, y, side){

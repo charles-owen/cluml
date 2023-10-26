@@ -20,8 +20,8 @@ Containment.prototype.helpLbl = 'containment';
 Containment.prototype.paletteLbl = "Containment";
 Containment.prototype.paletteDesc = "Containment component.";
 Containment.prototype.htmlDesc = '<h2>Containment</h2><p>Containment between 2 classes.</p>';
-Containment.prototype.paletteOrder = 23;
-Containment.prototype.loadOrder = 23;
+Containment.prototype.paletteOrder = 14;
+Containment.prototype.loadOrder = 14;
 //endregion
 
 Containment.prototype.drawTail = function(context, x, y, side){

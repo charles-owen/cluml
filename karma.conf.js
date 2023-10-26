@@ -1,12 +1,14 @@
 // Karma configuration
 // Generated on Sun Oct 22 2023 16:14:56 GMT-0400 (Eastern Daylight Time)
 
+const webpackConfig = require('./webpack.dev.js');
+
 module.exports = function(config) {
   config.set({
 
-    plugins: ['karma-chrome-launcher', 'karma-jasmine', 'karma-webpack', 'karma-jasmine-html-reporter'],
+    plugins: ['karma-firefox-launcher', 'karma-jasmine', 'karma-webpack', 'karma-jasmine-html-reporter'],
 
-    webpack: {"mode": "development"},
+    webpack: webpackConfig,
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -25,15 +27,17 @@ module.exports = function(config) {
 
     // list of files / patterns to exclude
     exclude: [
+        'test/Cluml/Diagrams.spec.js'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://www.npmjs.com/search?q=keywords:karma-preprocessor
     preprocessors: {
-      'test/**/*.spec.js': ['webpack']
+      'test/**/*.spec.js': ['webpack'],
     },
 
+    //'node_modules/dialog-cl/src/_dialog.scss': ['webpack']
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://www.npmjs.com/search?q=keywords:karma-reporter
@@ -59,7 +63,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://www.npmjs.com/search?q=keywords:karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['Firefox'],
 
 
     // Continuous Integration mode

@@ -84,3 +84,6 @@ typings/
     prompt = false
 [difftool "meld"]
     cmd = meld "$LOCAL" "$REMOTE"
+package-lock.json
+package.json
+yarn.lock

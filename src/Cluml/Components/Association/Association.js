@@ -147,8 +147,8 @@ Association.prototype.helpLbl = 'association';
 Association.prototype.paletteLbl = "Association";
 Association.prototype.paletteDesc = "Association component.";
 Association.prototype.htmlDesc = '<h2>Association</h2><p>A basic association between 2 classes.</p>';
-Association.prototype.paletteOrder = 20;
-Association.prototype.loadOrder = 20;
+Association.prototype.paletteOrder = 11;
+Association.prototype.loadOrder = 11;
 Association.prototype.drawOrder = 20;
 //endregion
 

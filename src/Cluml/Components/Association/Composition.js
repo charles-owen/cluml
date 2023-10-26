@@ -19,8 +19,8 @@ Composition.prototype.helpLbl = 'composition';
 Composition.prototype.paletteLbl = "Composition";
 Composition.prototype.paletteDesc = "Composition component.";
 Composition.prototype.htmlDesc = '<h2>Composition</h2><p>Composition between 2 classes.</p>';
-Composition.prototype.paletteOrder = 21;
-Composition.prototype.loadOrder = 21;
+Composition.prototype.paletteOrder = 13;
+Composition.prototype.loadOrder = 13;
 //endregion
 
 Composition.prototype.drawTail = function(context, x, y, side){

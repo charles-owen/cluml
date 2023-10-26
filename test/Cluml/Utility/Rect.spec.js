@@ -1,4 +1,3 @@
-
 import {Rect} from '../../../src/Cluml/Utility/Rect';
 
 describe('Rect', function() {

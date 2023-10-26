@@ -20,8 +20,8 @@ Aggregation.prototype.helpLbl = 'aggregation';
 Aggregation.prototype.paletteLbl = "Aggregation";
 Aggregation.prototype.paletteDesc = "Aggregation component.";
 Aggregation.prototype.htmlDesc = '<h2>Aggregation</h2><p>Aggregation between 2 classes.</p>';
-Aggregation.prototype.paletteOrder = 22;
-Aggregation.prototype.loadOrder = 22;
+Aggregation.prototype.paletteOrder = 12;
+Aggregation.prototype.loadOrder = 12;
 //endregion
 
 //Draw the paletteImage for the palette
