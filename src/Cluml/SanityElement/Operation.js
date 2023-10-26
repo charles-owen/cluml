@@ -137,6 +137,9 @@ export class Operation extends SanityElement {
     {
         this.abstract = operation.abstract;
         this.visibility = operation.visibility;
+        this.name = operation.name;
+        this.type = operation.type;
+        this.elementValue = operation.elementValue;
     }
 
     /**

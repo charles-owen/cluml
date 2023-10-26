@@ -127,6 +127,8 @@ EditingPopup.prototype.updateClass = function() {
         // Only update the text field if the text that the user
         // entered is less than or equal to 30 characters
         if(this.text.length <= 30) {
+            // Create a backup of the class before making edits
+            this.component.main.backup();
             // Editing the name field
             if (this.editingWhat === "name") {
                 this.component.naming = this.text
@@ -153,6 +155,5 @@ EditingPopup.prototype.updateClass = function() {
                 this.component.operations[selectedOperationNumber] = newOperation;
             }
         }
-        // this.component.main.backup();
     }
 }

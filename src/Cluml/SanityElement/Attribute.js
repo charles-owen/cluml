@@ -70,6 +70,9 @@ export class Attribute extends SanityElement {
     copyFrom(attribute)
     {
         this.visibility = attribute.visibility;
+        this.name = attribute.name;
+        this.type = attribute.type;
+        this.elementValue = attribute.elementValue;
     }
 
     /**

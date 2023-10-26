@@ -153,15 +153,24 @@ Class.prototype.paletteOrder = 1;
  * @param component {Class}
  */
 Class.prototype.copyFrom = function (component) {
-    for (let i = 0; i < this.attributes.length; i++)
-    {
+    // Create a new array of attributes and operations for the
+    // new class
+    this.attributes = []
+    this.operations = []
+    // Copy over the attribute objects from the existing class
+    for (let i = 0; i < component.attributes.length; i++) {
+        // Attributes in the new class must be initialized first
+        this.attributes.push(new Attribute(""));
+        // Then copied from the old class
         this.attributes[i].copyFrom(component.attributes[i]);
     }
-    for (let i = 0; i < this.operations.length; i++)
-    {
-        this.operations[i].copyFrom(component.operations[i]);
+    // Copy over the operation objects from the existing class
+    for (let j = 0; j < component.operations.length; j++) {
+        // Operations in the new class must be initialized first
+        this.operations.push(new Operation(""));
+        // Then copied from the old class
+        this.operations[j].copyFrom(component.operations[j]);
     }
-
     this.width = component.width;
     Component.prototype.copyFrom.call(this, component);
 }
@@ -463,8 +472,9 @@ Class.prototype.paletteImage = function () {
  * Add an attribute to this Class
  */
 Class.prototype.addAttribute = function (attribute) {
+    // Create a backup of the class before adding a new attribute
+    this.main.backup();
     this.attributes.push(attribute);
-    // this.main.backup();
 }
 
 /**
