@@ -368,7 +368,7 @@ Class.prototype.draw = function (context, view) {
     }
 
     if (this.editingPopup != null) {
-        if (this.editingPopup.text === "") {
+        if (this.editingPopup.text === null) {
             // name box
             if (this.lastSelectedY < this.attributesBounds.bottom) {
                 this.editingPopup.drawNameEdit(context, view, this.nameBounds,
@@ -464,28 +464,7 @@ Class.prototype.paletteImage = function () {
  */
 Class.prototype.addAttribute = function (attribute) {
     this.attributes.push(attribute);
-
-}
-
-/**
- * Edit an existing attribute in the class
- */
-Class.prototype.editAttribute = function (attributeIndex, newAttribute) {
-    this.attributes[attributeIndex] = newAttribute
-}
-
-/**
- * Add an operation to this Class
- */
-Class.prototype.addOperation = function (operation) {
-    this.operations.push(operation)
-}
-
-/**
- * Edit an existing operation in the class
- */
-Class.prototype.editOperation = function (operationIndex, newOperation) {
-    this.attributes[operationIndex] = newOperation
+    // this.main.backup();
 }
 
 /**

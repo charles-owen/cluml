@@ -23,7 +23,7 @@ export const EditingPopup = function (component) {
     this.enterClose = false;
 
     this.font = "14px Times";
-    this.text = "";
+    this.text = null;
     this.inputElement = document.createElement('input');
     this.inputElement.type = 'text';
     this.inputElement.style.font = this.font;
@@ -92,8 +92,8 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
     this.inputElement.defaultValue = initialText;
     this.inputElement.selectionStart = initialText.length;
     this.inputElement.style.top = y + "px";
-    this.inputElement.style.left = x + 6 + "px";
-    this.inputElement.style.width = width - 7 + "px";
+    this.inputElement.style.left = x + 4 + "px";
+    this.inputElement.style.width = width - 6 + "px";
     this.inputElement.style.height = height - 2 + "px";
     MainSingleton.currentTabDiv.append(this.inputElement);
     this.inputElement.focus();
