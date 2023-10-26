@@ -1,5 +1,7 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
+import {SanityElement} from "../../SanityElement/SanityElement";
+import {SanityErrorInfo} from "../../SanityElement/SanityErrorInfo";
 
 
 /**
@@ -8,6 +10,32 @@ import {PaletteImage} from "../../Graphics/PaletteImage";
  */
 export const Inheritance = function(){
     Association.call(this);
+
+    this.forwardSanityCheck = function* () {
+        if (this.nodes !== undefined) {
+            if (this.nodes.start !== null) {
+                yield this.nodes.start.multiplicityValue;
+                yield this.nodes.start.tagValue;
+            }
+
+            if (this.nodes.end !== null) {
+                yield this.nodes.end.multiplicityValue;
+                yield this.nodes.end.tagValue;
+            }
+
+            // Check for upside down inheritance
+            // Will probably rework this code. This is just for getting it to work.
+            if (this.nodes.end.y > this.nodes.start.y)
+            {
+                let element = new SanityElement("", undefined);
+                element.processSanityCheck = function() {
+                    return [new SanityErrorInfo("8888", "Generalization",
+                        "", "Upside down")];
+                }
+                yield element;
+            }
+        }
+    }
 }
 
 Inheritance.prototype = Object.create(Association.prototype);
