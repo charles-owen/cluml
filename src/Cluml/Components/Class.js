@@ -509,3 +509,17 @@ Class.prototype.sortAttributions = function() {
         }
     }
 }
+
+/**
+ * Delete function that is called when a class is deleted.
+ * This function overrides the Component.js delete function.
+ * This deletes all the associations attached to the class with the class.
+ */
+Class.prototype.delete = function() {
+    if(this.attachedTNodes !== []) {
+        for(let i = 0; i < this.attachedTNodes.length; i++) {
+            this.attachedTNodes[i].delete();
+        }
+    }
+    Component.prototype.delete.call(this);
+}

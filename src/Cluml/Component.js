@@ -227,16 +227,6 @@ Component.prototype.inRect = function (rect, collect) {
 };
 
 Component.prototype.delete = function () {
-    // let i;
-    // // Delete all connections
-    // for (i = 0; i < this.ins.length; i++) {
-    //     this.ins[i].clear();
-    // }
-    //
-    // for (i = 0; i < this.outs.length; i++) {
-    //     this.outs[i].clear();
-    // }
-
     this.diagram.delete(this);
 };
 
