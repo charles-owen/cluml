@@ -10,6 +10,7 @@ import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 import {SanityElement} from "../SanityElement/SanityElement";
 import {Attribute} from "../SanityElement/Attribute";
 import {Operation} from "../SanityElement/Operation";
+import {SanityErrorInfo} from "../SanityElement/SanityErrorInfo";
 
 export const Class = function () {
     Component.call(this);
@@ -18,6 +19,18 @@ export const Class = function () {
         yield new ClassName(this.naming);
         yield * this.attributes;
         yield * this.operations;
+
+        // Check if the number of attributes and operations exceeds the property limit
+        if (this.attributes.length + this.operations.length > this.propertyLimit)
+        {
+            let error = new SanityElement(this.naming, undefined);
+            error.processSanityCheck = function() {
+                return [new SanityErrorInfo("1100", "Class", this.elementValue,
+                    `Exceeded the limit of ${
+                    Class.prototype.propertyLimit} attributes and operations per class`)];
+            };
+            yield error;
+        }
     }
 
     /**
@@ -140,13 +153,15 @@ export const Class = function () {
 Class.prototype = Object.create(Component.prototype);
 Class.prototype.constructor = Class;
 
-
 Class.prototype.fileLbl = "Class";
 Class.prototype.helpLbl = 'class';
 Class.prototype.paletteLbl = "Class";
 Class.prototype.paletteDesc = "Class component.";
 Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
 Class.prototype.paletteOrder = 1;
+
+// limit on the total number of attributes and operations a class can have
+Class.prototype.propertyLimit = 20;
 
 /**
  * Copies from another component.
