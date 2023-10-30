@@ -43,17 +43,36 @@ export class Operation extends SanityElement {
                                           : stringValue.substring(parenEnd + 1).trim();
         }
 
+        this.#reconstructString();
+    }
 
-        // reformat the string
+    /**
+     * Reconstructs the element value with the visibility, name, parameters, and type
+     */
+    #reconstructString() {
+        let parenStart = parenStart = this.elementValue.indexOf('(');
+        let parenEnd = parenStart !== -1 ? this.elementValue.indexOf(')', parenStart) : -1;
+
         this.elementValue = this.visibility + this.name + (parenStart !== -1 ? '(' : '');
         for (let i = 0; i < this.parameters.length; i++)
         {
             const param = this.parameters[i];
             const paramText = param[0] + (param[1] !== '' ? ': ' : '') + param[1]
-                                       + (i < this.parameters.length - 1 ? ", " : "");
+                + (i < this.parameters.length - 1 ? ", " : "");
             this.elementValue += paramText;
         }
         this.elementValue += (parenEnd !== -1 ? ")" : "") + (this.type !== '' ? ": " : "") + this.type;
+    }
+
+    /**
+     * Sets the operation's visibility
+     * @param visibility the new visibility
+     */
+    setVisibility(visibility) {
+        if (!/^[+#-]$/.test(visibility))
+            return;
+        this.visibility = visibility;
+        this.#reconstructString();
     }
 
     processSanityCheck() {

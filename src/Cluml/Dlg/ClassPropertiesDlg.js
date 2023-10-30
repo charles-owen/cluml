@@ -376,7 +376,7 @@ export const ClassPropertiesDlg = function(component, main) {
             {
                 element.value = object.visibility;
             }
-            object.visibility = element.value;
+            object.setVisibility(element.value);
         }
 
         // Save Abstraction for Operations

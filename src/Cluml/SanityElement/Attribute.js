@@ -22,14 +22,12 @@ export class Attribute extends SanityElement {
 
         // process the string value;
         let nameStart = 0;
-        if (VISIBILITY_RX.test(stringValue))
-        {
+        if (VISIBILITY_RX.test(stringValue)) {
             this.visibility = stringValue[0];
             nameStart = 1;
         }
         const colonIndex = stringValue.indexOf(':');
-        if (colonIndex === -1)
-        {
+        if (colonIndex === -1) {
             this.name = stringValue.substring(nameStart).trim();
             this.type = '';
             return;
@@ -37,8 +35,26 @@ export class Attribute extends SanityElement {
         this.name = stringValue.substring(nameStart, colonIndex).trim();
         this.type = stringValue.substring(colonIndex).replace(':', '').trim();
 
+        this.#reconstructString();
+    }
+
+    /**
+     * Reconstructs the element value with the given visibility, name, and type
+     */
+    #reconstructString() {
         this.elementValue = this.visibility + this.name
             + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type;
+    }
+
+    /**
+     * Sets the attribute's visibility
+     * @param visibility the new visibility
+     */
+    setVisibility(visibility) {
+        if (!/^[+#-]$/.test(visibility))
+            return;
+        this.visibility = visibility;
+        this.#reconstructString();
     }
 
     processSanityCheck() {
