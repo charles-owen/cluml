@@ -6,6 +6,8 @@ import {Model} from "./Model";
 import {ExportPNGDlg} from "./Dlg/ExportPNGDlg";
 import Vector from "./Utility/Vector";
 import Selectable from "./Selectable";
+import {Class} from "./Components/Class";
+import {Attribute} from "./SanityElement/Attribute";
 
 /**
  * View of a diagram
@@ -284,6 +286,32 @@ export const View = function(main, canvas, diagram) {
             }
         }
 
+        let keysDown = {};
+        let keyDownListener = (e) => {
+            e.preventDefault();
+            if (this.selection.selected[0] instanceof Class) {
+                keysDown[e.keyCode] = e.type == 'keydown';
+                // Ctrl + A for Add
+                if (keysDown[17] && keysDown[65])
+                {
+                    this.selection.selected[0].addAttribute(new Attribute('-attribute: String'));
+                    this.draw();
+                    keysDown = {};
+                }
+                // Ctrl + P for Properties
+                else if (keysDown[17] && keysDown[80])
+                {
+                    this.selection.selected[0].openProperties();
+                    this.draw();
+                    keysDown = {};
+                }
+            }
+        }
+
+        let keyUpListener = (e) => {
+            keysDown = {};
+        }
+
         let touchEndListener = (event) => {
             event.preventDefault();
 
@@ -316,6 +344,8 @@ export const View = function(main, canvas, diagram) {
         canvas.addEventListener('contextmenu', contextMenuListener);
         canvas.addEventListener('mousedown', mouseDownListener);
         canvas.addEventListener('dblclick', dblClickListener);
+        document.addEventListener('keyup', keyUpListener);
+        document.addEventListener('keydown', keyDownListener);
 
         let body = document.querySelector('body');
         body.addEventListener('mouseup', mouseUpListener);

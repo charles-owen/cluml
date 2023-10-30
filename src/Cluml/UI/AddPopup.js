@@ -44,6 +44,10 @@ AddPopup.prototype.draw = function (context, view, x, y) {
         x+this.xOffset+this.margin,
         this.top + (this.height / 3) - 10,this.width);
 
+    context.fillText("Ctrl + A",
+        x+this.width,
+        this.top + (this.height / 3) - 10,this.width);
+
     // Draw Divider1
     context.beginPath();
     context.moveTo(x+this.xOffset, this.top + (this.height / 3));
@@ -55,6 +59,10 @@ AddPopup.prototype.draw = function (context, view, x, y) {
         x+this.xOffset+this.margin,
         this.top + 2*(this.height / 3) - 10,this.width);
 
+    context.fillText("Ctrl + P",
+        x+this.width,
+        this.top + 2*(this.height / 3) - 10,this.width);
+
     // Draw Divider2
     context.beginPath();
     context.moveTo(x+this.xOffset, this.top + 2*(this.height / 3));
@@ -64,6 +72,10 @@ AddPopup.prototype.draw = function (context, view, x, y) {
     // Delete text
     context.fillText("Delete",
         x+this.xOffset+this.margin,
+        this.top + 2*(this.height / 3) + 20,this.width);
+
+    context.fillText("Delete",
+        x+this.margin+this.width,
         this.top + 2*(this.height / 3) + 20,this.width);
 }
 
