@@ -27,9 +27,9 @@ module.exports = function(config) {
 
     // list of files / patterns to exclude
     exclude: [
-        'test/Cluml/Diagrams.spec.js'
+      //'test/Cluml/Components/Class.spec.js'
     ],
-
+    //'test/Cluml/Diagrams.spec.js'
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://www.npmjs.com/search?q=keywords:karma-preprocessor

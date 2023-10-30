@@ -12,10 +12,5 @@ describe('Component', function() {
 
         expect(con.get('Class')).toBe(Class);
         expect(con.get('Association')).toBe(null);
-
-        //importing from class causes a weird error and everything to crash.
-        //same thing with associations.
-        //The thing thats causing it to crash relates back to the dialog box for some reason
-        //will examine later
     });
 });
