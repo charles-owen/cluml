@@ -109,6 +109,11 @@ TerminationNode.prototype.drop = function () {
     this.detachFromClass();
 }
 
+/**
+ * Opens context menu for the termination node.
+ * @param x {number} X-coordinate of the mouse.
+ * @param y {number} Y-coordinate of the mouse.
+ */
 TerminationNode.prototype.rightClick = function (x, y) {
     Selectable.prototype.rightClick.call(this, x, y);
 
@@ -121,6 +126,10 @@ TerminationNode.prototype.rightClick = function (x, y) {
     contextMenu.addEntry("Swap Start and End", function () {
         this.association.swapEnds();
         MainSingleton.singleton.currentView.selection.selected = [this];
+        MainSingleton.singleton.redraw();
+    });
+    contextMenu.addEntry("Delete " + this.association.paletteLbl, function () {
+        this.delete();
         MainSingleton.singleton.redraw();
     });
 }

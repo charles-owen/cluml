@@ -4,6 +4,7 @@ import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
 import {MainSingleton} from "../../MainSingleton";
 import {TerminationNode} from "./TerminationNode";
+import {CustomContextMenu} from "../../ContextMenu/CustomContextMenu";
 
 /**
  * Determines the radius around the node at which
@@ -187,6 +188,22 @@ LineNode.prototype.drop = function () {
         // Delete this node if we drop it really close to another node.
         this.delete();
     }
+}
+
+/**
+ * Opens context menu for the line node.
+ * @param x {number} X-coordinate of the mouse.
+ * @param y {number} Y-coordinate of the mouse.
+ */
+LineNode.prototype.rightClick = function (x, y) {
+    Selectable.prototype.rightClick.call(this, x, y);
+
+    // Show context menu.
+    const contextMenu = new CustomContextMenu(this, new Vector(x, y));
+    contextMenu.addEntry("Delete Node", function () {
+        this.delete();
+        MainSingleton.singleton.redraw();
+    });
 }
 
 /**
