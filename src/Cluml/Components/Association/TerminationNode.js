@@ -118,9 +118,11 @@ TerminationNode.prototype.rightClick = function (x, y) {
         const tNodeDlg = new TerminationNodeDlg(this);
         tNodeDlg.open();
     });
-    // contextMenu.addEntry("Swap Start and End", function () {
-    //     this.association.swapEnds();
-    // });
+    contextMenu.addEntry("Swap Start and End", function () {
+        this.association.swapEnds();
+        MainSingleton.singleton.currentView.selection.selected = [this];
+        MainSingleton.singleton.redraw();
+    });
 }
 
 TerminationNode.prototype.draw = function (context, view) {
@@ -165,9 +167,7 @@ TerminationNode.prototype.draw = function (context, view) {
             break;
     }
 
-    //draw the tail of the association
-    //in the future, will need to be able to work regardless of if the node is connected
-    //to a class yet
+    // Draw the tails of the association
     if (this.isTail) {
         // Tail termination node doesn't call LineNode.draw
         this.association.drawTail(context, this.x, this.y, side);
@@ -177,6 +177,53 @@ TerminationNode.prototype.draw = function (context, view) {
 
     this.multiplicityValue.draw(context, view);
     this.roleValue.draw(context, view);
+}
+//endregion
+
+//region LineNode Overrides
+/**
+ * Links this node with another node. As the termination node can only be
+ * linked with one other node, calling this method unlinks this from the
+ * other node, if it exists.
+ * @param next {LineNode} The next line node.
+ */
+TerminationNode.prototype.linkToNext = function (next) {
+    if (this !== next) {
+        // Unlink from everything. See function comment.
+        this.tryUnlinkFromPrevious();
+        this.tryUnlinkFromNext();
+
+        // Link to next.
+        LineNode.prototype.linkToNext.call(this, next);
+    }
+}
+
+/**
+ * Links this node with another node. As the termination node can only be
+ * linked with one other node, calling this method unlinks this from the
+ * other node, if it exists.
+ * @param previous {LineNode} The previous line node.
+ */
+TerminationNode.prototype.linkToPrevious = function (previous) {
+    if (this !== previous) {
+        // Unlink from everything. See function comment.
+        this.tryUnlinkFromPrevious();
+        this.tryUnlinkFromNext();
+
+        // Link to previous.
+        LineNode.prototype.linkToPrevious.call(this, previous);
+    }
+}
+
+/**
+ * As the termination node can only have one neighbor, this function does
+ * nothing.
+ * @param previous
+ * @param next
+ * @return {undefined}
+ */
+TerminationNode.prototype.insertBetween = function (previous, next) {
+    return undefined;
 }
 //endregion
 

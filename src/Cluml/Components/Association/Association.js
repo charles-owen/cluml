@@ -110,30 +110,25 @@ class NodeData {
     }
 
     swapEnds() {
-        const NodeSwapData = function(node) {
-            return {
-                position: node.position,
-                attachedTo: node.attachedTo,
-                side: node.side,
-                previousNode: node.previousNode,
-                nextNode: node.nextNode
+        class NodeSwapData {
+            constructor(node) {
+                this.mult = node.multiplicityValue.elementValue;
+                this.role = node.roleValue.elementValue;
+                this.tail = node.isTail;
+            }
+
+            assignTo(target) {
+                target.multiplicityValue.elementValue = this.mult;
+                target.roleValue.elementValue = this.role;
+                target.isTail = this.tail;
             }
         }
 
-        const oldEnd = NodeSwapData(this.#end);
-        const oldStart = NodeSwapData(this.#start);
+        const oldEnd = new NodeSwapData(this.#end);
+        const oldStart = new NodeSwapData(this.#start);
 
-        this.#start.position = oldEnd.position;
-        this.#start.attachedTo = oldEnd.attachedTo;
-        this.#start.side = oldEnd.side;
-        this.#start.linkToNext(oldEnd.previousNode);
-        this.#start.refreshPosition();
-
-        this.#end.position = oldStart.position;
-        this.#end.attachedTo = oldStart.attachedTo;
-        this.#end.side = oldStart.side;
-        this.#end.linkToPrevious(oldStart.nextNode);
-        this.#end.refreshPosition();
+        oldEnd.assignTo(this.#start);
+        oldStart.assignTo(this.#end);
     }
 
     // /**
@@ -371,7 +366,7 @@ Association.prototype.reverseNodeGenerator = function* () {
 Association.prototype.edgeGenerator = function* () {
     let node = this.nodes.start;
 
-    while (node !== this.nodes.end) {
+    while (node.hasNext) {
         yield {
             from: node,
             to: node.nextNode

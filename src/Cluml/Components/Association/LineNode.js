@@ -184,9 +184,8 @@ LineNode.prototype.drop = function () {
 
     if ((this.hasNext && Vector.distance(this.position, this.nextNode.position) < 5) ||
         (this.hasPrevious && Vector.distance(this.position, this.previousNode.position) < 5)) {
-        // Delete this node.
+        // Delete this node if we drop it really close to another node.
         this.delete();
-        //console.log("testing");
     }
 }
 
@@ -209,21 +208,23 @@ LineNode.prototype.bounds = function () {
  * @param view {View} View object
  */
 LineNode.prototype.draw = function (context, view) {
+    // Don't need to call the super function here.
     // Selectable.prototype.draw.call(this, context, view);
 
     this.selectStyle(context, view);
 
+    // Either draws a small dot if not selected or a bigger dot if it is selected.
+    // These dots inform the user where the grab points of the association are.
+    context.beginPath();
     if (view.selection.isSelected(this)) {
-        context.beginPath();
-        context.arc(this.x, this.y, NODE_TOUCH_RADIUS, 0, 2 * Math.PI, true);
-        context.fill();
-    } else {
-        context.beginPath();
         context.arc(this.x, this.y, NODE_NORMAL_RADIUS, 0, 2 * Math.PI, true);
-        context.stroke();
+    } else {
+        context.arc(this.x, this.y, 1, 0, 2 * Math.PI, true);
     }
+    context.fill();
 
     if (DEBUG_BOUNDS) {
+        // If in debug mode, also draw the bounding box for the cursor.
         context.fillStyle = this.selectedStyle;
         context.fillRect(
             this.x - NODE_TOUCH_RADIUS,
@@ -237,21 +238,25 @@ LineNode.prototype.draw = function (context, view) {
 
 //region LineNode Specific Methods
 /**
- * Links this node with another node.
+ * Links this node with another node. Does nothing if next === this.
  * @param next {LineNode} The next line node.
  */
 LineNode.prototype.linkToNext = function (next) {
-    this.nextNode = next;
-    next.previousNode = this;
+    if (this !== next) {
+        this.nextNode = next;
+        next.previousNode = this;
+    }
 }
 
 /**
- * Links this node with another node.
+ * Links this node with another node. Does nothing if previous === this.
  * @param previous {LineNode} The previous line node.
  */
 LineNode.prototype.linkToPrevious = function (previous) {
-    this.previousNode = previous;
-    previous.nextNode = this;
+    if (this !== previous) {
+        this.previousNode = previous;
+        previous.nextNode = this;
+    }
 }
 
 /**
@@ -260,7 +265,6 @@ LineNode.prototype.linkToPrevious = function (previous) {
  * @param next {LineNode} The next line node.
  */
 LineNode.prototype.insertBetween = function (previous, next) {
-
     if (next !== undefined && next !== null)
         this.linkToNext(next);
 
@@ -287,11 +291,44 @@ LineNode.prototype.delete = function () {
  */
 LineNode.prototype.tryUnlinkFromNext = function () {
     if (this.nextNode === null)
+        // The next node does not exist.
         return false;
     else {
+        // Node found. Remove it.
         this.nextNode.previousNode = null;
         this.nextNode = null;
         return true;
     }
+}
+
+/**
+ * Tries to unlink from the previous node.
+ * @return {boolean} True if previous exists and is removed, false otherwise.
+ */
+LineNode.prototype.tryUnlinkFromPrevious = function () {
+    if (this.previousNode === null)
+        // The previous node does not exist.
+        return false;
+    else {
+        // Node found. Remove it.
+        this.previousNode.nextNode = null;
+        this.previousNode = null;
+        return true;
+    }
+}
+
+/**
+ * Tries to unlink from both previous and next nodes.
+ * @return {number} The number of nodes unlinked from.
+ */
+LineNode.prototype.tryUnlinkFromBoth = function () {
+    let cnt = 0;
+
+    if (this.tryUnlinkFromPrevious())
+        cnt++;
+    if (this.tryUnlinkFromNext())
+        cnt++;
+
+    return cnt;
 }
 //endregion
