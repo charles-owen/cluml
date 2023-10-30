@@ -34,6 +34,7 @@ export class TerminationNodeDlg extends Dialog {
         // Inputs
         const inputsDiv = document.createElement('div');
 
+        //region Right Div
         // Multiplicity
         const multiDiv = document.createElement('div');
         multiDiv.style.float = 'right';
@@ -96,7 +97,9 @@ export class TerminationNodeDlg extends Dialog {
 
         multiLbl.htmlFor = multiInput.id;
         multiDiv.append(multiLbl, multiInput, gotoBtn);
+        //endregion
 
+        //region Left Div
         // Role
         const roleDiv = document.createElement('div');
         roleDiv.style.float = 'left';
@@ -131,8 +134,26 @@ export class TerminationNodeDlg extends Dialog {
 
         swapBtn.append(swapTTCenter);
 
+        swapHandler = swapHandler.bind(this);
+        swapBtn.addEventListener('click', swapHandler);
+
+        function swapHandler(event) {
+            // Close this dialog to avoid the funny.
+            this.close();
+
+            const nodes = this.node.association.nodes;
+            nodes.swapEnds();
+
+            // Open another dialog.
+            const tNodeDlg = new TerminationNodeDlg(this.node);
+            tNodeDlg.open();
+            MainSingleton.singleton.currentView.selection.selected = [this.node];
+            MainSingleton.singleton.redraw();
+        }
+
         roleLbl.htmlFor = roleInput.id;
         roleDiv.append(roleLbl, roleInput, swapBtn);
+        //endregion
 
         this.tagInputID = roleInput.id;
         this.multiInputID = multiInput.id;

@@ -110,14 +110,26 @@ class NodeData {
     }
 
     swapEnds() {
-        const oldEnd = this.#end;
-        const oldStart = this.#start;
+        const NodeSwapData = function(node) {
+            return {
+                position: node.position,
+                attachedTo: node.attachedTo,
+                side: node.side,
+                previousNode: node.previousNode,
+                nextNode: node.nextNode
+            }
+        }
 
+        const oldEnd = NodeSwapData(this.#end);
+        const oldStart = NodeSwapData(this.#start);
+
+        this.#start.position = oldEnd.position;
         this.#start.attachedTo = oldEnd.attachedTo;
         this.#start.side = oldEnd.side;
         this.#start.linkToNext(oldEnd.previousNode);
         this.#start.refreshPosition();
 
+        this.#end.position = oldStart.position;
         this.#end.attachedTo = oldStart.attachedTo;
         this.#end.side = oldStart.side;
         this.#end.linkToPrevious(oldStart.nextNode);
