@@ -305,6 +305,15 @@ export const View = function(main, canvas, diagram) {
                     this.draw();
                     keysDown = {};
                 }
+                // Enter should count as a mouseDown/mouseUp (confirms changes)
+                else if(keysDown[13])
+                {
+                    e.preventDefault();
+                    this.selection.mouseDown(0, 0, e);
+                    this.selection.mouseUp(0, 0);
+                    this.draw();
+                    keysDown = {};
+                }
             }
         }
 

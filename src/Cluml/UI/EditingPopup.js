@@ -91,7 +91,7 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
     this.editingWhat = type;
     this.inputElement.defaultValue = initialText;
     this.inputElement.selectionStart = initialText.length;
-    this.inputElement.style.top = y + "px";
+    this.inputElement.style.top = y + 1 + "px";
     this.inputElement.style.left = x + 4 + "px";
     this.inputElement.style.width = width - 6 + "px";
     this.inputElement.style.height = height - 2 + "px";
@@ -114,7 +114,6 @@ EditingPopup.prototype.close = function() {
     this.text = this.inputElement.value;
     this.inputElement.remove();
     this.updateClass();
-    this.component.draw(this.context, this.view);
 }
 
 /**
@@ -122,37 +121,51 @@ EditingPopup.prototype.close = function() {
  * this EditingPopup.js object
  */
 EditingPopup.prototype.updateClass = function() {
-    // Only update the text field if the user enters something
-    if(this.text !== "") {
-        if(this.text.length > 30) {
-            this.text = this.text.substring(0, 30);
-        }
-        // Create a backup of the class before making edits
-        this.component.main.backup();
-        // Editing the name field
-        if (this.editingWhat === "name") {
+    if(this.text.length > 30) {
+        this.text = this.text.substring(0, 30);
+    }
+    // Create a backup of the class before making edits
+    this.component.main.backup();
+    // Editing the name field
+    if (this.editingWhat === "name") {
+        // Only edit the class name if the editing box is not empty
+        if(this.text !== "") {
             this.component.naming = this.text
         }
-        // Editing an attribute field
-        else if (this.editingWhat === "attribute") {
-            // Determine what attribute needs to be changed first, then change it
-            let boxHeight = this.component.attributesHeight /
-                this.component.attributes.length;
-            let selectedAttributeNumber = Math.floor((this.component.lastSelectedY
-                - this.component.attributesBounds.bottom) / boxHeight)
+    }
+    // Editing an attribute field
+    else if (this.editingWhat === "attribute") {
+        // Determine what attribute needs to be changed first, then change it
+        let boxHeight = this.component.attributesHeight /
+            this.component.attributes.length;
+        let selectedAttributeNumber = Math.floor((this.component.lastSelectedY
+            - this.component.attributesBounds.bottom) / boxHeight)
+        // Only edit an existing attribute if the editing box is not empty
+        if(this.text !== "") {
             this.component.attributes[selectedAttributeNumber] =
                 new Attribute(this.text);
         }
-        // Editing an operation field
-        else if (this.editingWhat === "operation") {
-            // Determine what operation needs to be changed first, then change it
-            let boxHeight = this.component.operationsHeight /
-                this.component.operations.length;
-            let selectedOperationNumber = Math.floor((this.component.lastSelectedY
-                - this.component.operationsBounds.bottom) / boxHeight)
+        // If the editing box is empty, delete the attribute from the class
+        else {
+            this.component.deleteAttribute(selectedAttributeNumber);
+        }
+    }
+    // Editing an operation field
+    else if (this.editingWhat === "operation") {
+        // Determine what operation needs to be changed first, then change it
+        let boxHeight = this.component.operationsHeight /
+            this.component.operations.length;
+        let selectedOperationNumber = Math.floor((this.component.lastSelectedY
+            - this.component.operationsBounds.bottom) / boxHeight)
+        // Only edit an existing operation if the editing box is not empty
+        if(this.text !== "") {
             let newOperation = new Operation(this.text);
             newOperation.abstract = this.component.operations[selectedOperationNumber].abstract;
             this.component.operations[selectedOperationNumber] = newOperation;
+        }
+        // If the editing box is empty, delete the operation from the class
+        else {
+            this.component.deleteOperation(selectedOperationNumber);
         }
     }
 }

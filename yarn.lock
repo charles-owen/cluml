@@ -2653,6 +2653,7 @@ __metadata:
     jasmine-core: ^5.0.1
     karma: ^6.4.2
     karma-chrome-launcher: ^3.2.0
+    karma-firefox-launcher: ^2.1.2
     karma-jasmine: ^5.1.0
     karma-jasmine-html-reporter: ^2.1.0
     karma-sourcemap-loader: ^0.4.0
@@ -2660,11 +2661,11 @@ __metadata:
     promise-polyfill: ^8.3.0
     resizer-cl: ^2.4.4
     resolve-url-loader: ^5.0.0
-    sass: ^1.63.6
+    sass: ^1.69.4
     sass-loader: ^13.3.2
     style-loader: ^3.3.3
     terser-webpack-plugin: ^5.3.9
-    webpack: ^5.88.1
+    webpack: ^5.89.0
     webpack-cli: ^5.1.4
     webpack-dev-server: ^4.15.1
     webpack-merge: ^5.9.0
@@ -4698,6 +4699,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"karma-firefox-launcher@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "karma-firefox-launcher@npm:2.1.2"
+  dependencies:
+    is-wsl: ^2.2.0
+    which: ^2.0.1
+  checksum: bfd5b35b35949fee50d92def57b32ab9702926ac24c90036583b76beac33fe8100ec601c9e71087b861d6ca7b3d54e8d2f9b62fa1b5115c8b99512dd763cf2ad
+  languageName: node
+  linkType: hard
+
 "karma-jasmine-html-reporter@npm:^2.1.0":
   version: 2.1.0
   resolution: "karma-jasmine-html-reporter@npm:2.1.0"
@@ -6446,16 +6457,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.63.6":
-  version: 1.66.1
-  resolution: "sass@npm:1.66.1"
+"sass@npm:^1.69.4":
+  version: 1.69.5
+  resolution: "sass@npm:1.69.5"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 74fc11d0fcd5e16c5331b57dd59865705a299c64e89f2b99646869caeb011dc8d0b6144a6c74a90c264e9ef70654207dbf44fc9b7e3393f8bd14809b904c8a52
+  checksum: c66f4f02882e7aa7aa49703824dadbb5a174dcd05e3cd96f17f73687889aab6027d078b518e2c04b594dfd89b2f574824bf935c7aee46c770aa6be9aafcc49f2
   languageName: node
   linkType: hard
 
@@ -7350,9 +7361,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.88.1":
-  version: 5.88.2
-  resolution: "webpack@npm:5.88.2"
+"webpack@npm:^5.89.0":
+  version: 5.89.0
+  resolution: "webpack@npm:5.89.0"
   dependencies:
     "@types/eslint-scope": ^3.7.3
     "@types/estree": ^1.0.0
@@ -7383,7 +7394,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 79476a782da31a21f6dd38fbbd06b68da93baf6a62f0d08ca99222367f3b8668f5a1f2086b7bb78e23172e31fa6df6fa7ab09b25e827866c4fc4dc2b30443ce2
+  checksum: 43fe0dbc30e168a685ef5a86759d5016a705f6563b39a240aa00826a80637d4a3deeb8062e709d6a4b05c63e796278244c84b04174704dc4a37bedb0f565c5ed
   languageName: node
   linkType: hard
 

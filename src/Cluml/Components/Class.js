@@ -257,9 +257,15 @@ Class.prototype.tryTouchAddPopup = function (x, y) {
     return null;
 }
 
+/**
+ * Verify if the editing popup was touched
+ * @param x touch position x
+ * @param y touch position y
+ * @returns {touched}
+ */
 Class.prototype.tryTouchEditingPopup = function (x, y) {
     if (this.editingPopup != null) {
-        this.editingPopup.touch(x, y);
+        return this.editingPopup.touch(x, y);
     }
     return null;
 }
@@ -286,6 +292,10 @@ Class.prototype.enableAddPopup = function (enable) {
     }
 }
 
+/**
+ * Go into and out of editing mode
+ * @param enable determines whether editing mode is enabled or not
+ */
 Class.prototype.enableEditing = function (enable) {
     if (enable) {
         this.editingPopup = new EditingPopup(this);
@@ -490,6 +500,22 @@ Class.prototype.addAttribute = function (attribute) {
     // Create a backup of the class before adding a new attribute
     this.main.backup();
     this.attributes.push(attribute);
+}
+
+/**
+ * Deletes an attribute from this class' attributes
+ * @param attributeIndex the index in attributes of the attribute to be deleted
+ */
+Class.prototype.deleteAttribute = function (attributeIndex) {
+    this.attributes.splice(attributeIndex, 1);
+}
+
+/**
+ * Deletes an operation from this class' operations
+ * @param operationIndex the index in operations of the operation to be deleted
+ */
+Class.prototype.deleteOperation = function (operationIndex) {
+    this.operations.splice(operationIndex, 1);
 }
 
 /**
