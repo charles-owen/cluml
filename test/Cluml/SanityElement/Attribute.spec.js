@@ -9,4 +9,23 @@ describe('Attribute', function() {
         expect(attribute.name).toEqual("attribute");
         expect(attribute.type).toEqual("String");
     });
+    it ('Should set', function() {
+        let attribute = new Attribute("+attribute: String");
+        expect(attribute.visibility).toEqual("+");
+        attribute.setVisibility("#");
+        expect(attribute.visibility).toEqual("#");
+        attribute.setVisibility("-");
+        expect(attribute.visibility).toEqual("-");
+        attribute.setVisibility("+");
+        expect(attribute.visibility).toEqual("+");
+        attribute.setVisibility("@");
+        expect(attribute.visibility).toEqual("+");
+    });
+    it ('Should remove unnecessary whitespace', function() {
+        let attribute = new Attribute('  + attribute     :       String    ');
+        expect(attribute.elementValue).toEqual("+attribute: String");
+        expect(attribute.visibility).toEqual("+");
+        expect(attribute.name).toEqual("attribute");
+        expect(attribute.type).toEqual("String");
+    });
 });
