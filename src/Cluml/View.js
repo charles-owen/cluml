@@ -288,7 +288,6 @@ export const View = function(main, canvas, diagram) {
 
         let keysDown = {};
         let keyDownListener = (e) => {
-            e.preventDefault();
             if (this.selection.selected[0] instanceof Class) {
                 keysDown[e.keyCode] = e.type == 'keydown';
                 // Ctrl + A for Add
@@ -301,6 +300,7 @@ export const View = function(main, canvas, diagram) {
                 // Ctrl + P for Properties
                 else if (keysDown[17] && keysDown[80])
                 {
+                    e.preventDefault();
                     this.selection.selected[0].openProperties();
                     this.draw();
                     keysDown = {};
