@@ -29,11 +29,15 @@ export class TerminationNodeDlg extends Dialog {
         const multiSE = this.node.multiplicityValue;
         const roleSE = this.node.roleValue;
 
-        const div = document.createElement('div');
+        const containerDiv = document.createElement('div');
 
+        // Inputs
+        const inputsDiv = document.createElement('div');
+
+        // Multiplicity
         const multiDiv = document.createElement('div');
         multiDiv.style.float = 'right';
-        multiDiv.style.width = "45%";
+        multiDiv.style.width = '49%';
 
         const multiLbl = document.createElement('label');
         multiLbl.innerText = "Multiplicity";
@@ -46,13 +50,57 @@ export class TerminationNodeDlg extends Dialog {
         multiInput.autocomplete = 'on';
         multiInput.style.width = "100%";
 
+        // Go to other node btn.
+        const gotoBtn = document.createElement('button');
+        gotoBtn.classList.add('tooltip-target');
+        const gotoIcon = document.createElement('span');
+        gotoIcon.classList.add('big-btn-txt');
+        gotoIcon.innerText = `↵`;
+        gotoBtn.append(gotoIcon);
+        const gotoTooltip = document.createElement('span');
+        gotoTooltip.className = "tooltip";
+        gotoTooltip.textContent = 'Go To Other';
+        gotoTooltip.style.left = '0';
+        gotoTooltip.style.bottom = '-4em';    // Avoid cutting off tooltip
+        const gotoTTCenter = document.createElement('div');
+        gotoTTCenter.className = 'tooltip-centerer';
+        gotoTTCenter.appendChild(gotoTooltip);
+
+        gotoBtn.append(gotoTTCenter);
+
+        gotoHandler = gotoHandler.bind(this);
+        gotoBtn.addEventListener('click', gotoHandler);
+
+        function gotoHandler(event) {
+            // Close and select the other node.
+            this.close();
+
+            const nodes = this.node.association.nodes;
+            let selected;
+
+            if (this.node === nodes.start) {
+                // Select end.
+                selected = nodes.end;
+            } else {
+                // Select start.
+                selected = nodes.start;
+            }
+
+            const tNodeDlg = new TerminationNodeDlg(selected);
+            tNodeDlg.open();
+
+            // Click on the other node.
+            MainSingleton.singleton.currentView.selection.selected = [selected];
+            MainSingleton.singleton.redraw();
+        }
+
         multiLbl.htmlFor = multiInput.id;
-        multiDiv.append(multiLbl, multiInput);
+        multiDiv.append(multiLbl, multiInput, gotoBtn);
 
-
+        // Role
         const roleDiv = document.createElement('div');
         roleDiv.style.float = 'left';
-        roleDiv.style.width = '45%';
+        roleDiv.style.width = '49%';
 
         const roleLbl = document.createElement('label');
         roleLbl.innerText = "Role";
@@ -65,18 +113,35 @@ export class TerminationNodeDlg extends Dialog {
         roleInput.autocomplete = 'on';
         roleInput.style.width = "100%";
 
+        // Swap nodes button.
+        const swapBtn = document.createElement('button');
+        swapBtn.classList.add('tooltip-target');
+        const swapIcon = document.createElement('span');
+        swapIcon.classList.add('big-btn-txt');
+        swapIcon.innerText = '⇌';
+        swapBtn.append(swapIcon);
+        const swapTooltip = document.createElement('span');
+        swapTooltip.className = "tooltip";
+        swapTooltip.textContent = 'Swap Arrow and End';
+        swapTooltip.style.left = '0';
+        swapTooltip.style.bottom = '-4em';    // Avoid cutting off tooltip
+        const swapTTCenter = document.createElement('div');
+        swapTTCenter.className = 'tooltip-centerer';
+        swapTTCenter.appendChild(swapTooltip);
+
+        swapBtn.append(swapTTCenter);
+
         roleLbl.htmlFor = roleInput.id;
-        roleDiv.append(roleLbl, roleInput);
-
-
-        div.append(roleDiv, multiDiv);
+        roleDiv.append(roleLbl, roleInput, swapBtn);
 
         this.tagInputID = roleInput.id;
         this.multiInputID = multiInput.id;
 
+        containerDiv.append(roleDiv, multiDiv);
+
         const endType = this.node.isTail ? 'Arrow' : 'End';
         super.contents(
-            div.outerHTML,
+            containerDiv,
             `Edit ${this.node.association.paletteLbl} ${endType}`
         );
         Dialog.prototype.open.call(this);

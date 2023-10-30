@@ -42,6 +42,10 @@ div.cluml {
       font-style: italic;
     }
 
+    button {
+      cursor: pointer;
+    }
+
     // Standard controls with label on top
     div.control {
       position: relative;
@@ -256,6 +260,13 @@ div.cluml {
   .cl-sc-row textarea {
     resize: none;
     //width: 6em;
+  }
+
+  .big-btn-txt {
+    margin: 0 0.5em;
+    cursor: pointer;
+    font-size: 1.5em;
+    font-weight: bold;
   }
 }
 

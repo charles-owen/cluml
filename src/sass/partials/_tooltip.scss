@@ -12,6 +12,7 @@
   border-radius: 5px;
   bottom: 110%;
   white-space: nowrap;  // Make tooltip one line.
+  user-select: none;
 }
 .tooltip-target:hover .tooltip {
   visibility: visible;
@@ -24,4 +25,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }

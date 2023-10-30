@@ -1,3 +1,5 @@
+import Side from "./Side";
+
 /**
  * General purpose object for 2D vectors.
  *
@@ -261,8 +263,8 @@ Vector.scale = function (v, s) {
 
 /**
  * Returns the dot product of the two vectors.
- * @param {Vector} v1 
- * @param {Vector} v2 
+ * @param {Vector} v1
+ * @param {Vector} v2
  * @returns {number} The dot product.
  */
 Vector.dot = function (v1, v2) {
@@ -295,6 +297,23 @@ Vector.maxComponents = function (...vectors) {
         Math.max(...x),
         Math.max(...y)
     );
+}
+
+/**
+ * Gets the major cardinal direction, that is, the largest
+ * component of the difference between from and to.
+ * @param from {Vector} Starting point.
+ * @param to {Vector} Ending point.
+ * @return {Side}
+ */
+Vector.majorCardinalDirection = function (from, to) {
+    const diff = Vector.sub(from, to);
+
+    if (Math.abs(diff.x) >= Math.abs(diff.y)) {
+        return diff.x > 0 ? Side.Right : Side.Left;
+    } else {
+        return diff.y > 0 ? Side.Top : Side.Bottom
+    }
 }
 
 export default Vector;
