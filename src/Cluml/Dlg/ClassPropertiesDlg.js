@@ -97,11 +97,21 @@ export const ClassPropertiesDlg = function(component, main) {
         visContentDiv.style.overflowY = "auto";
         visContentDiv.style.maxHeight = "100px";
         visContentDiv.style.minHeight = "100px";
+        visContentDiv.style.maxWidth = "150px";
+        visContentDiv.style.minWidth = "150px";
+        visContentDiv.style.overflowX = "hidden";
+        visContentDiv.style.textOverflow = "ellipsis";
+        visContentDiv.style.whiteSpace = "nowrap";
 
         let absContentDiv = document.createElement("div");
         absContentDiv.style.overflowY = "auto";
         absContentDiv.style.maxHeight = "100px";
         absContentDiv.style.minHeight = "100px";
+        absContentDiv.style.maxWidth = "150px";
+        absContentDiv.style.minWidth = "150px";
+        absContentDiv.style.overflowX = "hidden";
+        absContentDiv.style.textOverflow = "ellipsis";
+        absContentDiv.style.whiteSpace = "nowrap";
 
         // Abstract Class Input and Label
         let abstractClassDiv = document.createElement("div");
@@ -132,8 +142,6 @@ export const ClassPropertiesDlg = function(component, main) {
             let attribute = attributes[i];
             let visDiv = document.createElement("div");
             visDiv.class = "dropdown";
-            visDiv.style.position = "relative";
-            visDiv.style.display = "inline-block";
             let visInput = document.createElement("input");
             visInput.type = "text";
             visInput.maxLength = 1;
