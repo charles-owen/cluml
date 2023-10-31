@@ -98,6 +98,12 @@ export const Class = function () {
      */
     this.lastSelectedY = 0;
 
+    /**
+     * Represents whether this class is a regular class or a variation
+     * @type {boolean}
+     */
+    this.isVariation = false;
+
     Object.defineProperty(this, 'lineHeight', {
         get: function() {
             return this.fontHeight * 1.5;
@@ -106,7 +112,12 @@ export const Class = function () {
 
     Object.defineProperty(this, 'nameHeight', {
         get: function () {
-            return this.fontHeight * 2.5;
+            if(this.isVariation) {
+                return this.fontHeight * 4;
+            }
+            else {
+                return this.fontHeight * 2.5;
+            }
         }
     });
 
@@ -342,17 +353,33 @@ Class.prototype.draw = function (context, view) {
     let oldColor = new ClassName(this.naming).modifyContextFill(context);
     if (this.abstract)
     {
-        this.drawName(context,
-            0,
-            this.fontHeight * 1.5,
-            ITALICS_FONT);
+        if (this.isVariation) {
+            this.drawName(context,
+                0,
+                this.fontHeight * 3,
+                ITALICS_FONT);
+        }
+        else {
+            this.drawName(context,
+                0,
+                this.fontHeight * 1.5,
+                ITALICS_FONT);
+        }
     }
     else
     {
-        this.drawName(context,
-            0,
-            this.fontHeight * 1.5,
-            NAME_FONT);
+        if (this.isVariation) {
+            this.drawName(context,
+                0,
+                this.fontHeight * 3,
+                NAME_FONT);
+        }
+        else {
+            this.drawName(context,
+                0,
+                this.fontHeight * 1.5,
+                NAME_FONT);
+        }
     }
     context.fillStyle = oldColor;
 
@@ -405,8 +432,16 @@ Class.prototype.draw = function (context, view) {
         if (this.editingPopup.text === null) {
             // name box
             if (this.lastSelectedY < this.attributesBounds.bottom) {
-                this.editingPopup.drawNameEdit(context, view, this.nameBounds,
-                    this.width, this.nameHeight, this.naming);
+                if (this.isVariation) {
+                    this.editingPopup.drawNameEdit(context, view,
+                        Rect.fromTopAndSize(new Vector(this.x, this.y + this.nameHeight/2),
+                            new Vector(this.width, this.nameHeight)),
+                        this.width, this.nameHeight/3, this.naming);
+                }
+                else {
+                    this.editingPopup.drawNameEdit(context, view, this.nameBounds,
+                        this.width, this.nameHeight, this.naming);
+                }
             }
             // attribute box
             else if (this.lastSelectedY < this.operationsBounds.bottom) {

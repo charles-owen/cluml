@@ -1,8 +1,11 @@
 import {Class} from "./Class";
 import {PaletteImage} from "../Graphics/PaletteImage";
+import {NAME_FONT} from "../Selectable";
 
 export const InterfaceClass = function () {
     Class.call(this);
+
+    this.isVariation = true;
 }
 
 InterfaceClass.prototype = Object.create(Class.prototype);
@@ -40,4 +43,13 @@ InterfaceClass.prototype.paletteImage = function () {
     pi.drawLine(40, 20, 36, 16);
 
     return pi;
+}
+
+InterfaceClass.prototype.draw = function (context, view) {
+    Class.prototype.draw.call(this, context, view);
+    context.beginPath();
+    context.font = NAME_FONT;
+    context.textAlign = "center";
+    context.fillText("<<interface>>", this.x, this.y + this.fontHeight * 1.5);
+    context.stroke();
 }
