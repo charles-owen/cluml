@@ -1,11 +1,15 @@
 import {Class} from "./Class";
 import {PaletteImage} from "../Graphics/PaletteImage";
 import {NAME_FONT} from "../Selectable";
+import {Operation} from "../SanityElement/Operation";
 
 export const InterfaceClass = function () {
     Class.call(this);
 
     this.isVariation = true;
+
+    // Interfaces don't have attributes
+    this.attributes = [];
 }
 
 InterfaceClass.prototype = Object.create(Class.prototype);
@@ -45,6 +49,11 @@ InterfaceClass.prototype.paletteImage = function () {
     return pi;
 }
 
+/**
+ * Draws the interface class to the diagram
+ * @param context the context needed to draw to the diagram
+ * @param view the view that this diagram is located in
+ */
 InterfaceClass.prototype.draw = function (context, view) {
     Class.prototype.draw.call(this, context, view);
     context.beginPath();
@@ -52,4 +61,21 @@ InterfaceClass.prototype.draw = function (context, view) {
     context.textAlign = "center";
     context.fillText("<<interface>>", this.x, this.y + this.fontHeight * 1.5);
     context.stroke();
+}
+
+/**
+ * Instead of adding an attribute to this Interface class, it adds
+ * an operation (Interface classes can't have attributes)
+ * @param attribute the attribute to be added (and immediately discarded)
+ */
+InterfaceClass.prototype.addAttribute = function(attribute) {
+    Class.prototype.addAttribute.call(this, attribute);
+    this.attributes = [];
+    this.operations.push(new Operation("operation(): String"));
+}
+
+/**
+ * No more attributes means no reason to sort Attributions
+ */
+InterfaceClass.prototype.sortAttributions = function() {
 }
