@@ -129,15 +129,6 @@ export const Main = function (cluml, element, tests) {
                 },
                 set: function (value) {
                     _selectionToggle = value;
-
-                    const paletteDiv = document.getElementsByClassName('cs-palette')[0];
-
-                    if (value) {
-                        // In class mode now.
-                        paletteDiv.style.background = 'white';
-                    } else {
-                        paletteDiv.style.background = 'cyan';
-                    }
                 }
             });
 

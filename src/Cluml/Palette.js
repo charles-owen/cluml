@@ -42,9 +42,7 @@ export const Palette = function (main, work) {
             });
         }
 
-
         // Load the diagram components into the palette
-
         main.components.componentList.forEach(function (template) {
             addToPalette(template);
         });

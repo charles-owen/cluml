@@ -57,7 +57,6 @@ export const PaletteItem = function (palette, template, diagram) {
 
     palette.main.dragAndDrop.draggable(this);
     palette.main.toggleManager.toggleable(this);
-
 };
 
 /**
