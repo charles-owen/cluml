@@ -35,6 +35,16 @@ export const ToggleManager = function(main){
         setColor(paletteItem);
     }
 
+    //Exit association mode and clear last selected if escape is pressed
+    document.addEventListener('keydown', (event) =>{
+        if(event.key === "Escape"){
+            main.selectionToggle = true;
+            main.toggleManager.toggledAssociation = null;
+            //console.log(main.selectionToggle);
+            setColor(undefined);
+        }
+    });
+
     //set the background color of selected item
     const setColor = (paletteItem) =>{
         //loop through each manged item
@@ -43,14 +53,8 @@ export const ToggleManager = function(main){
             this.managedItems[i].element.style.background = 'white'
         }
         //set the selected items background to light grey
-        paletteItem.element.style.background = '#cccccc'
+        if(paletteItem !== undefined){
+            paletteItem.element.style.background = '#cccccc'
+        }
     }
-
-    //const paletteDiv = document.getElementsByClassName('cs-palette')[0];
-    //paletteDiv.style.background = '#cccccc';
-    //its so free
-    //loop through ManagedItems.
-    //for each item set its background to white
-    //except for the clicked item, set that to gray
-
 }

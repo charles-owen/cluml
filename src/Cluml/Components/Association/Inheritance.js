@@ -97,11 +97,13 @@ Inheritance.prototype.drawTail = function(context, x, y, side){
             break;
     }
 
+    context.fillStyle = "white";
     context.beginPath();
     context.moveTo(x, y);
     context.lineTo(val1, val2);
     context.lineTo(val3, val4);
     context.closePath();
+    context.fill();
     context.stroke();
 }
 

@@ -61,13 +61,13 @@ export const View = function(main, canvas, diagram) {
     });
 
     //catch escape input to exit association mode
-    document.addEventListener('keydown', (event) =>{
-        if(event.key === "Escape"){
-            main.selectionToggle = true;
-            main.toggleManager.toggledAssociation = null;
-            //console.log(main.selectionToggle);
-        }
-    });
+    // document.addEventListener('keydown', (event) =>{
+    //     if(event.key === "Escape"){
+    //         main.selectionToggle = true;
+    //         main.toggleManager.toggledAssociation = null;
+    //         //console.log(main.selectionToggle);
+    //     }
+    // });
 
 
     this.initialize = () => {
