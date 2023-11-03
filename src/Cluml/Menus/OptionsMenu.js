@@ -1,4 +1,5 @@
 import {Tools} from '../DOM/Tools';
+import {PropertyLimitDlg} from "../Dlg/PropertyLimitDlg";
 
 /**
  * The Options menu
@@ -12,6 +13,7 @@ export const OptionsMenu = function(menu, main) {
         return `<li><a>Options</a>
 <ul class="option-menu">
 <li><a class="option-showvisibility">Visibility<img></a></li>
+<li><a class="option-propertylimit">Property Limit</a></li>
 </ul></li>`;
     }
 
@@ -23,6 +25,10 @@ export const OptionsMenu = function(menu, main) {
             main.options.showVisibility = !main.options.showVisibility;
             main.currentView().draw();
 	    });
+        menu.click('.option-propertylimit', (event) => {
+            let dlg = new PropertyLimitDlg();
+            dlg.open();
+        })
     }
 
     /**
