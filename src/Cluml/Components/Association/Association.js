@@ -481,4 +481,10 @@ Association.prototype.drawTail = function (context, x, y, side) {
         }
     }
 }
+
+Association.prototype.delete = function() {
+    this.nodes.start.detachFromClass();
+    this.nodes.end.detachFromClass();
+    Component.prototype.delete.call(this);
+}
 //endregion
