@@ -171,6 +171,10 @@ Class.prototype.paletteDesc = "Class component.";
 Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
 Class.prototype.paletteOrder = 1;
 
+Class.help = 'class';
+Class.label = 'Class';
+Class.desc = 'Class';
+
 Class.prototype.showVisibility = false;
 
 // limit on the total number of attributes and operations a class can have
