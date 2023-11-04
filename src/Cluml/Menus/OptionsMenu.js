@@ -1,5 +1,6 @@
 import {Tools} from '../DOM/Tools';
 import {PropertyLimitDlg} from "../Dlg/PropertyLimitDlg";
+import {Class} from "../Components/Class";
 
 /**
  * The Options menu
@@ -22,7 +23,7 @@ export const OptionsMenu = function(menu, main) {
      */
     this.activate = function() {
 	    menu.click('.option-showvisibility', (event) => {
-            main.options.showVisibility = !main.options.showVisibility;
+            Class.prototype.showVisibility = !Class.prototype.showVisibility;
             main.currentView().draw();
 	    });
         menu.click('.option-propertylimit', (event) => {
@@ -36,7 +37,7 @@ export const OptionsMenu = function(menu, main) {
      * Set the state of the menu, so it will be valid when shown.
      */
     this.opening = function() {
-        if(main.options.showVisibility) {
+        if(Class.prototype.showVisibility) {
             Tools.addClass(menu.find('.option-showvisibility img'), 'check');
         } else {
 	        Tools.removeClass(menu.find('.option-showvisibility img'), 'check');

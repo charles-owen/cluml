@@ -3,6 +3,7 @@ import {VISIBILITY_RX, NAME_RX, PAREM_RX} from "./SanityRegExpressions";
 import {Name} from "../Utility/Name";
 import {MainSingleton} from "../MainSingleton";
 import {SanityErrorInfo} from "./SanityErrorInfo";
+import {Class} from "../Components/Class";
 
 export class Operation extends SanityElement {
     visibility = '';
@@ -82,7 +83,7 @@ export class Operation extends SanityElement {
         messages = messages.concat(Name.Check(204, "Operation",
             this.elementValue, this.type, "Type", true));
 
-        const showVisibility = MainSingleton.singleton.options.showVisibility;
+        const showVisibility = Class.prototype.showVisibility;
         if (this.visibility === '' && showVisibility) {
             messages.push(new SanityErrorInfo('0208',
                 "Operation", this.elementValue, "Visibility missing"));

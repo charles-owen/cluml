@@ -171,6 +171,8 @@ Class.prototype.paletteDesc = "Class component.";
 Class.prototype.htmlDesc = '<h2>Class</h2><p>A basic class.</p>';
 Class.prototype.paletteOrder = 1;
 
+Class.prototype.showVisibility = false;
+
 // limit on the total number of attributes and operations a class can have
 Class.prototype.propertyLimit = 20;
 
@@ -385,15 +387,13 @@ Class.prototype.draw = function (context, view) {
 
     context.textAlign = "left"
     context.font = NAME_FONT;
-    // boolean to check if attributes/operations' visibility should be drawn
-    const visibility = this.diagram.diagrams.model.main.options.showVisibility;
 
     // Attributes text
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
         oldColor = attribute.modifyContextFill(context);
-        const attributeText = (visibility ? attribute.visibility : '') + attribute.name
+        const attributeText = (this.showVisibility ? attribute.visibility : '') + attribute.name
             + (attribute.elementValue.indexOf(':') !== -1 ? ': ' : '') + attribute.type;
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
@@ -416,7 +416,7 @@ Class.prototype.draw = function (context, view) {
         const operation = this.operations[j];
         oldColor = operation.modifyContextFill(context);
         const operationText = operation.elementValue.substring(
-            !visibility && operation.visibility !== '' ? 1 : 0);
+            !this.showVisibility && operation.visibility !== '' ? 1 : 0);
         context.fillText(operationText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,

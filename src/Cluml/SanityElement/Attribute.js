@@ -3,6 +3,7 @@ import {Name} from "../Utility/Name";
 import {MainSingleton} from "../MainSingleton";
 import {VISIBILITY_RX} from "./SanityRegExpressions";
 import {SanityErrorInfo} from "./SanityErrorInfo";
+import {Class} from "../Components/Class";
 
 const spaces = /\s/;
 const nonAlphanumeric = /[^A-Za-z0-9]/;
@@ -64,7 +65,7 @@ export class Attribute extends SanityElement {
         messages = messages.concat(Name.Check(104, "Attribute",
             this.elementValue, this.type, "Type", true));
 
-        const showVisibility = MainSingleton.singleton.options.showVisibility;
+        const showVisibility = Class.prototype.showVisibility;
         if (this.visibility === '' && showVisibility) {
             messages.push(new SanityErrorInfo("00108", "Attribute",
                 this.elementValue, "Visibility missing"));

@@ -125,9 +125,6 @@ export const Options = function(options) {
     /// Display all output states
     this.showOutputStates = false;
 
-    // Show visibility of attributes/operations
-    this.showVisibility = false;
-
     for(const property in options) {
         if(options.hasOwnProperty(property)) {
             if(!this.hasOwnProperty(property)) {
