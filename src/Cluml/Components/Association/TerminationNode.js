@@ -179,7 +179,7 @@ TerminationNode.prototype.draw = function (context, view) {
     // Draw the tails of the association
     if (this.isTail) {
         // Tail termination node doesn't call LineNode.draw
-        this.association.drawTail(context, this.x, this.y, side);
+        this.association.drawTail(context, this.x, this.y, side, view);
     } else {
         LineNode.prototype.draw.call(this, context, view);
     }

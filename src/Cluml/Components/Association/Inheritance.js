@@ -54,7 +54,7 @@ Inheritance.prototype.loadOrder = 10;
 
 Inheritance.prototype.drawTail = function(context, x, y, side){
     //this will determine the size of the tail
-    let offsetVal = 8;
+    let offsetVal = 10;
     let val1 = offsetVal;
     let val2 = offsetVal;
     let val3 = offsetVal;

@@ -60,16 +60,6 @@ export const View = function(main, canvas, diagram) {
         event.preventDefault();
     });
 
-    //catch escape input to exit association mode
-    // document.addEventListener('keydown', (event) =>{
-    //     if(event.key === "Escape"){
-    //         main.selectionToggle = true;
-    //         main.toggleManager.toggledAssociation = null;
-    //         //console.log(main.selectionToggle);
-    //     }
-    // });
-
-
     this.initialize = () => {
         this.setSize();
 
@@ -462,6 +452,7 @@ View.prototype.importTab = function(importer) {
  * @param y {number}
  */
 View.prototype.initializeComponent = function (component, x, y) {
+    console.log('View called model.backup');
     this.model.backup();
 
     component.brand();

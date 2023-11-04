@@ -148,7 +148,6 @@ export const Main = function (cluml, element, tests) {
             observer.observe(document.body, {childList: true});
         }
 
-
         //
         // Instantiate a model object
         //

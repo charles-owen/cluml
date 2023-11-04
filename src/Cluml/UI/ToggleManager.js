@@ -30,8 +30,8 @@ export const ToggleManager = function(main){
             //console.log(main.selectionToggle)
             //call to main or wherever else that its currently in class mode.
         }
-        console.log('Just clicked on');
-        console.log(paletteItem.proto.paletteLbl);
+        //console.log('Just clicked on');
+        //console.log(paletteItem.proto.paletteLbl);
         setColor(paletteItem);
     }
 

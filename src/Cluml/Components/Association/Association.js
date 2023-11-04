@@ -442,7 +442,8 @@ Association.prototype.createNodeNear = function (near) {
     if (minTDP !== undefined) {
         // Now have the nearest point on the line.
         // First do backup.
-        MainSingleton.singleton.backup();
+        //console.log('Association called model.backup');
+        //MainSingleton.singleton.backup();
 
         const newNode = new LineNode();
         newNode.association = this;
@@ -473,10 +474,11 @@ Association.prototype.paletteImage = function () {
 /**
  * Default drawTail function, called by the #end TerminationNode
  */
-Association.prototype.drawTail = function (context, x, y, side) {
+Association.prototype.drawTail = function (context, x, y, side, view) {
     for (const tNode of [this.nodes.start, this.nodes.end]) {
         if (tNode.isTail) {
-            LineNode.prototype.draw.call(tNode, context, MainSingleton.singleton.currentView);
+            //LineNode.prototype.draw.call(tNode, context, MainSingleton.singleton.currentView);
+            LineNode.prototype.draw.call(tNode, context, view);
             break;
         }
     }

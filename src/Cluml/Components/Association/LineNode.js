@@ -160,7 +160,8 @@ LineNode.prototype.touch = function (x, y) {
  */
 LineNode.prototype.grab = function () {
     // Do backup.
-    MainSingleton.singleton.backup();
+    //console.log('LineNode called model.backup');
+    //MainSingleton.singleton.backup();
 
     Selectable.prototype.grab.call(this);
     this.touched = true;

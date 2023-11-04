@@ -18,8 +18,11 @@ export const Selection = function (view) {
      */
     this.selected = [];
 
+
+
     let down = false;
     let firstMove = false;
+    this.associationInit = false;
 
     /**
      * Rectangle for selected
@@ -93,8 +96,6 @@ export const Selection = function (view) {
         const touched = view.diagram.touch(x, y);
         if (touched !== null) {
 
-            console.log(this.selected.isTail);
-
             if (touched.single()) {
                 // Some selectables are singles, meaning we can
                 // only select one at a time.
@@ -142,8 +143,9 @@ export const Selection = function (view) {
             if (firstMove) {
                 // If we move the mouse the first time on any
                 // selected, we need to create an undo backup
-                if (rect === null && this.selected.length > 0) {
+                if (rect === null && this.selected.length > 0 && !this.associationInit) {
                     view.model.backup();
+                    console.log('Selection called model.backup');
                 }
 
                 // This is the first movement of the mouse
@@ -159,6 +161,7 @@ export const Selection = function (view) {
                 }
 
                 firstMove = false;
+                this.associationInit = false;
             }
 
             if (rect !== null) {
@@ -256,6 +259,7 @@ export const Selection = function (view) {
         this.selected = [association.nodes.end];
         association.nodes.end.x = x;
         association.nodes.end.y = y;
+        this.associationInit = true;
         //console.log(association.nodes.end.isTail);
     }
 
