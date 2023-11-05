@@ -1,12 +1,13 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
+import Vector from "../../Utility/Vector";
 
 
 /**
  * Inheritance-type association
  * @constructor
  */
-export const Containment = function(){
+export const Containment = function () {
     Association.call(this);
 }
 
@@ -24,14 +25,18 @@ Containment.prototype.paletteOrder = 14;
 Containment.prototype.loadOrder = 14;
 //endregion
 
-Containment.prototype.drawTail = function(context, x, y, side){
+Containment.prototype.drawTail = function (context, view, tail) {
+    const side = Math.floor(tail.side);
+    const x = tail.x;
+    const y = tail.y;
+
     //this will determine the size of the tail, in this case the diameter of the circle
     let offsetVal = 12;
     //this will determine the size of the plus sign
     let plusSize = 5;
     //this is the center of the circle
     let circleCenterX = x;
-    let circleCenterY  = y;
+    let circleCenterY = y;
 
     //declare the variables representing the different points
     // //coordinates of first point
@@ -44,32 +49,46 @@ Containment.prototype.drawTail = function(context, x, y, side){
     // let threeX = 0;
     // let threeY = 0;
 
-    switch(side){
+    let terminusPoint = new Vector(0, 0);
+
+    switch (side) {
         //top
         case 0:
-            circleCenterY = y + (offsetVal/2);
+            terminusPoint = new Vector(x,  y + offsetVal);
+            circleCenterY = y + (offsetVal / 2);
             break;
         //Right
         case 1:
-            circleCenterX = x + (offsetVal/2);
+            terminusPoint = new Vector(x + offsetVal,  y);
+            circleCenterX = x + (offsetVal / 2);
             break;
         //bottom
         case 2:
-            circleCenterY = y - (offsetVal/2);
+            terminusPoint = new Vector(x,  y - offsetVal);
+            circleCenterY = y - (offsetVal / 2);
             break;
         //left
         case 3:
-            circleCenterX = x - (offsetVal/2);
+            terminusPoint = new Vector(x - offsetVal,  y);
+            circleCenterX = x - (offsetVal / 2);
             console.log("The composition is connected to the left");
             break;
     }
+
+    // Draw the line from the shape to the lineup point.
+    context.beginPath();
+    const ap = tail.lineupPoint();
+    context.moveTo(terminusPoint.x, terminusPoint.y);
+    context.lineTo(ap.x, ap.y);
+    context.stroke();
+
     context.fillStyle = "white";
     context.beginPath();
-    context.arc(circleCenterX, circleCenterY, (offsetVal/2), 0, 2 * Math.PI, true);
+    context.arc(circleCenterX, circleCenterY, (offsetVal / 2), 0, 2 * Math.PI, true);
     context.fill();
 
     //horizontal line of plus sign
-    context.moveTo(circleCenterX - plusSize , circleCenterY);
+    context.moveTo(circleCenterX - plusSize, circleCenterY);
     context.lineTo(circleCenterX + plusSize, circleCenterY);
 
     //vertical line of plus sign
@@ -81,8 +100,8 @@ Containment.prototype.drawTail = function(context, x, y, side){
 
 
 //Draw the paletteImage for the palette
-Containment.prototype.paletteImage = function() {
-    let size=16;  // Box size
+Containment.prototype.paletteImage = function () {
+    let size = 16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
     const pi = new PaletteImage(width, height);

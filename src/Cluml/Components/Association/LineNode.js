@@ -1,4 +1,4 @@
-import {Selectable, DEBUG_BOUNDS} from "../../Selectable";
+import {DEBUG_BOUNDS, Selectable} from "../../Selectable";
 import {Vector} from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
 import {Rect} from "../../Utility/Rect";
@@ -72,6 +72,17 @@ LineNode.prototype.paletteLbl = "Line Node";
 LineNode.prototype.paletteDesc = "The intermediate nodes of an association.";
 LineNode.prototype.htmlDesc = '<h2>Line Node</h2><p>The intermediate nodes of an association.</p>';
 LineNode.prototype.paletteOrder = -1;
+
+//region Position
+/**
+ * Gets the point where the node attaches with the association
+ * line.
+ * @return {Vector}
+ */
+LineNode.prototype.lineupPoint = function () {
+    return this.position;
+}
+//endregion
 
 //region Save/Load
 LineNode.prototype.saveNode = function () {
@@ -229,7 +240,10 @@ LineNode.prototype.draw = function (context, view) {
     // Don't need to call the super function here.
     // Selectable.prototype.draw.call(this, context, view);
 
-    this.selectStyle(context, view);
+    if (this.association)
+        this.association.selectStyle(context, view);
+    else
+        this.selectStyle(context, view);
 
     // Either draws a small dot if not selected or a bigger dot if it is selected.
     // These dots inform the user where the grab points of the association are.
@@ -240,6 +254,16 @@ LineNode.prototype.draw = function (context, view) {
         context.arc(this.x, this.y, 1, 0, 2 * Math.PI, true);
     }
     context.fill();
+
+    if (this.lineupPoint() !== this.position) {
+        // Draw line from the attachment position to the actual position.
+        context.beginPath();
+
+        const line = new Line(this.position, this.lineupPoint());
+        line.contextLineTo(context);
+
+        context.stroke();
+    }
 
     if (DEBUG_BOUNDS) {
         // If in debug mode, also draw the bounding box for the cursor.

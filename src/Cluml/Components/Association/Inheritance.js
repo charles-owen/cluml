@@ -2,14 +2,13 @@ import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {SanityElement} from "../../SanityElement/SanityElement";
 import {SanityErrorInfo} from "../../SanityElement/SanityErrorInfo";
-import {Component} from "../../Component";
 
 
 /**
  * Inheritance-type association
  * @constructor
  */
-export const Inheritance = function(){
+export const Inheritance = function () {
     Association.call(this);
 
     this.forwardSanityCheck = function* () {
@@ -26,10 +25,9 @@ export const Inheritance = function(){
 
             // Check for upside down inheritance
             // Will probably rework this code. This is just for getting it to work.
-            if (this.nodes.end.y > this.nodes.start.y)
-            {
+            if (this.nodes.end.y > this.nodes.start.y) {
                 let element = new SanityElement("", undefined);
-                element.processSanityCheck = function() {
+                element.processSanityCheck = function () {
                     return [new SanityErrorInfo("8888", "Generalization",
                         "", "Upside down")];
                 }
@@ -55,7 +53,7 @@ Inheritance.prototype.loadOrder = 10;
 Inheritance.prototype.showTags = false;
 //endregion
 
-Inheritance.prototype.drawTail = function(context, x, y, side){
+Inheritance.prototype.drawTail = function (context, view, tail) {
     //this will determine the size of the tail
     let offsetVal = 10;
     let val1 = offsetVal;
@@ -63,7 +61,11 @@ Inheritance.prototype.drawTail = function(context, x, y, side){
     let val3 = offsetVal;
     let val4 = offsetVal;
 
-    switch(side){
+    const side = Math.floor(tail.side);
+    const x = tail.x;
+    const y = tail.y;
+
+    switch (side) {
         case 0:
             //top
             val1 = x - offsetVal;
@@ -100,6 +102,18 @@ Inheritance.prototype.drawTail = function(context, x, y, side){
             break;
     }
 
+    // Draw the line from the shape to the lineup point.
+    context.beginPath();
+    const ap = tail.lineupPoint();
+    if (side % 2 === 0) {
+        context.moveTo(x, val2);
+    } else {
+        context.moveTo(val1, y);
+    }
+    context.lineTo(ap.x, ap.y);
+    context.closePath();
+    context.stroke();
+
     context.fillStyle = "white";
     context.beginPath();
     context.moveTo(x, y);
@@ -111,8 +125,8 @@ Inheritance.prototype.drawTail = function(context, x, y, side){
 }
 
 //Draw the paletteImage for the palette
-Inheritance.prototype.paletteImage = function() {
-    let size=16;  // Box size
+Inheritance.prototype.paletteImage = function () {
+    let size = 16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
     const pi = new PaletteImage(width, height);

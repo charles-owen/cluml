@@ -302,7 +302,6 @@ Association.prototype.bounds = function () {
 Association.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 
-    // const testNodes = [...this.nodeGenerator()];
     this.selectStyle(context, view);
 
     // Draw the line.
@@ -400,15 +399,17 @@ Association.prototype.nodeSpins = function* () {
     }
 
     for (const edge of this.edgeGenerator()) {
+        const toV = edge.to.lineupPoint();
+        const fromV = edge.from.lineupPoint();
         const middle = spin === SPIN_HORIZONTAL ?
-            new Vector(edge.to.x, edge.from.y) :
-            new Vector(edge.from.x, edge.to.y);
+            new Vector(toV.x, fromV.y) :
+            new Vector(fromV.x, toV.y);
 
         yield {
             edge: edge,
             spin: spin,
-            lineStart: new Line(edge.from.position, middle),
-            lineEnd: new Line(middle, edge.to.position)
+            lineStart: new Line(edge.from.lineupPoint(), middle),
+            lineEnd: new Line(middle, edge.to.lineupPoint())
         }
     }
 }
@@ -479,15 +480,12 @@ Association.prototype.paletteImage = function () {
 
 /**
  * Default drawTail function, called by the #end TerminationNode
+ * @param context
+ * @param view
+ * @param tail {TerminationNode}
  */
-Association.prototype.drawTail = function (context, x, y, side, view) {
-    for (const tNode of [this.nodes.start, this.nodes.end]) {
-        if (tNode.isTail) {
-            //LineNode.prototype.draw.call(tNode, context, MainSingleton.singleton.currentView);
-            LineNode.prototype.draw.call(tNode, context, view);
-            break;
-        }
-    }
+Association.prototype.drawTail = function (context, view, tail) {
+    LineNode.prototype.draw.call(tail, context, view);
 }
 
 Association.prototype.delete = function() {

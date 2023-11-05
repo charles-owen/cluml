@@ -109,6 +109,9 @@ Selectable.prototype.isSelected = function (other) {
 }
 
 Selectable.prototype.selectStyle = function (context, view) {
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+
     if (view.selection.isSelected(this)) {
         context.strokeStyle = this.selectedStyle;
         context.fillStyle = this.selectedStyle;

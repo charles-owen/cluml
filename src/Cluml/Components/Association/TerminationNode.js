@@ -16,6 +16,12 @@ import {SanityElement} from "../../SanityElement/SanityElement.js";
  */
 export const NODE_CLASS_SNAP_DIST = 25;
 
+/**
+ * Determines how far away from any attached classes to start drawing the line.
+ * @type {number}
+ */
+export const ATTACHMENT_OFFSET = 25;
+
 export const TerminationNode = function () {
     LineNode.call(this);
 
@@ -182,7 +188,7 @@ TerminationNode.prototype.draw = function (context, view) {
     // Draw the tails of the association
     if (this.isTail) {
         // Tail termination node doesn't call LineNode.draw
-        this.association.drawTail(context, this.x, this.y, side, view);
+        this.association.drawTail(context, view, this);
     } else {
         LineNode.prototype.draw.call(this, context, view);
     }
@@ -197,6 +203,31 @@ TerminationNode.prototype.draw = function (context, view) {
 //endregion
 
 //region LineNode Overrides
+TerminationNode.prototype.lineupPoint = function () {
+    if (!this.attachedTo)
+        return this.position;
+
+    const side = Math.floor(this.side);
+    const normal = new Vector(0, 0);
+
+    switch (side) {
+        case 0:
+            normal.y = ATTACHMENT_OFFSET;
+            break;
+        case 1:
+            normal.x = ATTACHMENT_OFFSET;
+            break;
+        case 2:
+            normal.y = -ATTACHMENT_OFFSET;
+            break;
+        case 3:
+            normal.x = -ATTACHMENT_OFFSET;
+            break;
+    }
+
+    return Vector.add(this.position, normal);
+}
+
 /**
  * Links this node with another node. As the termination node can only be
  * linked with one other node, calling this method unlinks this from the

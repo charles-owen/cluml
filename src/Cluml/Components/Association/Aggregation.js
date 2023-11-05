@@ -6,7 +6,7 @@ import {PaletteImage} from "../../Graphics/PaletteImage";
  * Inheritance-type association
  * @constructor
  */
-export const Aggregation = function(){
+export const Aggregation = function () {
     Association.call(this);
 }
 
@@ -25,8 +25,8 @@ Aggregation.prototype.loadOrder = 12;
 //endregion
 
 //Draw the paletteImage for the palette
-Aggregation.prototype.paletteImage = function() {
-    let size=16;  // Box size
+Aggregation.prototype.paletteImage = function () {
+    let size = 16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
     const pi = new PaletteImage(width, height);
@@ -48,7 +48,7 @@ Aggregation.prototype.paletteImage = function() {
     // return pi;
 }
 
-Aggregation.prototype.drawTail = function(context, x, y, side){
+Aggregation.prototype.drawTail = function (context, view, tail) {
     //this will determine the size of the tail
     let offsetVal = 12;
     //let midPointVal = offsetVal/Math.sin(Math.PI/4);
@@ -64,62 +64,74 @@ Aggregation.prototype.drawTail = function(context, x, y, side){
     let threeX = 0;
     let threeY = 0;
 
-    switch(side){
+    const side = Math.floor(tail.side);
+    const x = tail.x;
+    const y = tail.y;
+
+    switch (side) {
         //top
         case 0:
-            oneX = x - (offsetVal/2);
-            oneY = y + (offsetVal/2);
+            oneX = x - (offsetVal / 2);
+            oneY = y + (offsetVal / 2);
 
             twoX = x;
             twoY = y + offsetVal;
 
-            threeX = x + (offsetVal/2);
-            threeY = y + (offsetVal/2);
+            threeX = x + (offsetVal / 2);
+            threeY = y + (offsetVal / 2);
             break;
         //Right
         case 1:
-            oneX = x + (offsetVal/2);
-            oneY = y + (offsetVal/2);
+            oneX = x + (offsetVal / 2);
+            oneY = y + (offsetVal / 2);
 
             twoX = x + offsetVal;
             twoY = y;
 
-            threeX = x + (offsetVal/2);
-            threeY = y - (offsetVal/2);
+            threeX = x + (offsetVal / 2);
+            threeY = y - (offsetVal / 2);
             break;
         //bottom
         case 2:
-            oneX = x + (offsetVal/2);
-            oneY = y - (offsetVal/2);
+            oneX = x + (offsetVal / 2);
+            oneY = y - (offsetVal / 2);
 
             twoX = x;
             twoY = y - offsetVal;
 
-            threeX = x - (offsetVal/2);
-            threeY = y - (offsetVal/2);
+            threeX = x - (offsetVal / 2);
+            threeY = y - (offsetVal / 2);
             break;
         //left
         case 3:
-            oneX = x - (offsetVal/2);
-            oneY = y - (offsetVal/2);
+            oneX = x - (offsetVal / 2);
+            oneY = y - (offsetVal / 2);
 
             twoX = x - offsetVal;
             twoY = y;
 
-            threeX = x - (offsetVal/2);
-            threeY = y + (offsetVal/2);
+            threeX = x - (offsetVal / 2);
+            threeY = y + (offsetVal / 2);
             break;
         default:
-            oneX = x - (offsetVal/2);
-            oneY = y + (offsetVal/2);
+            oneX = x - (offsetVal / 2);
+            oneY = y + (offsetVal / 2);
 
             twoX = x;
             twoY = y + offsetVal;
 
-            threeX = x + (offsetVal/2);
-            threeY = y + (offsetVal/2);
+            threeX = x + (offsetVal / 2);
+            threeY = y + (offsetVal / 2);
             break;
     }
+
+    // Draw the line from the shape to the lineup point.
+    context.beginPath();
+    const ap = tail.lineupPoint();
+    context.moveTo(twoX, twoY);
+    context.lineTo(ap.x, ap.y);
+    context.stroke();
+
     context.fillStyle = "white";
     context.beginPath();
     context.moveTo(x, y);
