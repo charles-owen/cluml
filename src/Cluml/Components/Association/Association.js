@@ -157,6 +157,12 @@ Association.prototype.htmlDesc = '<h2>Association</h2><p>A basic association bet
 Association.prototype.paletteOrder = 11;
 Association.prototype.loadOrder = 11;
 Association.prototype.drawOrder = 20;
+
+/**
+ * Determines whether the multiplicity and roles will be displayed.
+ * @type {boolean}
+ */
+Association.prototype.showTags = true;
 //endregion
 
 //region Component Methods

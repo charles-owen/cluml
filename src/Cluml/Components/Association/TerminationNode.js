@@ -119,10 +119,13 @@ TerminationNode.prototype.rightClick = function (x, y) {
 
     // Show context menu.
     const contextMenu = new CustomContextMenu(this, new Vector(x, y));
-    contextMenu.addEntry("Edit Multiplicity/Label", function () {
-        const tNodeDlg = new TerminationNodeDlg(this);
-        tNodeDlg.open();
-    });
+    if (!this.association || this.association.showTags) {
+        // Only allow users to open dialog if tags (role/multiplicity) are to be shown.
+        contextMenu.addEntry("Edit Multiplicity/Label", function () {
+            const tNodeDlg = new TerminationNodeDlg(this);
+            tNodeDlg.open();
+        });
+    }
     contextMenu.addEntry("Swap Start and End", function () {
         this.association.swapEnds();
         MainSingleton.singleton.currentView.selection.selected = [this];
@@ -184,8 +187,12 @@ TerminationNode.prototype.draw = function (context, view) {
         LineNode.prototype.draw.call(this, context, view);
     }
 
-    this.multiplicityValue.draw(context, view);
-    this.roleValue.draw(context, view);
+    if (!this.association || this.association.showTags) {
+        // Only show multiplicity and role if the association requests it.
+        // If no association, default to drawing the tags.
+        this.multiplicityValue.draw(context, view);
+        this.roleValue.draw(context, view);
+    }
 }
 //endregion
 

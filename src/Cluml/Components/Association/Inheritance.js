@@ -2,6 +2,7 @@ import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {SanityElement} from "../../SanityElement/SanityElement";
 import {SanityErrorInfo} from "../../SanityElement/SanityErrorInfo";
+import {Component} from "../../Component";
 
 
 /**
@@ -50,6 +51,8 @@ Inheritance.prototype.paletteDesc = "Inheritance component.";
 Inheritance.prototype.htmlDesc = '<h2>Inheritance</h2><p>Inheritance between 2 classes.</p>';
 Inheritance.prototype.paletteOrder = 10;
 Inheritance.prototype.loadOrder = 10;
+
+Inheritance.prototype.showTags = false;
 //endregion
 
 Inheritance.prototype.drawTail = function(context, x, y, side){
@@ -106,7 +109,6 @@ Inheritance.prototype.drawTail = function(context, x, y, side){
     context.fill();
     context.stroke();
 }
-
 
 //Draw the paletteImage for the palette
 Inheritance.prototype.paletteImage = function() {
