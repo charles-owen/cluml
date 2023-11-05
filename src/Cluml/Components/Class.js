@@ -113,10 +113,10 @@ export const Class = function () {
     Object.defineProperty(this, 'nameHeight', {
         get: function () {
             if(this.isVariation) {
-                return this.fontHeight * 4;
+                return this.fontHeight * 2.8;
             }
             else {
-                return this.fontHeight * 2.5;
+                return this.fontHeight * 1.75;
             }
         }
     });
@@ -362,13 +362,13 @@ Class.prototype.draw = function (context, view) {
         if (this.isVariation) {
             this.drawName(context,
                 0,
-                this.fontHeight * 3,
+                this.fontHeight * 2.25,
                 ITALICS_FONT);
         }
         else {
             this.drawName(context,
                 0,
-                this.fontHeight * 1.5,
+                this.fontHeight * 1.25,
                 ITALICS_FONT);
         }
     }
@@ -377,13 +377,13 @@ Class.prototype.draw = function (context, view) {
         if (this.isVariation) {
             this.drawName(context,
                 0,
-                this.fontHeight * 3,
+                this.fontHeight * 2.25,
                 NAME_FONT);
         }
         else {
             this.drawName(context,
                 0,
-                this.fontHeight * 1.5,
+                this.fontHeight * 1.25,
                 NAME_FONT);
         }
     }

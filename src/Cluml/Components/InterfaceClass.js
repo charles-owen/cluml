@@ -64,7 +64,7 @@ InterfaceClass.prototype.draw = function (context, view) {
     context.beginPath();
     context.font = NAME_FONT;
     context.textAlign = "center";
-    context.fillText("<<interface>>", this.x, this.y + this.fontHeight * 1.5);
+    context.fillText("<<interface>>", this.x, this.y + this.fontHeight * 1.2);
     context.stroke();
 }
 
