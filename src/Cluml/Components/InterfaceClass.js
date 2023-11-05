@@ -10,6 +10,11 @@ export const InterfaceClass = function () {
 
     // Interfaces don't have attributes
     this.attributes = [];
+
+    // All operations in an interface class must be abstract
+    for(let i = 0; i < this.operations.length; i++) {
+        this.operations[i].abstract = true;
+    }
 }
 
 InterfaceClass.prototype = Object.create(Class.prototype);
@@ -71,7 +76,9 @@ InterfaceClass.prototype.draw = function (context, view) {
 InterfaceClass.prototype.addAttribute = function(attribute) {
     Class.prototype.addAttribute.call(this, attribute);
     this.attributes = [];
-    this.operations.push(new Operation("operation(): String"));
+    let operation = new Operation("operation(): String");
+    operation.abstract = true;
+    this.operations.push(operation);
 }
 
 /**
