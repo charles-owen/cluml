@@ -60,6 +60,25 @@ export const SanityCheckDlg = function(main) {
             errorCount += 1;
         }
 
+        // Check for multiple classes with the same name
+        const map = new Map();
+        for (const classObj of classes) {
+            if (!map.has(classObj.naming)) {
+                map.set(classObj.naming, 1);
+            }
+            else {
+                let count = map.get(classObj.naming);
+
+                if (count === 1) {
+                    // add error message
+                    errorTbl.appendChild(new SanityErrorInfo("9998", "Class",
+                        classObj.naming, "Multiple classes with the same name").HTMLRepresentation);
+                    errorCount += 1;
+                }
+                map.set(classObj.naming, count + 1);
+            }
+        }
+
         const h2 = document.createElement('h2');
         h2.textContent = `(${errorCount}) errors have been detected`;
         html.appendChild(h2);
