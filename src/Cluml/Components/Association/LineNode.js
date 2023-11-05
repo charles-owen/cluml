@@ -178,19 +178,42 @@ LineNode.prototype.grab = function () {
     this.touched = true;
 }
 
-// LineNode.prototype.move = function (dx, dy, x, y) {
-//     Selectable.prototype.move.call(this, dx, dy, x, y);
-//     const cursorPos = new Vector(x,y);
-//     const delta = Vector.sub(cursorPos, this.movedFrom);
-//
-//     if (Math.abs(delta.x) > Math.abs(delta.y)) {
-//         this.x = this.moveX;
-//         this.y = this.movedFrom.y;
-//     } else {
-//         this.x = this.movedFrom.x;
-//         this.y = this.moveY;
-//     }
-// }
+LineNode.prototype.move = function (dx, dy, x, y) {
+    Selectable.prototype.move.call(this, dx, dy, x, y);
+
+    // Check the prev and next nodes, update if they don't have the correct position.
+    if (this.association) {
+        this.association.nodes.start.syncNodes();
+    }
+}
+
+/**
+ * Syncs all the nodes in the association.
+ * @return {boolean}
+ */
+LineNode.prototype.syncNodes = function () {
+    let anyChanges = false;
+    // Check the prev and next nodes, update if they don't have the correct position.
+    if (this.hasPrevious) {
+        if (!this.previousNode.isManaged) {
+            // No managed node? Make one.
+            this.association.insertManagedBetween(this.previousNode, this);
+            anyChanges = true;
+        }
+    }
+
+    if (this.hasNext) {
+        if (!this.nextNode.isManaged) {
+            // No managed node? Make one.
+            this.association.insertManagedBetween(this, this.nextNode);
+            anyChanges = true;
+        }
+
+        return this.nextNode.syncNodes() || anyChanges;
+    }
+
+    return anyChanges;
+}
 
 LineNode.prototype.drop = function () {
     Selectable.prototype.drop.call(this);

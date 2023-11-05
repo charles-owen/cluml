@@ -4,9 +4,9 @@ import {Rect} from "../../Utility/Rect";
 import {LineNode, SPIN_HORIZONTAL, SPIN_VERTICAL} from "./LineNode";
 import Vector from "../../Utility/Vector";
 import {Line} from "../../Utility/Line";
-import {MainSingleton} from "../../MainSingleton";
 import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
+import {ManagedNode} from "./ManagedNode";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -240,18 +240,6 @@ Association.prototype.touch = function (x, y) {
     return null;
 }
 
-// Association.prototype.move = function (dx, dy) {
-//     Selectable.prototype.move.call(this, dx, dy);
-//
-//     let node = this.nodes.start;
-//
-//     do {
-//         node.x += dx;
-//         node.y += dy;
-//         node = node.nextNode;
-//     } while (node !== null);
-// }
-
 Association.prototype.isSelected = function (other) {
     if (Selectable.prototype.isSelected.call(this, other)) {
         return true;
@@ -387,14 +375,13 @@ Association.prototype.nodeSpins = function* () {
     if (node.attachedTo !== null) {
         // If the start node is attached to any class, determine which
         // spin is best based on the side it's attached to.
-        const side = node.side;
-        if ((side >= 0 && side < 1) ||
-            (side >= 2 && side < 3)) {
+        const side = Math.floor(node.side);
+        if (side % 2 === 1) {
             // Top/bottom.
-            spin = SPIN_VERTICAL;
+            spin = SPIN_HORIZONTAL;
         } else {
             // Left/right.
-            spin = SPIN_HORIZONTAL;
+            spin = SPIN_VERTICAL;
         }
     }
 
@@ -408,8 +395,8 @@ Association.prototype.nodeSpins = function* () {
         yield {
             edge: edge,
             spin: spin,
-            lineStart: new Line(edge.from.lineupPoint(), middle),
-            lineEnd: new Line(middle, edge.to.lineupPoint())
+            lineStart: new Line(fromV, middle),
+            lineEnd: new Line(middle, toV)
         }
     }
 }
@@ -464,6 +451,18 @@ Association.prototype.createNodeNear = function (near) {
 }
 
 /**
+ * Inserts a managed node between two existing nodes.
+ * @param previousNode
+ * @param nextNode
+ */
+Association.prototype.insertManagedBetween = function (previousNode, nextNode) {
+    const mn = new ManagedNode();
+    mn.x = previousNode.x;
+    mn.y = nextNode.y;
+    mn.insertBetween(previousNode, nextNode);
+}
+
+/**
  * Draw the paletteImage for the palette
  * @return {PaletteImage}
  */
@@ -488,7 +487,7 @@ Association.prototype.drawTail = function (context, view, tail) {
     LineNode.prototype.draw.call(tail, context, view);
 }
 
-Association.prototype.delete = function() {
+Association.prototype.delete = function () {
     this.nodes.start.detachFromClass();
     this.nodes.end.detachFromClass();
     Component.prototype.delete.call(this);
