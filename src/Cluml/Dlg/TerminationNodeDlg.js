@@ -8,7 +8,7 @@ export class TerminationNodeDlg extends Dialog {
      * ID for the tag text input.
      * @type {string}
      */
-    tagInputID;
+    roleInputID;
 
     /**
      * ID for the multiplicity text input.
@@ -29,31 +29,62 @@ export class TerminationNodeDlg extends Dialog {
         const multiSE = this.node.multiplicityValue;
         const roleSE = this.node.roleValue;
 
-        const containerDiv = document.createElement('div');
+        const tbl = document.createElement('table');
 
-        // Inputs
-        const inputsDiv = document.createElement('div');
-
-        //region Right Div
-        // Multiplicity
+        //region Inputs
+        //region Multiplicity
         const multiDiv = document.createElement('div');
-        multiDiv.style.float = 'right';
-        multiDiv.style.width = '49%';
-
-        const multiLbl = document.createElement('label');
-        multiLbl.innerText = "Multiplicity";
-
         const multiInput = document.createElement('input');
         multiInput.id = Unique.uniqueName();
+        this.multiInputID = multiInput.id;
         multiInput.type = 'text';
         multiInput.defaultValue = multiSE.elementValue;
         multiInput.value = multiSE.elementValue;
         multiInput.autocomplete = 'on';
         multiInput.style.width = "100%";
 
-        // Go to other node btn.
+        const multiLbl = document.createElement('label');
+        multiLbl.innerText = "Multiplicity";
+        multiLbl.htmlFor = multiInput.id;
+        multiDiv.append(multiLbl, multiInput);
+        //endregion
+
+
+        //region Role
+        const roleDiv = document.createElement('div');
+        const roleInput = document.createElement('input');
+        roleInput.id = Unique.uniqueName();
+        this.roleInputID = roleInput.id;
+        roleInput.type = 'text';
+        roleInput.defaultValue = roleSE.elementValue;
+        roleInput.value = roleSE.elementValue;
+        roleInput.autocomplete = 'on';
+        roleInput.style.width = "100%";
+
+        const roleLbl = document.createElement('label');
+        roleLbl.innerText = "Role";
+        roleLbl.htmlFor = roleInput.id;
+        roleDiv.append(roleLbl, roleInput);
+        //endregion
+
+
+        //region Add everything to row
+        const inputRow = document.createElement('tr');
+        const multiCell = document.createElement('td');
+        multiCell.append(multiDiv);
+        const roleCell = document.createElement('td');
+        roleCell.append(roleDiv);
+        inputRow.append(multiCell, roleCell);
+        tbl.append(inputRow);
+        //endregion
+        //endregion
+
+
+        //region Buttons
+        //region Goto Other Node
         const gotoBtn = document.createElement('button');
-        gotoBtn.classList.add('tooltip-target');
+        gotoBtn.classList.add('tooltip-target', 'association-btn');
+        gotoBtn.type = 'button';
         const gotoIcon = document.createElement('span');
         gotoIcon.classList.add('big-btn-txt');
         gotoIcon.innerText = `↵`;
@@ -61,14 +92,12 @@ export class TerminationNodeDlg extends Dialog {
         const gotoTooltip = document.createElement('span');
         gotoTooltip.className = "tooltip";
         gotoTooltip.textContent = 'Go To Other';
-        gotoTooltip.style.left = '0';
-        gotoTooltip.style.bottom = '-4em';    // Avoid cutting off tooltip
+        gotoTooltip.style.bottom = '1em';    // Avoid cutting off tooltip
         const gotoTTCenter = document.createElement('div');
         gotoTTCenter.className = 'tooltip-centerer';
         gotoTTCenter.appendChild(gotoTooltip);
 
         gotoBtn.append(gotoTTCenter);
-
         gotoHandler = gotoHandler.bind(this);
         gotoBtn.addEventListener('click', gotoHandler);
 
@@ -94,31 +123,12 @@ export class TerminationNodeDlg extends Dialog {
             MainSingleton.singleton.currentView.selection.selected = [selected];
             MainSingleton.singleton.redraw();
         }
-
-        multiLbl.htmlFor = multiInput.id;
-        multiDiv.append(multiLbl, multiInput, gotoBtn);
         //endregion
 
-        //region Left Div
-        // Role
-        const roleDiv = document.createElement('div');
-        roleDiv.style.float = 'left';
-        roleDiv.style.width = '49%';
-
-        const roleLbl = document.createElement('label');
-        roleLbl.innerText = "Role";
-
-        const roleInput = document.createElement('input');
-        roleInput.id = Unique.uniqueName();
-        roleInput.type = 'text';
-        roleInput.defaultValue = roleSE.elementValue;
-        roleInput.value = roleSE.elementValue;
-        roleInput.autocomplete = 'on';
-        roleInput.style.width = "100%";
-
-        // Swap nodes button.
+        //region Swap Nodes
         const swapBtn = document.createElement('button');
-        swapBtn.classList.add('tooltip-target');
+        swapBtn.classList.add('tooltip-target', 'association-btn');
+        swapBtn.type = 'button';
         const swapIcon = document.createElement('span');
         swapIcon.classList.add('big-btn-txt');
         swapIcon.innerText = '⇌';
@@ -126,14 +136,12 @@ export class TerminationNodeDlg extends Dialog {
         const swapTooltip = document.createElement('span');
         swapTooltip.className = "tooltip";
         swapTooltip.textContent = 'Swap Arrow and End';
-        swapTooltip.style.left = '0';
-        swapTooltip.style.bottom = '-4em';    // Avoid cutting off tooltip
+        swapTooltip.style.bottom = '-1em';    // Avoid cutting off tooltip
         const swapTTCenter = document.createElement('div');
         swapTTCenter.className = 'tooltip-centerer';
         swapTTCenter.appendChild(swapTooltip);
 
         swapBtn.append(swapTTCenter);
-
         swapHandler = swapHandler.bind(this);
         swapBtn.addEventListener('click', swapHandler);
 
@@ -150,19 +158,23 @@ export class TerminationNodeDlg extends Dialog {
             MainSingleton.singleton.currentView.selection.selected = [this.node];
             MainSingleton.singleton.redraw();
         }
-
-        roleLbl.htmlFor = roleInput.id;
-        roleDiv.append(roleLbl, roleInput, swapBtn);
         //endregion
 
-        this.tagInputID = roleInput.id;
-        this.multiInputID = multiInput.id;
 
-        containerDiv.append(roleDiv, multiDiv);
+        //region Add everything to buttons row
+        const btnRow = document.createElement('tr');
+        const gotoCell = document.createElement('td');
+        gotoCell.append(gotoBtn);
+        const swapCell = document.createElement('td');
+        swapCell.append(swapBtn);
+        btnRow.append(gotoCell, swapCell);
+        tbl.append(btnRow);
+        //endregion
+        //endregion
 
         const endType = this.node.isTail ? 'Arrow' : 'End';
         super.contents(
-            containerDiv,
+            tbl,
             `Edit ${this.node.association.paletteLbl} ${endType}`
         );
         Dialog.prototype.open.call(this);
@@ -173,7 +185,7 @@ export class TerminationNodeDlg extends Dialog {
         const roleSE = this.node.roleValue;
 
         const mInput = document.getElementById(this.multiInputID);
-        const tInput = document.getElementById(this.tagInputID);
+        const tInput = document.getElementById(this.roleInputID);
 
         multiSE.elementValue = mInput.value;
         roleSE.elementValue = tInput.value;
