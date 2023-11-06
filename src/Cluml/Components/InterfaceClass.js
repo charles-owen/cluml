@@ -7,6 +7,8 @@ export const InterfaceClass = function () {
     Class.call(this);
 
     this.isVariation = true;
+    
+    this.abstract = true;
 
     // Interfaces don't have attributes
     this.attributes = [];
