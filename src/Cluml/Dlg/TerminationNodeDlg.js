@@ -34,10 +34,12 @@ export class TerminationNodeDlg extends Dialog {
         //region Inputs
         //region Multiplicity
         const multiDiv = document.createElement('div');
+
         const multiInput = document.createElement('input');
         multiInput.id = Unique.uniqueName();
         this.multiInputID = multiInput.id;
         multiInput.type = 'text';
+        multiInput.tabIndex = 0;
         multiInput.defaultValue = multiSE.elementValue;
         multiInput.value = multiSE.elementValue;
         multiInput.autocomplete = 'on';
@@ -52,10 +54,12 @@ export class TerminationNodeDlg extends Dialog {
 
         //region Role
         const roleDiv = document.createElement('div');
+
         const roleInput = document.createElement('input');
         roleInput.id = Unique.uniqueName();
         this.roleInputID = roleInput.id;
         roleInput.type = 'text';
+        roleInput.tabIndex = 0;
         roleInput.defaultValue = roleSE.elementValue;
         roleInput.value = roleSE.elementValue;
         roleInput.autocomplete = 'on';
@@ -85,6 +89,7 @@ export class TerminationNodeDlg extends Dialog {
         const gotoBtn = document.createElement('button');
         gotoBtn.classList.add('tooltip-target', 'association-btn');
         gotoBtn.type = 'button';
+        gotoBtn.tabIndex = 10;
         const gotoIcon = document.createElement('span');
         gotoIcon.classList.add('big-btn-txt');
         gotoIcon.innerText = `↵`;
@@ -129,6 +134,7 @@ export class TerminationNodeDlg extends Dialog {
         const swapBtn = document.createElement('button');
         swapBtn.classList.add('tooltip-target', 'association-btn');
         swapBtn.type = 'button';
+        swapBtn.tabIndex = 10;
         const swapIcon = document.createElement('span');
         swapIcon.classList.add('big-btn-txt');
         swapIcon.innerText = '⇌';
@@ -178,6 +184,29 @@ export class TerminationNodeDlg extends Dialog {
             `Edit ${this.node.association.paletteLbl} ${endType}`
         );
         Dialog.prototype.open.call(this);
+
+        // Focus on first input.
+        multiInput.focus();
+
+        //region Handle enter press for inputs.
+        const dialogDiv = this.div;
+
+        multiInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                roleLbl.focus();
+            }
+        });
+
+        roleInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const okBtns = document.getElementsByClassName('cs-ok');
+
+                if (okBtns) {
+                    okBtns[0].focus();
+                }
+            }
+        })
+        //endregion
     }
 
     ok() {
