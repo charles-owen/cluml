@@ -44,7 +44,7 @@ AddPopup.prototype.draw = function (context, view, x, y) {
         x+this.xOffset+this.margin,
         this.top + (this.height / 3) - 10,this.width);
 
-    context.fillText("Ctrl + A",
+    context.fillText("Ctrl+A",
         x+this.width,
         this.top + (this.height / 3) - 10,this.width);
 
@@ -59,7 +59,7 @@ AddPopup.prototype.draw = function (context, view, x, y) {
         x+this.xOffset+this.margin,
         this.top + 2*(this.height / 3) - 10,this.width);
 
-    context.fillText("Ctrl + P",
+    context.fillText("Ctrl+P",
         x+this.width,
         this.top + 2*(this.height / 3) - 10,this.width);
 
@@ -75,7 +75,7 @@ AddPopup.prototype.draw = function (context, view, x, y) {
         this.top + 2*(this.height / 3) + 20,this.width);
 
     context.fillText("Delete",
-        x+this.margin+this.width,
+        x+this.width,
         this.top + 2*(this.height / 3) + 20,this.width);
 }
 
