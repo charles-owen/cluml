@@ -178,14 +178,9 @@ LineNode.prototype.grab = function () {
     this.touched = true;
 }
 
-LineNode.prototype.move = function (dx, dy, x, y) {
-    Selectable.prototype.move.call(this, dx, dy, x, y);
-
-    // Check the prev and next nodes, update if they don't have the correct position.
-    if (this.association) {
-        this.association.nodes.start.syncNodes();
-    }
-}
+// LineNode.prototype.move = function (dx, dy, x, y) {
+//     Selectable.prototype.move.call(this, dx, dy, x, y);
+// }
 
 /**
  * Syncs all the nodes in the association.

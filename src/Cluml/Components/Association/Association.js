@@ -290,6 +290,8 @@ Association.prototype.bounds = function () {
 Association.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 
+    this.syncNodes();
+
     this.selectStyle(context, view);
 
     // Draw the line.
@@ -491,5 +493,9 @@ Association.prototype.delete = function () {
     this.nodes.start.detachFromClass();
     this.nodes.end.detachFromClass();
     Component.prototype.delete.call(this);
+}
+
+Association.prototype.syncNodes = function () {
+    this.nodes.start.syncNodes();
 }
 //endregion
