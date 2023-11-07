@@ -102,7 +102,8 @@ TerminationNode.prototype.drop = function () {
 
     // Determine if we are near a class. For now, just go
     // through every class.
-    const classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
+    let classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
+    classes = classes.concat(MainSingleton.singleton.getCurrentComponentsByType("InterfaceClass"));
 
     for (const cl of classes) {
         // Attach to the first class we see.
