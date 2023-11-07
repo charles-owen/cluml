@@ -2,12 +2,13 @@ import {Class} from "./Class";
 import {PaletteImage} from "../Graphics/PaletteImage";
 import {NAME_FONT} from "../Selectable";
 import {Operation} from "../SanityElement/Operation";
+import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
 
 export const InterfaceClass = function () {
     Class.call(this);
 
     this.isVariation = true;
-    
+
     this.abstract = true;
 
     // Interfaces don't have attributes
@@ -81,6 +82,11 @@ InterfaceClass.prototype.addAttribute = function(attribute) {
     let operation = new Operation("operation(): String");
     operation.abstract = true;
     this.operations.push(operation);
+}
+
+InterfaceClass.prototype.openProperties = function() {
+    const propertiesDlg = new ClassPropertiesDlg(this, this.main, true);
+    propertiesDlg.open();
 }
 
 /**

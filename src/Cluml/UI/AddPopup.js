@@ -95,7 +95,7 @@ AddPopup.prototype.touch = function (x, y) {
 
         if (y < this.top + (this.height / 3))
         {
-            this.component.addAttribute(new Attribute('-attribute: String'));
+            this.component.addAttribute(new Attribute('+attribute: String'));
         }
         else if (y > this.top + 2*(this.height / 3))
         {

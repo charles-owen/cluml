@@ -257,7 +257,7 @@ Class.prototype.rightClick = function(x,y)
  * Open a ClassPropertiesDlg box
  */
 Class.prototype.openProperties = function() {
-    const propertiesDlg = new ClassPropertiesDlg(this, this.main);
+    const propertiesDlg = new ClassPropertiesDlg(this, this.main, false);
     propertiesDlg.open();
 }
 

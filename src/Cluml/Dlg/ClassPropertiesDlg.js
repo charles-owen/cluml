@@ -7,7 +7,7 @@ import {Class} from "../Components/Class";
  * Component properties dialog box
  * @constructor
  */
-export const ClassPropertiesDlg = function(component, main) {
+export const ClassPropertiesDlg = function(component, main, isInterface) {
     Dialog.call(this, 'component');
 
     this.resize = 'both';
@@ -26,10 +26,13 @@ export const ClassPropertiesDlg = function(component, main) {
     let extraValidate = function() {return null;};
     let extraTake = function() {return null;};
 
+    // ids for abstraction html elements
     let abstractInputs = [];
 
+    // ids for visibility html elements
     let visibilityInputs = [];
 
+    // ids for dropdown html elements for visibility inputs
     let dropDowns = [];
 
     /**
@@ -73,7 +76,7 @@ export const ClassPropertiesDlg = function(component, main) {
                 '</div>';
         }
         
-        // Create container for the abstract &v visibility content
+        // Create container for the abstract & visibility content
         let propertiesDiv = document.createElement("div");
 
         // Abstract Title
@@ -93,6 +96,7 @@ export const ClassPropertiesDlg = function(component, main) {
         propertiesDiv.append(abstractTitleDiv);
         propertiesDiv.append(visibilityTitleDiv);
 
+        // Styling for visibility div
         let visContentDiv = document.createElement("div");
         visContentDiv.style.overflowY = "auto";
         visContentDiv.style.maxHeight = "100px";
@@ -103,6 +107,7 @@ export const ClassPropertiesDlg = function(component, main) {
         visContentDiv.style.textOverflow = "ellipsis";
         visContentDiv.style.whiteSpace = "nowrap";
 
+        // Styling for abstraction div
         let absContentDiv = document.createElement("div");
         absContentDiv.style.overflowY = "auto";
         absContentDiv.style.maxHeight = "100px";
@@ -118,16 +123,14 @@ export const ClassPropertiesDlg = function(component, main) {
         abstractClassId = Unique.uniqueName();
         let classInput = document.createElement("input");
         classInput.type = "checkbox";
+        if (isInterface)
+            classInput.disabled = true;
         classInput.id = abstractClassId;
         abstractClassDiv.append(classInput);
         if (component.abstract)
-        {
             classInput.setAttribute("checked", "true");
-        }
         else
-        {
-        classInput.removeAttribute("checked");
-        }
+            classInput.removeAttribute("checked");
 
         let classLabel = document.createElement("label");
         classLabel.appendChild(document.createTextNode("Class"));
@@ -244,17 +247,15 @@ export const ClassPropertiesDlg = function(component, main) {
             let abstractDiv = document.createElement("div");
             let absInput = document.createElement("input");
             absInput.type = "checkbox";
+            if (isInterface)
+                absInput.disabled = true;
             absInput.id = Unique.uniqueName();
             abstractDiv.append(absInput);
             abstractInputs.push(absInput.id);
             if (operation.abstract)
-            {
                 absInput.setAttribute("checked", "true");
-            }
             else
-            {
                 absInput.removeAttribute("checked");
-            }
 
             let absLabel = document.createElement("label");
             absLabel.appendChild(document.createTextNode(operationName));
@@ -288,9 +289,7 @@ export const ClassPropertiesDlg = function(component, main) {
                     }
                 }
                 else
-                {
                     dropDown.style.display = "none";
-                }
             });
         }
 
@@ -300,9 +299,7 @@ export const ClassPropertiesDlg = function(component, main) {
                 {
                     let dropDown = document.getElementById(dropDowns[i]);
                     if (dropDown)
-                    {
                         dropDown.style.display = "none";
-                    }
                 }
             }
         });
