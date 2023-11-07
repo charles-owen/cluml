@@ -15,7 +15,7 @@ export const HelpMenu = function(menu, main) {
         return '<li><a>Help</a>' +
             '<ul class="help-menu">' +
             '<li><a class="help-help">Help</a></li>' +
-            '<li><a class="help-docked-help">Docked Help<img alt="Docked Help"/></a></li>' +
+            '<li><a class="help-docked-help">Docked Help<img></a></li>' +
             '<li><a class="help-sanity-check">Sanity Check</a></li>' +
             '<li><a class="help-about">About...</a></li>' +
             '</ul>' +
