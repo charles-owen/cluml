@@ -78,7 +78,7 @@ export class Operation extends SanityElement {
 
     processSanityCheck() {
         let messages = Name.Check(200, "Operation",
-            this.elementValue, this.name, "Name");
+            this.elementValue, this.name, "Name", true);
 
         messages = messages.concat(Name.Check(204, "Operation",
             this.elementValue, this.type, "Type", true));
