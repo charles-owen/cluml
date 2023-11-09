@@ -188,6 +188,18 @@ LineNode.prototype.grab = function () {
  */
 LineNode.prototype.syncNodes = function () {
     let anyChanges = false;
+
+    // // Check if this node is redundant.
+    // if (this.hasPrevious && this.hasNext) {
+    //     if (this.y === this.previousNode.y && this.y === this.nextNode.y) {
+    //         // Vertically redundant.
+    //         this.delete();
+    //     } else if (this.x === this.previousNode.x && this.x === this.nextNode.x) {
+    //         // Horizontally redundant.
+    //         this.delete();
+    //     }
+    // }
+
     // Check the prev and next nodes, update if they don't have the correct position.
     if (this.hasPrevious) {
         if (!this.previousNode.isManaged) {

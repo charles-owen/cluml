@@ -283,7 +283,7 @@ export const View = function(main, canvas, diagram) {
                 // Ctrl + A for Add
                 if (keysDown[17] && keysDown[65])
                 {
-                    this.selection.selected[0].addAttribute(new Attribute('+attribute: String'));
+                    this.selection.selected[0].addAttribute(new Attribute('+attribute: string'));
                     this.draw();
                     keysDown = {};
                 }

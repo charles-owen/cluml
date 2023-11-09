@@ -78,10 +78,10 @@ export class Operation extends SanityElement {
 
     processSanityCheck() {
         let messages = Name.Check(200, "Operation",
-            this.elementValue, this.name, "Name");
+            this.elementValue, this.name, "Name", true);
 
         messages = messages.concat(Name.Check(204, "Operation",
-            this.elementValue, this.type, "Type", true));
+            this.elementValue, this.type, "Type"));
 
         const showVisibility = Class.prototype.showVisibility;
         if (this.visibility === '' && showVisibility) {
@@ -91,9 +91,6 @@ export class Operation extends SanityElement {
         if (this.name === '')
             messages.push(new SanityErrorInfo("0209",
                 "Operation", this.elementValue, "Name missing"));
-        if (this.type === '')
-            messages.push(new SanityErrorInfo("0210",
-                "Operation", this.elementValue, "Type missing"));
 
         const paramMessages = this.#checkParameters();
         messages = messages.concat(paramMessages);
@@ -141,9 +138,10 @@ export class Operation extends SanityElement {
                     this.elementValue, "Parameter type missing"));
 
             messages = messages.concat(Name.Check(213, "Operation",
-                this.elementValue, name, "Parameter name"));
+                this.elementValue, name, "Parameter name", false));
+
             messages = messages.concat(Name.Check(217, "Operation",
-                this.elementValue, type, "Parameter type", true));
+                this.elementValue, type, "Parameter type"));
         }
 
         return messages;

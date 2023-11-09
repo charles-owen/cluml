@@ -20,7 +20,7 @@ export const Name = function()
  * @returns {SanityErrorInfo[]} List of error messages
  * @constructor
  */
-Name.Check = function(errorCode, elementType, elementName, string, prefix= "Name", capitalized= false)
+Name.Check = function(errorCode, elementType, elementName, string, prefix= "Name", capitalized= null)
 {
     let messages = [];
     if (string.length === 0)
@@ -41,12 +41,12 @@ Name.Check = function(errorCode, elementType, elementName, string, prefix= "Name
         messages.push(new SanityErrorInfo(`${errorCode + 2}`.padStart(4, '0'),
                                           elementType, elementName, `${prefix}'s first character is not alphabetical`));
     }
-    else if (capitalized && string[0].toUpperCase() !== string[0])
+    else if (capitalized === true && string[0].toUpperCase() !== string[0])
     {
         messages.push(new SanityErrorInfo(`${errorCode + 3}`.padStart(4, '0'),
                                           elementType, elementName, `${prefix}'s first character is not capitalized`));
     }
-    else if (!capitalized && string[0].toUpperCase() === string[0])
+    else if (capitalized === false && string[0].toUpperCase() === string[0])
     {
         messages.push(new SanityErrorInfo(`${errorCode + 3}`.padStart(4, '0'),
                                           elementType, elementName, `${prefix}'s first character is capitalized`));
