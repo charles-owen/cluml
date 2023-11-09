@@ -60,7 +60,7 @@ export class Attribute extends SanityElement {
 
     processSanityCheck() {
         let messages = Name.Check(100, "Attribute",
-            this.elementValue, this.name, "Name");
+            this.elementValue, this.name, "Name", false);
 
         messages = messages.concat(Name.Check(104, "Attribute",
             this.elementValue, this.type, "Type"));
