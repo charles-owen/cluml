@@ -41,7 +41,7 @@ Name.Check = function(errorCode, elementType, elementName, string, prefix= "Name
         messages.push(new SanityErrorInfo(`${errorCode + 2}`.padStart(4, '0'),
                                           elementType, elementName, `${prefix}'s first character is not alphabetical`));
     }
-    else if (capitalized && string[0].toUpperCase() !== string[0])
+    else if (capitalized && string[0].toUpperCase() !== string[0] && string !== 'int' && string !== 'string' && string !== 'boolean' && string !== 'bool' && string !== 'double') //only throw this error if the string
     {
         messages.push(new SanityErrorInfo(`${errorCode + 3}`.padStart(4, '0'),
                                           elementType, elementName, `${prefix}'s first character is not capitalized`));

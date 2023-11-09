@@ -63,7 +63,7 @@ export class Attribute extends SanityElement {
             this.elementValue, this.name, "Name");
 
         messages = messages.concat(Name.Check(104, "Attribute",
-            this.elementValue, this.type, "Type", true));
+            this.elementValue, this.type, "Type"));
 
         const showVisibility = Class.prototype.showVisibility;
         if (this.visibility === '' && showVisibility) {

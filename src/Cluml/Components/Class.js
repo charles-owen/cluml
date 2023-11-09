@@ -59,13 +59,13 @@ export const Class = function () {
      * The array of attributes.
      * @type{Array<Attribute>}
      */
-    this.attributes = [new Attribute('-attribute: String')];
+    this.attributes = [new Attribute('-attribute: string')];
 
     /**
      * The array of operations.
      * @type{Array<Operation>}
      */
-    this.operations = [new Operation('-operation(): String')];
+    this.operations = [new Operation('-operation(): string')];
 
     this.addPopup = null;
 
