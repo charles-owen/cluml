@@ -9,8 +9,6 @@ export const InterfaceClass = function () {
 
     this.isVariation = true;
 
-    this.abstract = true;
-
     // Interfaces don't have attributes
     this.attributes = [];
 
@@ -84,6 +82,10 @@ InterfaceClass.prototype.addAttribute = function(attribute) {
     this.operations.push(operation);
 }
 
+/**
+ * Need to tell the Properties box it's dealing with an interface so
+ * abstraction toggles can be disabled
+ */
 InterfaceClass.prototype.openProperties = function() {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main, true);
     propertiesDlg.open();

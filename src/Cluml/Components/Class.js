@@ -39,6 +39,8 @@ export const Class = function () {
      */
     Object.defineProperty(this, 'height', {
         get: function () {
+            if (!this.attributesHeight && !this.operationsHeight)
+                return this.nameHeight + this.lineHeight;
             return this.nameHeight + this.attributesHeight + this.operationsHeight;
         }
     })
@@ -345,6 +347,10 @@ Class.prototype.draw = function (context, view) {
 
     // Operations rect
     this.operationsBounds.contextRect(context);
+
+    // If class is empty, draw a 1 line box
+    if (this.attributes.length == 0 && this.operations.length == 0)
+        context.rect(this.x-(this.width/2),this.y + this.nameHeight, this.width, this.lineHeight);
 
     context.fill();
     context.stroke();

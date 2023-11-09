@@ -123,14 +123,18 @@ export const ClassPropertiesDlg = function(component, main, isInterface) {
         abstractClassId = Unique.uniqueName();
         let classInput = document.createElement("input");
         classInput.type = "checkbox";
-        if (isInterface)
-            classInput.disabled = true;
-        classInput.id = abstractClassId;
-        abstractClassDiv.append(classInput);
         if (component.abstract)
             classInput.setAttribute("checked", "true");
         else
             classInput.removeAttribute("checked");
+
+        if (isInterface)
+        {
+            classInput.setAttribute("checked", "true");
+            classInput.disabled = true;
+        }
+        classInput.id = abstractClassId;
+        abstractClassDiv.append(classInput);
 
         let classLabel = document.createElement("label");
         classLabel.appendChild(document.createTextNode("Class"));
