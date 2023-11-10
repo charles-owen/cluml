@@ -55,4 +55,12 @@ describe('Attribute', function() {
         expect(messages.length).toEqual(1);
         expect(messages[0].description).toEqual("Type missing");
     });
+    it ('Should support default values', function() {
+        const defaultValue = "defaultValue";
+        let attribute = new Attribute(`+attribute: String = ${defaultValue}`);
+        expect(attribute.defaultValue).toEqual(defaultValue);
+
+        const messages = attribute.processSanityCheck();
+        expect(messages.length).toEqual(0);
+    })
 });

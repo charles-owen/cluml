@@ -403,8 +403,8 @@ Class.prototype.draw = function (context, view) {
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
         oldColor = attribute.modifyContextFill(context);
-        const attributeText = (this.showVisibility ? attribute.visibility : '') + attribute.name
-            + (attribute.elementValue.indexOf(':') !== -1 ? ': ' : '') + attribute.type;
+        const attributeText = attribute.elementValue.substring(
+            !this.showVisibility && attribute.visibility !== '' ? 1 : 0);
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,

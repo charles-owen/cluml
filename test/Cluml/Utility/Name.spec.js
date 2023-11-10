@@ -24,7 +24,7 @@ describe('Name', function() {
         expect(messages.length === 1);
         expect(messages[0]['description']).toEqual('Name\'s first character is not capitalized');
 
-        messages = Name.Check('','','', capitalized);
+        messages = Name.Check('','','', capitalized, 'Name', false);
         expect(messages.length === 1);
         expect(messages[0]['description']).toEqual('Name\'s first character is capitalized');
     });

@@ -16,6 +16,7 @@ export class Attribute extends SanityElement {
     visibility = '';
     name = "";
     type = "";
+    defaultValue = "";
 
     constructor(stringValue) {
         stringValue = stringValue.trim();
@@ -30,11 +31,21 @@ export class Attribute extends SanityElement {
         const colonIndex = stringValue.indexOf(':');
         if (colonIndex === -1) {
             this.name = stringValue.substring(nameStart).trim();
-            this.type = '';
+            this.#reconstructString();
             return;
         }
         this.name = stringValue.substring(nameStart, colonIndex).trim();
-        this.type = stringValue.substring(colonIndex).replace(':', '').trim();
+
+        // Check for default value
+        const equalIndex = stringValue.indexOf('=', colonIndex);
+        if (equalIndex === -1)
+        {
+            this.type = stringValue.substring(colonIndex + 1).trim();
+            this.#reconstructString();
+            return;
+        }
+        this.type = stringValue.substring(colonIndex + 1, equalIndex).trim();
+        this.defaultValue = stringValue.substring(equalIndex + 1).trim();
 
         this.#reconstructString();
     }
@@ -44,7 +55,8 @@ export class Attribute extends SanityElement {
      */
     #reconstructString() {
         this.elementValue = this.visibility + this.name
-            + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type;
+            + (this.elementValue.indexOf(':') !== -1 ? ': ' : '') + this.type
+            + (this.defaultValue !== '' ? ' = ' : '') + this.defaultValue;
     }
 
     /**
