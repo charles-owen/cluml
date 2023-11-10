@@ -59,6 +59,7 @@ export class Operation extends SanityElement {
         {
             const param = this.parameters[i];
             const paramText = param[0] + (param[1] !== '' ? ': ' : '') + param[1]
+                + (param.length > 2 ? ` = ${param[2]}` : '')
                 + (i < this.parameters.length - 1 ? ", " : "");
             this.elementValue += paramText;
         }
@@ -88,9 +89,15 @@ export class Operation extends SanityElement {
             messages.push(new SanityErrorInfo('0208',
                 "Operation", this.elementValue, "Visibility missing"));
         }
-        if (this.name === '')
+        if (this.name === '') {
             messages.push(new SanityErrorInfo("0209",
                 "Operation", this.elementValue, "Name missing"));
+        }
+
+        if (this.elementValue.indexOf(')', this.elementValue.indexOf('(')) === -1) {
+            messages.push(new SanityErrorInfo("0210", "Operation",
+                this.elementValue, "Closed parenthesis missing"));
+        }
 
         const paramMessages = this.#checkParameters();
         messages = messages.concat(paramMessages);
@@ -113,8 +120,26 @@ export class Operation extends SanityElement {
             const param = this.parameters[i];
             let parameterFinal = ["", ""];
             const colonIndex = param.indexOf(':');
-            parameterFinal[0] = param.substring(0, colonIndex !== -1 ? colonIndex : param.length).trim();
-            parameterFinal[1] = colonIndex !== -1 ? param.substring(colonIndex + 1).trim() : "";
+            if (colonIndex === -1) {
+                parameterFinal[0] = param.substring(0).trim();
+                this.parameters[i] = parameterFinal;
+                continue;
+            }
+            parameterFinal[0] = param.substring(0, colonIndex).trim();
+
+            // check for default values
+            const equalIndex = param.indexOf('=', colonIndex);
+            if (equalIndex === -1) {
+                parameterFinal[1] = param.substring(colonIndex + 1).trim();
+                this.parameters[i] = parameterFinal;
+                continue;
+            }
+
+            parameterFinal[1] = param.substring(colonIndex + 1, equalIndex).trim();
+            const defaultValue = param.substring(equalIndex + 1).trim();
+            if (defaultValue !== "") {
+                parameterFinal.push(defaultValue);
+            }
             this.parameters[i] = parameterFinal;
         }
     }

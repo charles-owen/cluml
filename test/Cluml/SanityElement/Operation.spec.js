@@ -35,6 +35,7 @@ describe('Operation', function() {
         const missingName = "+(): String";
         const missingParamName = "+Operation(: String): String";
         const missingParamType = "+Operation(param:): String";
+        const missingClosedParen = "+Operation(";
 
 
         let operation = new Operation(missingVisibility);
@@ -62,5 +63,17 @@ describe('Operation', function() {
         messages = operation.processSanityCheck();
         expect(messages.length).toEqual(1);
         expect(messages[0].description).toEqual("Parameter type missing");
+
+        operation = new Operation(missingClosedParen);
+        messages = operation.processSanityCheck();
+        expect(messages.length).toEqual(1);
+        expect(messages[0].description).toEqual("Closed parenthesis missing");
+    });
+    it ('Should support parameter default values', function() {
+        const defaultValue = "defaultValue";
+        let operation = new Operation(`+Op(param: String = ${defaultValue})`);
+        expect(operation.parameters[0].length).toEqual(3)
+        expect(operation.parameters[0][2]).toEqual(defaultValue);
+        expect(operation.processSanityCheck().length).toEqual(0);
     });
 });
