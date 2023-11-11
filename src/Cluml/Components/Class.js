@@ -31,6 +31,28 @@ export const Class = function () {
             };
             yield error;
         }
+
+        // check for attributes having the same name
+        const map = new Map();
+        const name = this.naming;
+        for (const attribute of this.attributes) {
+            if (!map.has(attribute.name)) {
+                map.set(attribute.name, 1);
+            }
+            else {
+                const count = map.get(attribute.name);
+                // only generate the error once per unique attribute name
+                if (count === 1) {
+                    let error = new SanityElement(this.naming, undefined);
+                    error.processSanityCheck = function() {
+                        return [new SanityErrorInfo("1100", "Class",
+                            name, `Multiple attributes with the name <b>${attribute.name}</b>`)];
+                    };
+                    yield error;
+                }
+                map.set(attribute.name, count + 1);
+            }
+        }
     }
 
     /**
