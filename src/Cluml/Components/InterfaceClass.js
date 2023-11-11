@@ -77,7 +77,7 @@ InterfaceClass.prototype.draw = function (context, view) {
 InterfaceClass.prototype.addAttribute = function(attribute) {
     Class.prototype.addAttribute.call(this, attribute);
     this.attributes = [];
-    let operation = new Operation("operation(): String");
+    let operation = new Operation("+Operation(): String");
     operation.abstract = true;
     this.operations.push(operation);
 }

@@ -89,7 +89,7 @@ export const Class = function () {
      * The array of operations.
      * @type{Array<Operation>}
      */
-    this.operations = [new Operation('-operation(): string')];
+    this.operations = [new Operation('+Operation(): string')];
 
     this.addPopup = null;
 
