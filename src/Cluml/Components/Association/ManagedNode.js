@@ -1,5 +1,6 @@
-import {LineNode} from "./LineNode";
+import {LineNode, NODE_NORMAL_RADIUS} from "./LineNode";
 import Vector from "../../Utility/Vector";
+import {DEBUG_BOUNDS} from "../../Selectable";
 
 export const ManagedNode = function () {
     LineNode.call(this);
@@ -18,6 +19,11 @@ ManagedNode.prototype.touch = function (x, y) {
 
 ManagedNode.prototype.draw = function (context, view) {
     // No draw-y
+    if (DEBUG_BOUNDS) {
+        // If in debug mode, draw circle.
+        context.arc(this.x, this.y, NODE_NORMAL_RADIUS / 2, 0, 2 * Math.PI, true);
+        context.stroke();
+    }
 }
 
 ManagedNode.prototype.syncNodes = function () {

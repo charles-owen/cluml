@@ -20,6 +20,12 @@ export const NODE_TOUCH_RADIUS = 15;
  */
 export const NODE_NORMAL_RADIUS = 5;
 
+/**
+ * Determines the snapping distance of the node
+ * @type {number}
+ */
+export const NODE_SNAPPING_RADIUS = 5;
+
 export const SPIN_VERTICAL = 0;
 export const SPIN_HORIZONTAL = 1;
 
@@ -178,27 +184,56 @@ LineNode.prototype.grab = function () {
     this.touched = true;
 }
 
-// LineNode.prototype.move = function (dx, dy, x, y) {
-//     Selectable.prototype.move.call(this, dx, dy, x, y);
-// }
+LineNode.prototype.move = function (dx, dy, x, y) {
+    Selectable.prototype.move.call(this, dx, dy, x, y);
+
+    if (this.hasNext && this.nextNode.hasNext) {
+        if (Math.abs(this.x - this.nextNode.nextNode.x) < NODE_SNAPPING_RADIUS) {
+            // Snap to next node in the X axis
+            this.x = this.nextNode.nextNode.x;
+            this.moveX = this.x;
+        }
+        if (Math.abs(this.y - this.nextNode.nextNode.y) < NODE_SNAPPING_RADIUS) {
+            // Snap to next node in the Y axis
+            this.y = this.nextNode.nextNode.y;
+            this.moveY = this.y;
+        }
+    }
+
+    if (this.hasPrevious && this.previousNode.hasPrevious) {
+        if (Math.abs(this.x - this.previousNode.previousNode.x) < NODE_SNAPPING_RADIUS) {
+            // Snap to previous node in the X axis
+            this.x = this.previousNode.previousNode.x;
+            this.moveX = this.x;
+        }
+        if (Math.abs(this.y - this.previousNode.previousNode.y) < NODE_SNAPPING_RADIUS) {
+            // Snap to previous node in the Y axis
+            this.y = this.previousNode.previousNode.y;
+            this.moveY = this.y;
+        }
+    }
+}
 
 /**
  * Syncs all the nodes in the association.
+ * @param cullRedundant {boolean} If true, then remove redundant nodes.
  * @return {boolean}
  */
-LineNode.prototype.syncNodes = function () {
+LineNode.prototype.syncNodes = function (cullRedundant) {
     let anyChanges = false;
 
-    // // Check if this node is redundant.
-    // if (this.hasPrevious && this.hasNext) {
-    //     if (this.y === this.previousNode.y && this.y === this.nextNode.y) {
-    //         // Vertically redundant.
-    //         this.delete();
-    //     } else if (this.x === this.previousNode.x && this.x === this.nextNode.x) {
-    //         // Horizontally redundant.
-    //         this.delete();
-    //     }
-    // }
+    if (cullRedundant) {
+        // Check if this node is redundant.
+        if (this.hasPrevious && this.hasNext) {
+            if (this.y === this.previousNode.y && this.y === this.nextNode.y) {
+                // Vertically redundant.
+                this.delete();
+            } else if (this.x === this.previousNode.x && this.x === this.nextNode.x) {
+                // Horizontally redundant.
+                this.delete();
+            }
+        }
+    }
 
     // Check the prev and next nodes, update if they don't have the correct position.
     if (this.hasPrevious) {
@@ -296,14 +331,9 @@ LineNode.prototype.draw = function (context, view) {
     }
 
     if (DEBUG_BOUNDS) {
-        // If in debug mode, also draw the bounding box for the cursor.
-        context.fillStyle = this.selectedStyle;
-        context.fillRect(
-            this.x - NODE_TOUCH_RADIUS,
-            this.y - NODE_TOUCH_RADIUS,
-            NODE_TOUCH_RADIUS * 2,
-            NODE_TOUCH_RADIUS * 2
-        );
+        // If in debug mode, draw circle.
+        context.arc(this.x, this.y, NODE_NORMAL_RADIUS, 0, 2 * Math.PI, true);
+        context.stroke();
     }
 }
 //endregion

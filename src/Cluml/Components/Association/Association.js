@@ -7,6 +7,8 @@ import {Line} from "../../Utility/Line";
 import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {ManagedNode} from "./ManagedNode";
+import {MainSingleton} from "../../MainSingleton";
+import {Main} from "../../Main";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -290,7 +292,11 @@ Association.prototype.bounds = function () {
 Association.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 
-    this.syncNodes();
+    while (this.syncNodes()) {
+        // Yes, this is left blank on purpose.
+        // Run sync nodes until it returns false to ensure that
+        // all nodes have properly synced
+    }
 
     this.selectStyle(context, view);
 
@@ -496,6 +502,20 @@ Association.prototype.delete = function () {
 }
 
 Association.prototype.syncNodes = function () {
-    this.nodes.start.syncNodes();
+    // Don't cull if association itself is selected
+    if (MainSingleton.singleton.currentView.selection.isSelected(this)) {
+        return this.nodes.start.syncNodes(false);
+    }
+
+    for (const node of this.nodeGenerator()) {
+        if (MainSingleton.singleton.currentView.selection.isSelected(node))
+        {
+            // Don't cull if something's still selected.
+            return this.nodes.start.syncNodes(false);
+        }
+    }
+
+    // Can cull now
+    return this.nodes.start.syncNodes(false);
 }
 //endregion

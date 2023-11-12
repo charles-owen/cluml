@@ -166,8 +166,11 @@ Selectable.prototype.move = function (dx, dy, x, y) {
         this.moveX += dx;
         this.moveY += dy;
 
-        this.x += dx;
-        this.y += dy;
+        // this.x += dx;
+        // this.y += dy;
+
+        this.x = x;
+        this.y = y;
 
         if (this.diagram !== null) {
             this.diagram.snapIt(this);
