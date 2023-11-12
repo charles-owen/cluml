@@ -215,6 +215,7 @@ TerminationNode.prototype.determineUnattachedSide = function (previous) {
             // The previous node and this node are on the same position. Need to check the node before that.
             this.determineUnattachedSide(previous.previousNode);
         } else {
+            // Otherwise, set side accordingly.
             if (previous.y === this.y) {
                 this.side = previous.x > this.x ? 1 : 3;
             } else {
@@ -330,6 +331,19 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
 
     if (force || attachTo.bounds().contains(this.x, this.y) ||
         someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
+
+        // if (this.association.fileLbl === "Inheritance") {
+        //
+        // }
+        //
+        // // Check for association loops.
+        // const clsGen = attachTo.generateMap("Inheritance");
+        // for (const cls of clsGen) {
+        //     if (cls.visited) {
+        //         // Hey look a loop.
+        //         return false;
+        //     }
+        // }
 
         // Actually attach the class.
         this.attachToClass(attachTo, someGoodTea.atPoint, someGoodTea.side);

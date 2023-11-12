@@ -17,17 +17,16 @@ export const Class = function () {
 
     this.forwardSanityCheck = function* () {
         yield new ClassName(this.naming);
-        yield * this.attributes;
-        yield * this.operations;
+        yield* this.attributes;
+        yield* this.operations;
 
         // Check if the number of attributes and operations exceeds the property limit
-        if (this.attributes.length + this.operations.length > this.propertyLimit)
-        {
+        if (this.attributes.length + this.operations.length > this.propertyLimit) {
             let error = new SanityElement(this.naming, undefined);
-            error.processSanityCheck = function() {
+            error.processSanityCheck = function () {
                 return [new SanityErrorInfo("1100", "Class", this.elementValue,
                     `Exceeded the limit of ${
-                    Class.prototype.propertyLimit} attributes and operations per class`)];
+                        Class.prototype.propertyLimit} attributes and operations per class`)];
             };
             yield error;
         }
@@ -38,13 +37,12 @@ export const Class = function () {
         for (const attribute of this.attributes) {
             if (!map.has(attribute.name)) {
                 map.set(attribute.name, 1);
-            }
-            else {
+            } else {
                 const count = map.get(attribute.name);
                 // only generate the error once per unique attribute name
                 if (count === 1) {
                     let error = new SanityElement(this.naming, undefined);
-                    error.processSanityCheck = function() {
+                    error.processSanityCheck = function () {
                         return [new SanityErrorInfo("1100", "Class",
                             name, `Multiple attributes with the name <b>${attribute.name}</b>`)];
                     };
@@ -72,6 +70,12 @@ export const Class = function () {
      * @type {number}
      */
     this.width = 200;
+
+    /**
+     * Used by mapping function to avoid loops.
+     * @type {boolean}
+     */
+    this.visited = false;
 
     Object.defineProperty(this, 'size', {
         get: function () {
@@ -129,17 +133,16 @@ export const Class = function () {
     this.isVariation = false;
 
     Object.defineProperty(this, 'lineHeight', {
-        get: function() {
+        get: function () {
             return this.fontHeight * 1.5;
         }
     });
 
     Object.defineProperty(this, 'nameHeight', {
         get: function () {
-            if(this.isVariation) {
+            if (this.isVariation) {
                 return this.fontHeight * 2.8;
-            }
-            else {
+            } else {
                 return this.fontHeight * 1.75;
             }
         }
@@ -260,7 +263,7 @@ Class.prototype.move = function (dx, dy, x, y) {
  * @param x touch position
  * @param y touch position
  */
-Class.prototype.doubleClick = function(x, y) {
+Class.prototype.doubleClick = function (x, y) {
     Selectable.prototype.doubleClick.call(this, x, y);
     this.lastSelectedX = x;
     this.lastSelectedY = y;
@@ -272,15 +275,14 @@ Class.prototype.doubleClick = function(x, y) {
  * @param x touch position
  * @param y touch position
  */
-Class.prototype.rightClick = function(x,y)
-{
+Class.prototype.rightClick = function (x, y) {
     this.enableAddPopup(true);
 }
 
 /**
  * Open a ClassPropertiesDlg box
  */
-Class.prototype.openProperties = function() {
+Class.prototype.openProperties = function () {
     const propertiesDlg = new ClassPropertiesDlg(this, this.main, false);
     propertiesDlg.open();
 }
@@ -372,7 +374,7 @@ Class.prototype.draw = function (context, view) {
 
     // If class is empty, draw a 1 line box
     if (this.attributes.length == 0 && this.operations.length == 0)
-        context.rect(this.x-(this.width/2),this.y + this.nameHeight, this.width, this.lineHeight);
+        context.rect(this.x - (this.width / 2), this.y + this.nameHeight, this.width, this.lineHeight);
 
     context.fill();
     context.stroke();
@@ -385,30 +387,25 @@ Class.prototype.draw = function (context, view) {
     // Naming text
     context.fillStyle = "#000000";
     let oldColor = new ClassName(this.naming).modifyContextFill(context);
-    if (this.abstract)
-    {
+    if (this.abstract) {
         if (this.isVariation) {
             this.drawName(context,
                 0,
                 this.fontHeight * 2.25,
                 ITALICS_FONT);
-        }
-        else {
+        } else {
             this.drawName(context,
                 0,
                 this.fontHeight * 1.25,
                 ITALICS_FONT);
         }
-    }
-    else
-    {
+    } else {
         if (this.isVariation) {
             this.drawName(context,
                 0,
                 this.fontHeight * 2.25,
                 NAME_FONT);
-        }
-        else {
+        } else {
             this.drawName(context,
                 0,
                 this.fontHeight * 1.25,
@@ -437,12 +434,9 @@ Class.prototype.draw = function (context, view) {
     // Operations text
     fromTop += this.attributesHeight;
     for (let j = 0; j < this.operations.length; j++) {
-        if (this.operations[j].abstract)
-        {
+        if (this.operations[j].abstract) {
             context.font = ITALICS_FONT;
-        }
-        else
-        {
+        } else {
             context.font = NAME_FONT;
         }
         const operation = this.operations[j];
@@ -466,11 +460,10 @@ Class.prototype.draw = function (context, view) {
             if (this.lastSelectedY < this.attributesBounds.bottom) {
                 if (this.isVariation) {
                     this.editingPopup.drawNameEdit(context, view,
-                        Rect.fromTopAndSize(new Vector(this.x, this.y + this.nameHeight/2),
+                        Rect.fromTopAndSize(new Vector(this.x, this.y + this.nameHeight / 2),
                             new Vector(this.width, this.nameHeight)),
-                        this.width, this.nameHeight/3, this.naming);
-                }
-                else {
+                        this.width, this.nameHeight / 3, this.naming);
+                } else {
                     this.editingPopup.drawNameEdit(context, view, this.nameBounds,
                         this.width, this.nameHeight, this.naming);
                 }
@@ -522,7 +515,7 @@ Class.prototype.saveComponent = function () {
 
 Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
-    
+
     this.attributes = SanityElement.loadMultiple(Attribute, 'attributes', obj, this);
     this.operations = SanityElement.loadMultiple(Operation, 'operations', obj, this);
     this.width = +obj["width"];
@@ -589,7 +582,7 @@ Class.prototype.deleteOperation = function (operationIndex) {
  * Get attributes (component.attributes was giving me issues in a diff class)
  * @returns {Array<Attribute>}
  */
-Class.prototype.getAttributes = function() {
+Class.prototype.getAttributes = function () {
     return this.attributes;
 }
 
@@ -598,7 +591,7 @@ Class.prototype.getAttributes = function() {
  * Get operations
  * @returns {Array<Operation>}
  */
-Class.prototype.getOperations = function() {
+Class.prototype.getOperations = function () {
     return this.operations;
 }
 
@@ -606,12 +599,12 @@ Class.prototype.getOperations = function() {
  * Sorts attributes/operations with regex so that operations appear
  * in the operations box and attributes appear in the attributes box
  */
-Class.prototype.sortAttributions = function() {
+Class.prototype.sortAttributions = function () {
     let pattern = /\(/i
     // Get operations out of the attributes array and into the operations
     // array
-    for(let i = 0; i < this.attributes.length; i++) {
-        if(pattern.test(this.attributes[i].elementValue)) {
+    for (let i = 0; i < this.attributes.length; i++) {
+        if (pattern.test(this.attributes[i].elementValue)) {
             let operation = this.attributes.splice(i, 1);
             // This code will need to be updated when Operations.js is
             // implemented
@@ -620,8 +613,8 @@ Class.prototype.sortAttributions = function() {
     }
     // Get attributes out of the operations array and into the attributes
     // array
-    for(let j = 0; j < this.operations.length; j++) {
-        if(!pattern.test(this.operations[j].elementValue)) {
+    for (let j = 0; j < this.operations.length; j++) {
+        if (!pattern.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
             this.attributes.push(new Attribute(attribute[0].elementValue));
         }
@@ -633,11 +626,64 @@ Class.prototype.sortAttributions = function() {
  * This function overrides the Component.js delete function.
  * This deletes all the associations attached to the class with the class.
  */
-Class.prototype.delete = function() {
-    if(this.attachedTNodes !== []) {
-        for(let i = 0; i < this.attachedTNodes.length; i++) {
+Class.prototype.delete = function () {
+    if (this.attachedTNodes !== []) {
+        for (let i = 0; i < this.attachedTNodes.length; i++) {
             this.attachedTNodes[i].delete();
         }
     }
     Component.prototype.delete.call(this);
+}
+
+/**
+ * Generates a mapping of a class and all its connected classes.
+ * Returns true if a loop exists, false otherwise.
+ * @param filterByFileLbl {string} List of file labels to filter by.
+ * If left blank, no filter is applied and all association types are considered.
+ * @return {Generator<Class, boolean, *>}
+ */
+Class.prototype.generateMap = function* (...filterByFileLbl) {
+    const stack = [this];
+    /**
+     *
+     * @type {Class[]}
+     */
+    const visited = [];
+
+    do {
+        // Push all associations to the class.
+        const current = stack.pop();
+        yield current;
+
+        if (!current.visited) {
+            current.visited = true;
+            visited.push(current);
+
+            // Get all the attached classes in all the attached
+            // associations that's not this class.
+            for (const tNode of current.attachedTNodes) {
+                if (tNode.association) {
+                    // Support file label filtering
+                    const passesFilter = filterByFileLbl.length === 0 ||
+                        filterByFileLbl.some(
+                            (lbl) => {
+                                return lbl === tNode.association.fileLbl;
+                            });
+
+                    if (passesFilter) {
+                        const otherClass = tNode.association.nextClass(current);
+
+                        if (otherClass) {
+                            stack.push(otherClass);
+                        }
+                    }
+                }
+            }
+        }
+    } while (stack.length > 0)
+
+    // Clear all visited tags.
+    for (const visitedElement of visited) {
+        visitedElement.visited = false;
+    }
 }

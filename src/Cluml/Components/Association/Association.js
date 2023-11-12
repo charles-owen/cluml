@@ -8,7 +8,6 @@ import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {ManagedNode} from "./ManagedNode";
 import {MainSingleton} from "../../MainSingleton";
-import {Main} from "../../Main";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -502,20 +501,36 @@ Association.prototype.delete = function () {
 }
 
 Association.prototype.syncNodes = function () {
-    // Don't cull if association itself is selected
-    if (MainSingleton.singleton.currentView.selection.isSelected(this)) {
-        return this.nodes.start.syncNodes(false);
-    }
-
-    for (const node of this.nodeGenerator()) {
-        if (MainSingleton.singleton.currentView.selection.isSelected(node))
-        {
-            // Don't cull if something's still selected.
+    if (MainSingleton.singleton.currentView) {
+        // Don't cull if association itself is selected
+        if (MainSingleton.singleton.currentView.selection.isSelected(this)) {
             return this.nodes.start.syncNodes(false);
         }
-    }
 
-    // Can cull now
-    return this.nodes.start.syncNodes(false);
+        for (const node of this.nodeGenerator()) {
+            if (MainSingleton.singleton.currentView.selection.isSelected(node)) {
+                // Don't cull if something's still selected.
+                return this.nodes.start.syncNodes(false);
+            }
+        }
+
+        // Can cull now
+        return this.nodes.start.syncNodes(false);
+    }
+}
+
+/**
+ * Returns the class next in line after previousClass. If this is not attached to
+ * previousClass, this returns null.
+ * @param previousClass The other class this is attached to.
+ */
+Association.prototype.nextClass = function (previousClass) {
+    if (this.nodes.end.attachedTo && this.nodes.end.attachedTo === previousClass)
+        return this.nodes.start.attachedTo;
+    else if (this.nodes.start.attachedTo && this.nodes.start.attachedTo === previousClass)
+        return this.nodes.end.attachedTo;
+    else
+        // No attached nodes or mismatched nodes
+        return null;
 }
 //endregion
