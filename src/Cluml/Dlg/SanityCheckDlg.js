@@ -118,8 +118,9 @@ export const SanityCheckDlg = function(main) {
 
             for (const tNode of node.attachedTNodes) {
                 if (tNode.association.fileLbl === "Composition" && !tNode.isTail) {
-                    hasCycle = hasCycle || isCyclic(tNode.association.nodes.end.attachedTo, visited, recursiveVisited);
-
+                    const nodes = tNode.association.nodes;
+                    const tail = nodes.start.isTail ? nodes.start : nodes.end;
+                    hasCycle = hasCycle || isCyclic(tail.attachedTo, visited, recursiveVisited);
                 }
             }
             recursiveVisited.delete(node);
