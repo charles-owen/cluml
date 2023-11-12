@@ -145,6 +145,9 @@ TerminationNode.prototype.rightClick = function (x, y) {
 }
 
 TerminationNode.prototype.draw = function (context, view) {
+    // Set the side based on the line direction.
+    this.determineUnattachedSide(this.previousNode);
+
     const side = Math.floor(this.side);
 
     switch (side) {
@@ -199,6 +202,25 @@ TerminationNode.prototype.draw = function (context, view) {
         // If no association, default to drawing the tags.
         this.multiplicityValue.draw(context, view);
         this.roleValue.draw(context, view);
+    }
+}
+
+/**
+ * Determines the side of the termination node if it is not attached to anything.
+ * @param {LineNode} previous The previous node.
+ */
+TerminationNode.prototype.determineUnattachedSide = function (previous) {
+    if (this.isTail && !this.attachedTo && previous) {
+        if (previous.x === this.x && previous.y === this.y && previous.hasPrevious) {
+            // The previous node and this node are on the same position. Need to check the node before that.
+            this.determineUnattachedSide(previous.previousNode);
+        } else {
+            if (previous.y === this.y) {
+                this.side = previous.x > this.x ? 1 : 3;
+            } else {
+                this.side = previous.y > this.y ? 0 : 2;
+            }
+        }
     }
 }
 //endregion

@@ -310,15 +310,13 @@ LineNode.prototype.draw = function (context, view) {
     else
         this.selectStyle(context, view);
 
-    // Either draws a small dot if not selected or a bigger dot if it is selected.
+    // Draws a big dot if it is selected.
     // These dots inform the user where the grab points of the association are.
-    context.beginPath();
     if (view.selection.isSelected(this)) {
+        context.beginPath();
         context.arc(this.x, this.y, NODE_NORMAL_RADIUS, 0, 2 * Math.PI, true);
-    } else {
-        context.arc(this.x, this.y, 1, 0, 2 * Math.PI, true);
+        context.fill();
     }
-    context.fill();
 
     if (this.lineupPoint() !== this.position) {
         // Draw line from the attachment position to the actual position.
