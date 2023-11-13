@@ -353,7 +353,22 @@ export const ClassPropertiesDlg = function(component, main, isInterface) {
 
         main.backup();
         if(component.prefix !== null) {
-            component.naming = name.length > 0 ? name : null;
+
+            const count = component.diagram.classMap.get(component.naming);
+            if (count === 1) {
+                component.diagram.classMap.delete(component.naming);
+            }
+            else {
+                component.diagram.classMap.set(component.naming, count - 1);
+            }
+
+            component.naming = name.length > 0 ? name : "Class";
+
+            if (!component.diagram.classMap.has(component.naming)) {
+                component.diagram.classMap.set(component.naming, 0);
+            }
+            component.diagram.classMap.set(component.naming, component.diagram.classMap.get(component.naming) + 1);
+
             const classToggle = document.getElementById(abstractClassId);
             component.abstract = classToggle.checked;
         }

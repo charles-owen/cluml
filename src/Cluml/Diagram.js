@@ -43,6 +43,9 @@ export const Diagram = function (name) {
     // Previous copy in the copy stack
     this.prev = null;
 
+    // map of all classes in the diagram with the key value pair (class name, count)
+    this.classMap = new Map();
+
     /**
      * See if some object has been touched by the mouse.
      * @param x {number} Mouse X

@@ -127,7 +127,20 @@ EditingPopup.prototype.updateClass = function() {
     if (this.editingWhat === "name") {
         // Only edit the class name if the editing box is not empty
         if(this.text !== "") {
-            this.component.naming = this.text
+            const diagram = this.component.diagram;
+            const count = diagram.classMap.get(this.component.naming);
+            if (count === 1) {
+                diagram.classMap.delete(this.component.naming);
+            }
+            else {
+                diagram.classMap.set(this.component.naming, count - 1);
+            }
+            this.component.naming = this.text;
+
+            if(!diagram.classMap.has(this.text)) {
+                diagram.classMap.set(this.text, 0);
+            }
+            diagram.classMap.set(this.text, diagram.classMap.get(this.text) + 1);
         }
     }
     // Editing an attribute field
@@ -140,7 +153,7 @@ EditingPopup.prototype.updateClass = function() {
         // Only edit an existing attribute if the editing box is not empty
         if(this.text !== "") {
             this.component.attributes[selectedAttributeNumber] =
-                new Attribute(this.text);
+                new Attribute(this.text, this.component);
         }
         // If the editing box is empty, delete the attribute from the class
         else {

@@ -77,6 +77,8 @@ export const Class = function () {
      */
     this.visited = false;
 
+    this.naming = "Class";
+
     Object.defineProperty(this, 'size', {
         get: function () {
             return new Vector(this.width, this.height);
@@ -87,7 +89,7 @@ export const Class = function () {
      * The array of attributes.
      * @type{Array<Attribute>}
      */
-    this.attributes = [new Attribute('-attribute: string')];
+    this.attributes = [new Attribute('-attribute: string', this)];
 
     /**
      * The array of operations.
@@ -225,7 +227,7 @@ Class.prototype.copyFrom = function (component) {
     // Copy over the attribute objects from the existing class
     for (let i = 0; i < component.attributes.length; i++) {
         // Attributes in the new class must be initialized first
-        this.attributes.push(new Attribute(""));
+        this.attributes.push(new Attribute("", this));
         // Then copied from the old class
         this.attributes[i].copyFrom(component.attributes[i]);
     }
@@ -525,6 +527,18 @@ Class.prototype.draw = function (context, view) {
     Component.prototype.draw.call(this, context, view);
 }
 
+/**
+ * Called when a class is added to a diagram
+ * @param diagram {Diagram}
+ */
+Class.prototype.added = function (diagram) {
+    Component.prototype.added.call(this, diagram);
+    if (!diagram.classMap.has(this.naming)) {
+        diagram.classMap.set(this.naming, 0);
+    }
+    diagram.classMap.set(this.naming, diagram.classMap.get(this.naming) + 1);
+};
+
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
     obj.attributes = SanityElement.saveMultiple(this.attributes);
@@ -642,12 +656,12 @@ Class.prototype.sortAttributions = function () {
     for (let j = 0; j < this.operations.length; j++) {
         if (!pattern.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
-            this.attributes.push(new Attribute(attribute[0].elementValue));
+            this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }
         // Move attributes with a complex default value to the attributes category
         if (pattern3.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
-            this.attributes.push(new Attribute(attribute[0].elementValue));
+            this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }
     }
 }
@@ -709,6 +723,14 @@ Class.prototype.delete = function () {
     // deleted (can only happen from the Edit Menu).
     if(this.editingPopup !== null) {
         this.editingPopup.close();
+    }
+
+    const count = this.diagram.classMap.get(this.naming);
+    if (count === 1) {
+        this.diagram.classMap.delete(this.naming);
+    }
+    else {
+        this.diagram.classMap.set(this.naming, count - 1);
     }
     Component.prototype.delete.call(this);
 }

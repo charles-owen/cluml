@@ -18,9 +18,9 @@ export class Attribute extends SanityElement {
     type = "";
     defaultValue = "";
 
-    constructor(stringValue) {
+    constructor(stringValue, relativeTo) {
         stringValue = stringValue.trim();
-        super(stringValue);
+        super(stringValue, relativeTo);
 
         // process the string value;
         let nameStart = 0;
@@ -88,6 +88,10 @@ export class Attribute extends SanityElement {
         if (this.type === '')
             messages.push(new SanityErrorInfo("0110", "Attribute",
                 this.elementValue, "Type missing"));
+        if (this.relativeTo !== undefined && this.relativeTo.diagram.classMap.has(this.type)) {
+            messages.push(new SanityErrorInfo("0111", "Attribute", this.elementValue,
+                "Type is a class in the diagram. Consider making the attribute an association instead."));
+        }
 
         return messages;
     }
