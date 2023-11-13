@@ -669,7 +669,14 @@ Class.prototype.setClassWidth = function() {
     }
     // Sets the width of the class based on the longest text
     // in the class
-    this.width = 200*(longestText/35);
+    if(longestText > 35) {
+        this.width = 200 * (longestText / 35);
+    }
+    // Don't want classes to be too small, so the smallest
+    // it can be is 200.
+    else {
+        this.width = 200;
+    }
 }
 
 /**
