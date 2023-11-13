@@ -632,6 +632,11 @@ Class.prototype.delete = function () {
             this.attachedTNodes[i].delete();
         }
     }
+    // Deletes an EditingPopup if it happens to be open when the class is
+    // deleted (can only happen from the Edit Menu).
+    if(this.editingPopup !== null) {
+        this.editingPopup.close();
+    }
     Component.prototype.delete.call(this);
 }
 
