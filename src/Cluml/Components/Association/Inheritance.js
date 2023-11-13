@@ -24,8 +24,9 @@ export const Inheritance = function () {
             }
 
             // Check for upside down inheritance
-            // Will probably rework this code. This is just for getting it to work.
-            if (this.nodes.end.y > this.nodes.start.y) {
+            const head = this.nodes.start.isTail ? this.nodes.start : this.nodes.end;
+            const tail = this.nodes.start.isTail ? this.nodes.end : this.nodes.start;
+            if (head.y > tail.y) {
                 let element = new SanityElement("", undefined);
                 element.processSanityCheck = function () {
                     return [new SanityErrorInfo("8888", "Generalization",
