@@ -621,14 +621,19 @@ Class.prototype.getOperations = function () {
  */
 Class.prototype.sortAttributions = function () {
     let pattern = /\(/i
+    // This pattern is used for edge cases like Points and Vectors that could
+    // have default values like Point = (0, 0)
+    let pattern2 = /= \(/i
     // Get operations out of the attributes array and into the operations
     // array
     for (let i = 0; i < this.attributes.length; i++) {
-        if (pattern.test(this.attributes[i].elementValue)) {
-            let operation = this.attributes.splice(i, 1);
-            // This code will need to be updated when Operations.js is
-            // implemented
-            this.operations.push(new Operation(operation[0].elementValue));
+        if (!pattern2.test(this.attributes[i].elementValue)) {
+            if (pattern.test(this.attributes[i].elementValue)) {
+                let operation = this.attributes.splice(i, 1);
+                // This code will need to be updated when Operations.js is
+                // implemented
+                this.operations.push(new Operation(operation[0].elementValue));
+            }
         }
     }
     // Get attributes out of the operations array and into the attributes
