@@ -621,9 +621,10 @@ Class.prototype.getOperations = function () {
  */
 Class.prototype.sortAttributions = function () {
     let pattern = /\(/i
-    // This pattern is used for edge cases like Points and Vectors that could
+    // These patterns are used for edge cases like Points and Vectors that could
     // have default values like Point = (0, 0)
     let pattern2 = /= \(/i
+    let pattern3 = /=\(/i
     // Get operations out of the attributes array and into the operations
     // array
     for (let i = 0; i < this.attributes.length; i++) {
@@ -640,6 +641,11 @@ Class.prototype.sortAttributions = function () {
     // array
     for (let j = 0; j < this.operations.length; j++) {
         if (!pattern.test(this.operations[j].elementValue)) {
+            let attribute = this.operations.splice(j, 1);
+            this.attributes.push(new Attribute(attribute[0].elementValue));
+        }
+        // Move attributes with a complex default value to the attributes category
+        if (pattern3.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
             this.attributes.push(new Attribute(attribute[0].elementValue));
         }
