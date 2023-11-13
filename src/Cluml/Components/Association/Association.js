@@ -525,10 +525,18 @@ Association.prototype.syncNodes = function () {
  * @param previousClass The other class this is attached to.
  */
 Association.prototype.nextClass = function (previousClass) {
-    if (this.nodes.end.attachedTo && this.nodes.end.attachedTo === previousClass)
-        return this.nodes.start.attachedTo;
-    else if (this.nodes.start.attachedTo && this.nodes.start.attachedTo === previousClass)
-        return this.nodes.end.attachedTo;
+    if (this.nodes.end.attachedTo && this.nodes.end.attachedTo === previousClass) {
+        if (this.nodes.start.isTail)
+            return this.nodes.start.attachedTo;
+        else
+            return null;
+    }
+    else if (this.nodes.start.attachedTo && this.nodes.start.attachedTo === previousClass) {
+        if (this.nodes.end.isTail)
+            return this.nodes.end.attachedTo;
+        else
+            return null;
+    }
     else
         // No attached nodes or mismatched nodes
         return null;

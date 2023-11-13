@@ -636,6 +636,61 @@ Class.prototype.delete = function () {
 }
 
 /**
+ * Determines if a cycle of associations has a cycle or not.
+ * @param filterByFileLbl {string} List of file labels to filter by.
+ * If left blank, no filter is applied and all association types are considered.
+ * @return {boolean} True if cycle detected, false otherwise.
+ */
+Class.prototype.hasAssociationCycle = function(...filterByFileLbl) {
+    const stack = [this];
+    const visited = [];
+
+    do {
+        // Push all associations to the class.
+        const current = stack.pop();
+        current.visited = true;
+        visited.push(current);
+
+        // Get all the attached classes in all the attached
+        // associations that's not this class.
+        for (const tNode of current.attachedTNodes) {
+            if (tNode.association) {
+                // Support file label filtering
+                const passesFilter = filterByFileLbl.length === 0 ||
+                    filterByFileLbl.some(
+                        (lbl) => {
+                            return lbl === tNode.association.fileLbl;
+                        });
+
+                if (passesFilter) {
+                    const otherClass = tNode.association.nextClass(current);
+
+                    if (otherClass) {
+                        if (!otherClass.visited) {
+                            stack.push(otherClass);
+                        } else {
+                            // Found a cycle
+                            // Clear all visited tags.
+                            for (const visitedElement of visited) {
+                                visitedElement.visited = false;
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    } while (stack.length > 0)
+
+    // No cycles found
+    // Clear all visited tags.
+    for (const visitedElement of visited) {
+        visitedElement.visited = false;
+    }
+    return false;
+}
+
+/**
  * Generates a mapping of a class and all its connected classes.
  * Returns true if a loop exists, false otherwise.
  * @param filterByFileLbl {string} List of file labels to filter by.
@@ -645,7 +700,6 @@ Class.prototype.delete = function () {
 Class.prototype.generateMap = function* (...filterByFileLbl) {
     const stack = [this];
     /**
-     *
      * @type {Class[]}
      */
     const visited = [];
@@ -654,28 +708,25 @@ Class.prototype.generateMap = function* (...filterByFileLbl) {
         // Push all associations to the class.
         const current = stack.pop();
         yield current;
+        current.visited = true;
+        visited.push(current);
 
-        if (!current.visited) {
-            current.visited = true;
-            visited.push(current);
+        // Get all the attached classes in all the attached
+        // associations that's not this class.
+        for (const tNode of current.attachedTNodes) {
+            if (tNode.association) {
+                // Support file label filtering
+                const passesFilter = filterByFileLbl.length === 0 ||
+                    filterByFileLbl.some(
+                        (lbl) => {
+                            return lbl === tNode.association.fileLbl;
+                        });
 
-            // Get all the attached classes in all the attached
-            // associations that's not this class.
-            for (const tNode of current.attachedTNodes) {
-                if (tNode.association) {
-                    // Support file label filtering
-                    const passesFilter = filterByFileLbl.length === 0 ||
-                        filterByFileLbl.some(
-                            (lbl) => {
-                                return lbl === tNode.association.fileLbl;
-                            });
+                if (passesFilter) {
+                    const otherClass = tNode.association.nextClass(current);
 
-                    if (passesFilter) {
-                        const otherClass = tNode.association.nextClass(current);
-
-                        if (otherClass) {
-                            stack.push(otherClass);
-                        }
+                    if (otherClass && !otherClass.visited) {
+                        stack.push(otherClass);
                     }
                 }
             }

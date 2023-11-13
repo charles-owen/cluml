@@ -332,21 +332,21 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
     if (force || attachTo.bounds().contains(this.x, this.y) ||
         someGoodTea.distance < NODE_CLASS_SNAP_DIST) {
 
-        // if (this.association.fileLbl === "Inheritance") {
-        //
-        // }
-        //
-        // // Check for association loops.
-        // const clsGen = attachTo.generateMap("Inheritance");
-        // for (const cls of clsGen) {
-        //     if (cls.visited) {
-        //         // Hey look a loop.
-        //         return false;
-        //     }
-        // }
-
         // Actually attach the class.
         this.attachToClass(attachTo, someGoodTea.atPoint, someGoodTea.side);
+
+        if (attachTo) {
+            // Check for association cycles.
+            const cycleFound = (this.association.fileLbl === "Inheritance" &&
+                this.association.nodes.start.attachedTo === this.association.nodes.end.attachedTo) ||
+                attachTo.hasAssociationCycle("Inheritance");
+
+            if (cycleFound) {
+                MainSingleton.singleton.undo();
+                return false;
+            }
+        }
+
 
         return true;
     }

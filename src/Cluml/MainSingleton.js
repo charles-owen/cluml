@@ -98,6 +98,13 @@ export class MainSingleton {
     }
 
     /**
+     * Undos the last change.
+     */
+    undo() {
+        this.#main.undo();
+    }
+
+    /**
      * Redraws the current view.
      */
     redraw() {
