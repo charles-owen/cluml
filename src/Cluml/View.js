@@ -281,14 +281,14 @@ export const View = function(main, canvas, diagram) {
             if (this.selection.selected[0] instanceof Class) {
                 keysDown[e.keyCode] = e.type == 'keydown';
                 // Ctrl + A for Add
-                if (keysDown[17] && keysDown[65])
+                if (keysDown[17] && keysDown[65] || keysDown[91] && keysDown[65])
                 {
                     this.selection.selected[0].addAttribute(new Attribute('+attribute: string'));
                     this.draw();
                     keysDown = {};
                 }
                 // Ctrl + P for Properties
-                else if (keysDown[17] && keysDown[80])
+                else if (keysDown[17] && keysDown[80] || keysDown[91] && keysDown[80])
                 {
                     e.preventDefault();
                     this.selection.selected[0].openProperties();
