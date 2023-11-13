@@ -121,9 +121,6 @@ EditingPopup.prototype.close = function() {
  * this EditingPopup.js object
  */
 EditingPopup.prototype.updateClass = function() {
-    if(this.text.length > 30) {
-        this.text = this.text.substring(0, 30);
-    }
     // Create a backup of the class before making edits
     this.component.main.backup();
     // Editing the name field
@@ -168,4 +165,5 @@ EditingPopup.prototype.updateClass = function() {
             this.component.deleteOperation(selectedOperationNumber);
         }
     }
+    this.component.setClassWidth();
 }

@@ -132,6 +132,12 @@ export const Class = function () {
      */
     this.isVariation = false;
 
+    /**
+     * The maximum number of characters allowed for this class' text
+     * @type {number}
+     */
+    this.maxChars = 60;
+
     Object.defineProperty(this, 'lineHeight', {
         get: function () {
             return this.fontHeight * 1.5;
@@ -373,7 +379,7 @@ Class.prototype.draw = function (context, view) {
     this.operationsBounds.contextRect(context);
 
     // If class is empty, draw a 1 line box
-    if (this.attributes.length == 0 && this.operations.length == 0)
+    if (this.attributes.length === 0 && this.operations.length === 0)
         context.rect(this.x - (this.width / 2), this.y + this.nameHeight, this.width, this.lineHeight);
 
     context.fill();
@@ -392,24 +398,28 @@ Class.prototype.draw = function (context, view) {
             this.drawName(context,
                 0,
                 this.fontHeight * 2.25,
-                ITALICS_FONT);
+                ITALICS_FONT,
+                this.maxChars);
         } else {
             this.drawName(context,
                 0,
                 this.fontHeight * 1.25,
-                ITALICS_FONT);
+                ITALICS_FONT,
+                this.maxChars);
         }
     } else {
         if (this.isVariation) {
             this.drawName(context,
                 0,
                 this.fontHeight * 2.25,
-                NAME_FONT);
+                NAME_FONT,
+                this.maxChars);
         } else {
             this.drawName(context,
                 0,
                 this.fontHeight * 1.25,
-                NAME_FONT);
+                NAME_FONT,
+                this.maxChars);
         }
     }
     context.fillStyle = oldColor;
@@ -422,8 +432,13 @@ Class.prototype.draw = function (context, view) {
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
         oldColor = attribute.modifyContextFill(context);
-        const attributeText = attribute.elementValue.substring(
+        let attributeText = attribute.elementValue.substring(
             !this.showVisibility && attribute.visibility !== '' ? 1 : 0);
+        // Cut off drawing the attributes at the maxChars limit
+        if(attributeText.length > this.maxChars) {
+            attributeText = attributeText.substring(0, this.maxChars);
+            attributeText += "...";
+        }
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + i * this.lineHeight,
@@ -441,8 +456,13 @@ Class.prototype.draw = function (context, view) {
         }
         const operation = this.operations[j];
         oldColor = operation.modifyContextFill(context);
-        const operationText = operation.elementValue.substring(
+        let operationText = operation.elementValue.substring(
             !this.showVisibility && operation.visibility !== '' ? 1 : 0);
+        // Cut off drawing the operations at the maxChars limit
+        if(operationText.length > this.maxChars) {
+            operationText = operationText.substring(0, this.maxChars);
+            operationText += "...";
+        }
         context.fillText(operationText,
             this.x - this.width / 2 + 5,
             this.y + fromTop + j * this.lineHeight,
@@ -619,6 +639,37 @@ Class.prototype.sortAttributions = function () {
             this.attributes.push(new Attribute(attribute[0].elementValue));
         }
     }
+}
+
+/**
+ * Updates the width of this class based on the length of the text
+ * within the class.
+ */
+Class.prototype.setClassWidth = function() {
+    let longestText = 0;
+    // Name text
+    if(this.naming.length > longestText) {
+        longestText = this.naming.length;
+    }
+    // Attribute text
+    for(let i = 0; i < this.attributes.length; i++) {
+        if(this.attributes[i].elementValue.length > longestText) {
+            longestText = this.attributes[i].elementValue.length;
+        }
+    }
+    // Operation text
+    for(let j = 0; j < this.operations.length; j++) {
+        if(this.operations[j].elementValue.length > longestText) {
+            longestText = this.operations[j].elementValue.length;
+        }
+    }
+    // Limits the text to the maxChars plus 3 (the ...)
+    if(longestText > this.maxChars) {
+        longestText = this.maxChars + 3;
+    }
+    // Sets the width of the class based on the longest text
+    // in the class
+    this.width = 200*(longestText/35);
 }
 
 /**

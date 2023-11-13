@@ -402,14 +402,21 @@ Component.prototype.newTab = function () {
  * @param x X location
  * @param y Y location
  * @param font Optional font to use
+ * @param maxChars The maximum number of characters to be drawn
  */
-Component.prototype.drawName = function (context, x, y, font) {
+Component.prototype.drawName = function (context, x, y, font, maxChars) {
     // Name
     if (this.naming !== null) {
         context.beginPath();
         context.font = font !== undefined ? font : NAME_FONT;
         context.textAlign = "center";
-        context.fillText(this.naming, this.x + x, this.y + y);
+        let text = this.naming;
+        // Cut off the name at the maxChars limit
+        if(text.length > maxChars) {
+            text = text.substring(0, maxChars);
+            text += "...";
+        }
+        context.fillText(text, this.x + x, this.y + y);
         context.stroke();
     }
 };
