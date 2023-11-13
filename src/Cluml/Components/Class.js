@@ -677,6 +677,10 @@ Class.prototype.setClassWidth = function() {
     else {
         this.width = 200;
     }
+    // Update the TNodes attached to the class when updating the width
+    for(let k = 0; k < this.attachedTNodes.length; k++) {
+        this.attachedTNodes[k].refreshPosition();
+    }
 }
 
 /**
