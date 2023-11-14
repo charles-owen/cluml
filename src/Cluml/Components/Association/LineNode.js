@@ -32,6 +32,8 @@ export const SPIN_HORIZONTAL = 1;
 export const LineNode = function () {
     Selectable.call(this);
 
+    console.log("A LineNode has been created");
+
     //region Fields
     /**
      * The next LineNode.

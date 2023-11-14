@@ -8,6 +8,7 @@ import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {ManagedNode} from "./ManagedNode";
 import {MainSingleton} from "../../MainSingleton";
+import {Class} from "../Class";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -159,6 +160,10 @@ Association.prototype.paletteOrder = 11;
 Association.prototype.loadOrder = 11;
 Association.prototype.drawOrder = 20;
 
+Association.help = 'association';
+Association.label = 'Association';
+Association.desc = 'Association';
+
 /**
  * Determines whether the multiplicity and roles will be displayed.
  * @type {boolean}
@@ -224,7 +229,7 @@ Association.prototype.onUndo = function () {
  * @param y {number} Mouse y.
  * @return {LineNode|null}
  */
-Association.prototype.touch = function (x, y) {
+Association.prototype.touch = function (x, y, rightclick = false) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         // Return a node instead of the association itself.
@@ -233,12 +238,20 @@ Association.prototype.touch = function (x, y) {
                 return node;
             }
         }
-
-        // No node found. Create a new node.
-        return this.createNodeNear(new Vector(x, y));
+        //If it isn't a right click
+        if(!rightclick){
+            // No node found. Create a new node.
+            return this.createNodeNear(new Vector(x, y));
+        } else {
+            return this;
+        }
     }
 
     return null;
+}
+
+Association.prototype.rightClick = function (x, y) {
+    this.nodes.start.rightClick(x, y);
 }
 
 Association.prototype.isSelected = function (other) {

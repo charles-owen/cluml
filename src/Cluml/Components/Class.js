@@ -51,6 +51,25 @@ export const Class = function () {
                 map.set(attribute.name, count + 1);
             }
         }
+
+        map.clear();
+        for (const operation of this.operations) {
+            if (!map.has(operation.name)) {
+                map.set(operation.name, 1);
+            } else {
+                const count = map.get(operation.name);
+                // only generate the error once per unique operation name
+                if (count === 1) {
+                    let error = new SanityElement(this.naming, undefined);
+                    error.processSanityCheck = function () {
+                        return [new SanityErrorInfo("1100", "Class",
+                            name, `Multiple operations with the name <b>${operation.name}</b>`)];
+                    };
+                    yield error;
+                }
+                map.set(operation.name, count + 1);
+            }
+        }
     }
 
     /**
@@ -249,7 +268,7 @@ Class.prototype.copyFrom = function (component) {
  * @param y {number} Mouse y.
  * @return {Class|null}
  */
-Class.prototype.touch = function (x, y) {
+Class.prototype.touch = function (x, y, rightclick = false) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         return this;
@@ -660,7 +679,7 @@ Class.prototype.sortAttributions = function () {
             this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }
         // Move attributes with a complex default value to the attributes category
-        if (pattern3.test(this.operations[j].elementValue)) {
+        else if (pattern3.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
             this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }

@@ -51,6 +51,10 @@ Inheritance.prototype.htmlDesc = '<h2>Inheritance</h2><p>Inheritance between 2 c
 Inheritance.prototype.paletteOrder = 10;
 Inheritance.prototype.loadOrder = 10;
 
+Inheritance.help = 'inheritance';
+Inheritance.label = 'Inheritance';
+Inheritance.desc = 'Inheritance';
+
 Inheritance.prototype.showTags = false;
 //endregion
 

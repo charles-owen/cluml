@@ -52,7 +52,7 @@ export const Diagram = function (name) {
      * @param y {number} Mouse Y
      * @return {Component} Touched element or null if none
      */
-    this.touch = function (x, y) {
+    this.touch = function (x, y, rightclick = false) {
         //
         // First we try to grab a component.
         // We do this in reverse order, so we are selecting
@@ -60,14 +60,16 @@ export const Diagram = function (name) {
         //
         for (let i = this.components.length - 1; i >= 0; i--) {
             let component = this.components[i];
-            let grabbed = component.touch(x, y);
+            let grabbed = component.touch(x, y, rightclick);
             if (grabbed !== null) {
+                //console.log("Diagram.touch was called");
                 return grabbed;
             }
         }
 
         return null;
     };
+
 
     /**
      * Advance the animation by delta time...

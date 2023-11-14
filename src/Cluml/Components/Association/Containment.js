@@ -1,6 +1,7 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import Vector from "../../Utility/Vector";
+import {Inheritance} from "./Inheritance";
 
 
 /**
@@ -23,6 +24,10 @@ Containment.prototype.paletteDesc = "Containment component.";
 Containment.prototype.htmlDesc = '<h2>Containment</h2><p>Containment between 2 classes.</p>';
 Containment.prototype.paletteOrder = 14;
 Containment.prototype.loadOrder = 14;
+
+Containment.help = 'containment';
+Containment.label = 'Containment';
+Containment.desc = 'Containment';
 //endregion
 
 Containment.prototype.drawTail = function (context, view, tail) {

@@ -1,5 +1,6 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
+import {Containment} from "./Containment";
 
 
 /**
@@ -22,6 +23,11 @@ Aggregation.prototype.paletteDesc = "Aggregation component.";
 Aggregation.prototype.htmlDesc = '<h2>Aggregation</h2><p>Aggregation between 2 classes.</p>';
 Aggregation.prototype.paletteOrder = 12;
 Aggregation.prototype.loadOrder = 12;
+
+Aggregation.help = 'aggregation';
+Aggregation.label = 'Aggregation';
+Aggregation.desc = 'Aggregation';
+
 //endregion
 
 //Draw the paletteImage for the palette
