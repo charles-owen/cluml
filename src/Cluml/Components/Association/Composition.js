@@ -1,7 +1,6 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {Aggregation} from "./Aggregation";
-import {Inheritance} from "./Inheritance";
 
 /**
  * Inheritance-type association
