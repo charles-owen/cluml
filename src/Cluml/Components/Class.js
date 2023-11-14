@@ -51,6 +51,25 @@ export const Class = function () {
                 map.set(attribute.name, count + 1);
             }
         }
+
+        map.clear();
+        for (const operation of this.operations) {
+            if (!map.has(operation.name)) {
+                map.set(operation.name, 1);
+            } else {
+                const count = map.get(operation.name);
+                // only generate the error once per unique operation name
+                if (count === 1) {
+                    let error = new SanityElement(this.naming, undefined);
+                    error.processSanityCheck = function () {
+                        return [new SanityErrorInfo("1100", "Class",
+                            name, `Multiple operations with the name <b>${operation.name}</b>`)];
+                    };
+                    yield error;
+                }
+                map.set(operation.name, count + 1);
+            }
+        }
     }
 
     /**
