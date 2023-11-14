@@ -122,7 +122,7 @@ EditingPopup.prototype.close = function() {
  */
 EditingPopup.prototype.updateClass = function() {
     // Create a backup of the class before making edits
-    this.component.main.backup();
+    this.component.diagram.diagrams.model.backup();
     // Editing the name field
     if (this.editingWhat === "name") {
         // Only edit the class name if the editing box is not empty
