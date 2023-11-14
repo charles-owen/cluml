@@ -268,7 +268,7 @@ Class.prototype.copyFrom = function (component) {
  * @param y {number} Mouse y.
  * @return {Class|null}
  */
-Class.prototype.touch = function (x, y) {
+Class.prototype.touch = function (x, y, rightclick = false) {
     // Have we touched the component itself?
     if (this.bounds().contains(x, y)) {
         return this;

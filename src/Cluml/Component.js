@@ -206,7 +206,7 @@ Component.prototype.added = function (diagram) {
  * @param y {number} Mouse Y
  * @return {Component}
  */
-Component.prototype.touch = function (x, y) {
+Component.prototype.touch = function (x, y, rightclick = false) {
 
 };
 

@@ -31,7 +31,9 @@ export const Selection = function (view) {
     let rect = null;
 
     this.rightClick = function (x, y, event) {
-        const touched = view.diagram.touch(x, y);
+        const touched = view.diagram.touch(x, y, true);
+
+        //console.log("This was a right click");
 
         this.closeOpenMenus();
 
@@ -94,6 +96,7 @@ export const Selection = function (view) {
          * @type {Component}
          */
         const touched = view.diagram.touch(x, y);
+        //console.log("This was a mouseDown");
         if (touched !== null) {
 
             if (touched.single()) {
@@ -145,7 +148,7 @@ export const Selection = function (view) {
                 // selected, we need to create an undo backup
                 if (rect === null && this.selected.length > 0 && !this.associationInit) {
                     view.model.backup();
-                    console.log('Selection called model.backup');
+                    //console.log('Selection called model.backup');
                 }
 
                 // This is the first movement of the mouse

@@ -85,7 +85,13 @@ export const View = function(main, canvas, diagram) {
         let mouseDownListener = (event) => {
             event.preventDefault();
 
-            downListener(event.pageX, event.pageY, false, event);
+            //Determine if the user left clicked or right clicked
+            if(event.button === 0){
+                downListener(event.pageX, event.pageY, false, event);
+            } else if (event.button === 2){
+                contextMenuListener(event);
+            }
+
         }
 
         let contextMenuListener = (event) => {
@@ -341,7 +347,7 @@ export const View = function(main, canvas, diagram) {
             // canvasJ.parent().off("scroll");
             const dv = setMousePos(pageX, pageY);
             this.selection.mouseUp(dv.x, dv.y);
-            // this.draw();
+            this.draw();
         }
 
         // Install mouse handlers
@@ -457,7 +463,7 @@ View.prototype.importTab = function(importer) {
  * @param y {number}
  */
 View.prototype.initializeComponent = function (component, x, y) {
-    console.log('View called model.backup');
+    //console.log('View called model.backup');
     this.model.backup();
 
     component.brand();

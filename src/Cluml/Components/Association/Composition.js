@@ -1,6 +1,7 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {Aggregation} from "./Aggregation";
+import {Inheritance} from "./Inheritance";
 
 /**
  * Inheritance-type association
@@ -22,6 +23,10 @@ Composition.prototype.paletteDesc = "Composition component.";
 Composition.prototype.htmlDesc = '<h2>Composition</h2><p>Composition between 2 classes.</p>';
 Composition.prototype.paletteOrder = 13;
 Composition.prototype.loadOrder = 13;
+
+Composition.help = 'composition';
+Composition.label = 'Composition';
+Composition.desc = 'Composition';
 //endregion
 
 Composition.prototype.drawTail = function (context, view, tail) {
