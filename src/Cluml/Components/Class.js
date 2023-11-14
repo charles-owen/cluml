@@ -291,7 +291,7 @@ Class.prototype.rightClick = function (x, y) {
  * Open a ClassPropertiesDlg box
  */
 Class.prototype.openProperties = function () {
-    const propertiesDlg = new ClassPropertiesDlg(this, this.main, false);
+    const propertiesDlg = new ClassPropertiesDlg(this, this.diagram.diagrams.model.main, false);
     propertiesDlg.open();
 }
 
@@ -592,7 +592,8 @@ Class.prototype.paletteImage = function () {
  */
 Class.prototype.addAttribute = function (attribute) {
     // Create a backup of the class before adding a new attribute
-    this.main.backup();
+    this.diagram.diagrams.model.backup();
+    //this.main.backup();
     this.attributes.push(attribute);
 }
 

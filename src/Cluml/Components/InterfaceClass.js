@@ -87,7 +87,7 @@ InterfaceClass.prototype.addAttribute = function(attribute) {
  * abstraction toggles can be disabled
  */
 InterfaceClass.prototype.openProperties = function() {
-    const propertiesDlg = new ClassPropertiesDlg(this, this.main, true);
+    const propertiesDlg = new ClassPropertiesDlg(this, this.diagram.diagrams.model.main, true);
     propertiesDlg.open();
 }
 
