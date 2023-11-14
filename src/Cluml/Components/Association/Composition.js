@@ -44,7 +44,6 @@ Composition.prototype.drawTail = function (context, view, tail) {
 
 //Draw the paletteImage for the palette
 Composition.prototype.paletteImage = function () {
-    let size = 16;  // Box size
     let width = 60;       // Image width
     let height = 40;      // Image height
     const pi = new PaletteImage(width, height);
