@@ -119,6 +119,9 @@ Inheritance.prototype.drawTail = function (context, view, tail) {
     context.closePath();
     context.stroke();
 
+    if (view.selection.isSelected(this))
+        context.lineWidth = 3;
+
     context.fillStyle = "white";
     context.beginPath();
     context.moveTo(x, y);
@@ -127,6 +130,7 @@ Inheritance.prototype.drawTail = function (context, view, tail) {
     context.closePath();
     context.fill();
     context.stroke();
+    context.lineWidth = 1;
 }
 
 //Draw the paletteImage for the palette

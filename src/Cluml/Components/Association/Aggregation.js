@@ -1,6 +1,5 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
-import {Containment} from "./Containment";
 
 
 /**
@@ -43,15 +42,6 @@ Aggregation.prototype.paletteImage = function () {
     pi.drawLine(10, 20, 16, 14);
     pi.drawLine(16, 14, 22, 20);
     return pi;
-
-    // //Containment
-    // pi.drawLine(22, 20, 50, 20);
-    // pi.circle(-14, 0, 6);
-    // pi.drawLine(16, 24, 16, 16);
-    // pi.drawLine(12, 20, 20, 20);
-    // return pi;
-    // const pi = this.nodes.end.paletteImage();
-    // return pi;
 }
 
 Aggregation.prototype.drawTail = function (context, view, tail) {
@@ -138,6 +128,8 @@ Aggregation.prototype.drawTail = function (context, view, tail) {
     context.lineTo(ap.x, ap.y);
     context.stroke();
 
+    if (view.selection.isSelected(this))
+        context.lineWidth = 3;
     context.fillStyle = "white";
     context.beginPath();
     context.moveTo(x, y);
@@ -147,4 +139,5 @@ Aggregation.prototype.drawTail = function (context, view, tail) {
     context.closePath();
     context.fill();
     context.stroke();
+    context.lineWidth = 1;
 }

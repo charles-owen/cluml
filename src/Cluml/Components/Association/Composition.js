@@ -34,8 +34,12 @@ Composition.prototype.drawTail = function (context, view, tail) {
     // use it here also.
     Aggregation.prototype.drawTail.call(this, context, view, tail);
 
+    if (view.selection.isSelected(this))
+        context.lineWidth = 3;
     context.fillStyle = 'black';
     context.fill();
+    context.stroke();
+    context.lineWidth = 1;
 }
 
 

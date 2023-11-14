@@ -1,7 +1,6 @@
 import {Association} from "./Association";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import Vector from "../../Utility/Vector";
-import {Inheritance} from "./Inheritance";
 
 
 /**
@@ -87,6 +86,8 @@ Containment.prototype.drawTail = function (context, view, tail) {
     context.lineTo(ap.x, ap.y);
     context.stroke();
 
+    if (view.selection.isSelected(this))
+        context.lineWidth = 3;
     context.fillStyle = "white";
     context.beginPath();
     context.arc(circleCenterX, circleCenterY, (offsetVal / 2), 0, 2 * Math.PI, true);
@@ -101,6 +102,7 @@ Containment.prototype.drawTail = function (context, view, tail) {
     context.lineTo(circleCenterX, circleCenterY - plusSize);
 
     context.stroke();
+    context.lineWidth = 1;
 }
 
 
