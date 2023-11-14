@@ -678,7 +678,7 @@ Class.prototype.sortAttributions = function () {
             this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }
         // Move attributes with a complex default value to the attributes category
-        if (pattern3.test(this.operations[j].elementValue)) {
+        else if (pattern3.test(this.operations[j].elementValue)) {
             let attribute = this.operations.splice(j, 1);
             this.attributes.push(new Attribute(attribute[0].elementValue, this));
         }
