@@ -11,6 +11,7 @@ import {SanityElement} from "../SanityElement/SanityElement";
 import {Attribute} from "../SanityElement/Attribute";
 import {Operation} from "../SanityElement/Operation";
 import {SanityErrorInfo} from "../SanityElement/SanityErrorInfo";
+import {MainSingleton} from "../MainSingleton";
 
 export const Class = function () {
     Component.call(this);
@@ -310,7 +311,7 @@ Class.prototype.rightClick = function (x, y) {
  * Open a ClassPropertiesDlg box
  */
 Class.prototype.openProperties = function () {
-    const propertiesDlg = new ClassPropertiesDlg(this, this.diagram.diagrams.model.main, false);
+    const propertiesDlg = new ClassPropertiesDlg(this,  MainSingleton.singleton, false);
     propertiesDlg.open();
 }
 
@@ -611,7 +612,7 @@ Class.prototype.paletteImage = function () {
  */
 Class.prototype.addAttribute = function (attribute) {
     // Create a backup of the class before adding a new attribute
-    this.diagram.diagrams.model.backup();
+    MainSingleton.singleton.backup();
     //this.main.backup();
     this.attributes.push(attribute);
 }

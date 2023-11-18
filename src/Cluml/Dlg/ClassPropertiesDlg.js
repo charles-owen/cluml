@@ -405,7 +405,7 @@ export const ClassPropertiesDlg = function(component, main, isInterface) {
         extraTake();
 
         this.close();
-        main.currentView().draw();
+        main.currentView.draw();
 
     }
 

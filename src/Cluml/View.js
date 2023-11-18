@@ -185,7 +185,7 @@ export const View = function(main, canvas, diagram) {
 
             //if user is in association selection mode, and the user has touched a class
             if(main.selectionToggle === false &&
-                tempComp !== null && tempComp.fileLbl === 'Class'){
+                tempComp !== null && (tempComp.fileLbl === 'Class' || tempComp.fileLbl === "InterfaceClass")){
                 //create an association
                 const componentTemplate = main.toggleManager.toggledAssociation.template;
                 //console.log(componentTemplate);

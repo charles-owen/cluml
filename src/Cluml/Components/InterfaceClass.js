@@ -3,6 +3,7 @@ import {PaletteImage} from "../Graphics/PaletteImage";
 import {NAME_FONT} from "../Selectable";
 import {Operation} from "../SanityElement/Operation";
 import {ClassPropertiesDlg} from "../Dlg/ClassPropertiesDlg";
+import {MainSingleton} from "../MainSingleton";
 
 export const InterfaceClass = function () {
     Class.call(this);
@@ -87,7 +88,7 @@ InterfaceClass.prototype.addAttribute = function(attribute) {
  * abstraction toggles can be disabled
  */
 InterfaceClass.prototype.openProperties = function() {
-    const propertiesDlg = new ClassPropertiesDlg(this, this.diagram.diagrams.model.main, true);
+    const propertiesDlg = new ClassPropertiesDlg(this,  MainSingleton.singleton, true);
     propertiesDlg.open();
 }
 
