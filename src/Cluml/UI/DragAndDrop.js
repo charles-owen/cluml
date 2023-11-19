@@ -1,3 +1,5 @@
+import {MainSingleton} from "../MainSingleton";
+
 /**
  * Drag and drop support for the palette
  * @constructor
@@ -41,6 +43,7 @@ export const DragAndDrop = function(main) {
 	this.draggable = (paletteItem) => {
 		paletteItem.element.addEventListener('mousedown', (event) => {
 			event.preventDefault();
+			closeContextMenus();
 			click(paletteItem);
 
 			mouseMove(event.pageX, event.pageY);
@@ -48,6 +51,7 @@ export const DragAndDrop = function(main) {
 
 		paletteItem.element.addEventListener('touchstart', (event) => {
 			event.preventDefault();
+			closeContextMenus();
 			click(paletteItem);
 
 			let touch = event.changedTouches[0];
@@ -60,6 +64,14 @@ export const DragAndDrop = function(main) {
 			'view': view,
 			'callback': callback
 		});
+	}
+
+	let closeContextMenus = () => {
+		let classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
+		classes = classes.concat(MainSingleton.singleton.getCurrentComponentsByType("InterfaceClass"));
+		for (const cl of classes) {
+			cl.enableAddPopup(false);
+		}
 	}
 
 	/**
