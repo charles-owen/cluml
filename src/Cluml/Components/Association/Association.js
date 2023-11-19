@@ -8,7 +8,6 @@ import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {ManagedNode} from "./ManagedNode";
 import {MainSingleton} from "../../MainSingleton";
-import {Class} from "../Class";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -528,7 +527,7 @@ Association.prototype.syncNodes = function () {
         }
 
         // Can cull now
-        return this.nodes.start.syncNodes(false);
+        return this.nodes.start.syncNodes(true);
     }
 }
 

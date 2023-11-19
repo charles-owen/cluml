@@ -190,30 +190,54 @@ LineNode.prototype.move = function (dx, dy, x, y) {
     Selectable.prototype.move.call(this, dx, dy, x, y);
 
     if (this.hasNext && this.nextNode.hasNext) {
-        if (Math.abs(this.x - this.nextNode.nextNode.x) < NODE_SNAPPING_RADIUS) {
-            // Snap to next node in the X axis
-            this.x = this.nextNode.nextNode.x;
-            this.moveX = this.x;
-        }
-        if (Math.abs(this.y - this.nextNode.nextNode.y) < NODE_SNAPPING_RADIUS) {
-            // Snap to next node in the Y axis
-            this.y = this.nextNode.nextNode.y;
-            this.moveY = this.y;
+        const snapped = this.trySnap(this.nextNode.nextNode.position);
+
+        if (!snapped && this.nextNode.nextNode.getNormal !== undefined) {
+            const offset = Vector.add(
+                this.nextNode.nextNode.getNormal(),
+                this.nextNode.nextNode.position
+            );
+
+            this.trySnap(offset);
         }
     }
 
     if (this.hasPrevious && this.previousNode.hasPrevious) {
-        if (Math.abs(this.x - this.previousNode.previousNode.x) < NODE_SNAPPING_RADIUS) {
-            // Snap to previous node in the X axis
-            this.x = this.previousNode.previousNode.x;
-            this.moveX = this.x;
-        }
-        if (Math.abs(this.y - this.previousNode.previousNode.y) < NODE_SNAPPING_RADIUS) {
-            // Snap to previous node in the Y axis
-            this.y = this.previousNode.previousNode.y;
-            this.moveY = this.y;
+        const snapped = this.trySnap(this.previousNode.previousNode.position);
+
+        if (!snapped && this.previousNode.previousNode.getNormal !== undefined) {
+            const offset = Vector.add(
+                this.previousNode.previousNode.getNormal(),
+                this.previousNode.previousNode.position
+            );
+
+            this.trySnap(offset);
         }
     }
+}
+
+/**
+ * Tries to snap this node to testPoint.
+ * @param testPoint {Vector}
+ * @return {boolean} True if successfully snapped, false otherwise.
+ */
+LineNode.prototype.trySnap = function(testPoint) {
+    if (Math.abs(this.x - testPoint.x) < NODE_SNAPPING_RADIUS) {
+        // Snap to test point in the X axis
+        this.x = testPoint.x;
+        this.moveX = this.x;
+
+        return true;
+    }
+    if (Math.abs(this.y - testPoint.y) < NODE_SNAPPING_RADIUS) {
+        // Snap to test point in the Y axis
+        this.y = testPoint.y;
+        this.moveY = this.y;
+
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -253,7 +277,7 @@ LineNode.prototype.syncNodes = function (cullRedundant) {
             anyChanges = true;
         }
 
-        return this.nextNode.syncNodes() || anyChanges;
+        return this.nextNode.syncNodes(cullRedundant) || anyChanges;
     }
 
     return anyChanges;

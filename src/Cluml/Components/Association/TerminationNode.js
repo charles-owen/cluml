@@ -233,6 +233,41 @@ TerminationNode.prototype.lineupPoint = function () {
     if (!this.attachedTo)
         return this.position;
 
+    return Vector.add(this.position, this.getNormal());
+}
+
+// TerminationNode.prototype.syncNodes = function (cullRedundant) {
+//     let anyChanges = LineNode.prototype.syncNodes.call(this, cullRedundant);
+//
+//     const offset = Vector.add(this.position, this.getNormal());
+//
+//     if (this.hasNext) {
+//         // Add offset node if missing.
+//         if (!this.nextNode.isTOffset) {
+//             const offsetNode = new OffsetNode();
+//             offsetNode.association = this.association;
+//             offsetNode.position = offset;
+//             offsetNode.insertBetween(this, this.nextNode);
+//         }
+//
+//     } else if (this.hasPrevious) {
+//         // Add offset node if missing.
+//         if (!this.previousNode.isTOffset) {
+//             const offsetNode = new OffsetNode();
+//             offsetNode.association = this.association;
+//             offsetNode.position = offset;
+//             offsetNode.insertBetween(this.previousNode, this);
+//         }
+//     }
+//
+//     return anyChanges;
+// }
+
+/**
+ * Returns the normal of the TNode, based on the side.
+ * @return {Vector}
+ */
+TerminationNode.prototype.getNormal = function () {
     const side = Math.floor(this.side);
     const normal = new Vector(0, 0);
 
@@ -251,7 +286,7 @@ TerminationNode.prototype.lineupPoint = function () {
             break;
     }
 
-    return Vector.add(this.position, normal);
+    return normal;
 }
 
 /**
@@ -340,7 +375,7 @@ TerminationNode.prototype.tryAttachToClass = function (attachTo, force) {
         if (attachTo) {
             // Check for association cycles.
             const cycleFound = (this.association.fileLbl === "Inheritance" &&
-                this.association.nodes.start.attachedTo === this.association.nodes.end.attachedTo) ||
+                    this.association.nodes.start.attachedTo === this.association.nodes.end.attachedTo) ||
                 attachTo.hasAssociationCycle("Inheritance");
 
             if (cycleFound) {

@@ -26,7 +26,7 @@ ManagedNode.prototype.draw = function (context, view) {
     }
 }
 
-ManagedNode.prototype.syncNodes = function () {
+ManagedNode.prototype.syncNodes = function (cullRedundant) {
     let anyChanges = false;
 
     const plp = this.hasPrevious ? this.previousNode.lineupPoint() : new Vector(0, 0);
@@ -62,11 +62,11 @@ ManagedNode.prototype.syncNodes = function () {
             anyChanges = true;
         }
 
-        return this.nextNode.syncNodes() || anyChanges;
+        return this.nextNode.syncNodes(cullRedundant) || anyChanges;
     }
 
     if (this.hasNext)
-        return this.nextNode.syncNodes() || anyChanges;
+        return this.nextNode.syncNodes(cullRedundant) || anyChanges;
     else
         return anyChanges
 }
