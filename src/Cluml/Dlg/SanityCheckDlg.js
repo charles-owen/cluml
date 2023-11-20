@@ -42,6 +42,7 @@ export const SanityCheckDlg = function(main) {
 
         // Check for composition cycles
         const classes = main.currentView().diagram.getComponentsByType("Class");
+        const interfaces = main.currentView().diagram.getComponentsByType("InterfaceClass");
         const visited = new Set();
         let recursiveVisited = new Set();
         let hasCycle = false;
@@ -62,7 +63,8 @@ export const SanityCheckDlg = function(main) {
 
         // Check for multiple classes with the same name
         const map = new Map();
-        for (const classObj of classes) {
+        const allClasses = classes.concat(interfaces)
+        for (const classObj of allClasses) {
             if (!map.has(classObj.naming)) {
                 map.set(classObj.naming, 1);
             }
