@@ -8,6 +8,7 @@ import Vector from "./Utility/Vector";
 import Selectable from "./Selectable";
 import {Class} from "./Components/Class";
 import {Attribute} from "./SanityElement/Attribute";
+import {MainSingleton} from "./MainSingleton";
 
 /**
  * View of a diagram
@@ -84,6 +85,7 @@ export const View = function(main, canvas, diagram) {
 
         let mouseDownListener = (event) => {
             event.preventDefault();
+            closeContextMenus();
 
             //Determine if the user left clicked or right clicked
             if(event.button === 0){
@@ -95,8 +97,17 @@ export const View = function(main, canvas, diagram) {
         }
 
         let contextMenuListener = (event) => {
+            closeContextMenus();
             this.selection.rightClick(mouse.x, mouse.y, event);
             this.draw();
+        }
+
+        let closeContextMenus = () => {
+            let classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
+            classes = classes.concat(MainSingleton.singleton.getCurrentComponentsByType("InterfaceClass"));
+            for (const cl of classes) {
+                cl.enableAddPopup(false);
+            }
         }
 
         let longTouchTimer = null;
