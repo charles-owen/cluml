@@ -87,7 +87,7 @@ export const View = function(main, canvas, diagram) {
             event.preventDefault();
             closeContextMenus();
 
-            //Determine if the user left clicked or right clicked
+            //Determine if the user left-clicked or right-clicked
             if(event.button === 0){
                 downListener(event.pageX, event.pageY, false, event);
             } else if (event.button === 2){
@@ -199,10 +199,6 @@ export const View = function(main, canvas, diagram) {
                 tempComp !== null && (tempComp.fileLbl === 'Class' || tempComp.fileLbl === "InterfaceClass")){
                 //create an association
                 const componentTemplate = main.toggleManager.toggledAssociation.template;
-                //console.log(componentTemplate);
-                if(main.toggleManager.toggledAssociation === undefined){
-                    return;
-                }
 
                 const newAssociation = new componentTemplate(main.toggleManager.toggledAssociation);
                 this.initializeComponent(newAssociation, mouse.x, mouse.y);
@@ -365,11 +361,18 @@ export const View = function(main, canvas, diagram) {
         canvas.addEventListener('contextmenu', contextMenuListener);
         canvas.addEventListener('mousedown', mouseDownListener);
         canvas.addEventListener('dblclick', dblClickListener);
+        canvas.addEventListener('mouseleave', mouseUpListener);
         document.addEventListener('keyup', keyUpListener);
         document.addEventListener('keydown', keyDownListener);
 
-        let body = document.querySelector('body');
+        const body = document.querySelector('body');
         body.addEventListener('mouseup', mouseUpListener);
+
+        // body.addEventListener('mouseleave', mouseUpListener);
+        // Uncomment the above line and comment out
+        //      canvas.addEventListener('mouseleave', mouseUpListener);
+        // to instead target the body (so mouseUp isn't called when we
+        // mouse over the palette).
 
         // Install touch handlers
         canvas.addEventListener('touchstart', touchStartListener);

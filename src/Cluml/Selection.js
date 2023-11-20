@@ -253,8 +253,8 @@ export const Selection = function (view) {
      * Sets the end node of the created association as the current selected
      * Places the end node at the same position as the mouse
      * @param association {Association}
-     * @param x {MousePosX}
-     * @param y {MousePosY}
+     * @param x {number}
+     * @param y {number}
      */
     this.selectEndNode = function(association, x, y){
         //console.log("Testing that this does a thing");

@@ -510,9 +510,6 @@ Association.prototype.createNodeNear = function (near) {
 
     if (minTDP !== undefined) {
         // Now have the nearest point on the line.
-        // First do backup.
-        //console.log('Association called model.backup');
-        //MainSingleton.singleton.backup();
 
         const newNode = new LineNode();
         newNode.association = this;
