@@ -99,7 +99,7 @@ TerminationNode.prototype.drop = function () {
     // Do not replace with LineNode.prototype.drop. That would destroy
     // the end nodes (bad).
     Selectable.prototype.drop.call(this);
-    //console.log("Termination Drop called");
+    console.log("Termination Drop called");
 
     // Determine if we are near a class. For now, just go
     // through every class.
@@ -108,14 +108,17 @@ TerminationNode.prototype.drop = function () {
 
     for (const cl of classes) {
         // Attach to the first class we see.
-        if (this.tryAttachToClass(cl, false))
+        if (this.tryAttachToClass(cl, false)) {
+            // If the association is fully formed, see if we need to move the
+            // termination nodes around.
+            this.association.formatAttachedEnds();
             return;
+        }
     }
 
     // Not attached to any class. Make sure to remove the class
     // we would be attached to.
     this.delete();
-    //this.detachFromClass();
 }
 
 /**

@@ -304,10 +304,10 @@ Vector.maxComponents = function (...vectors) {
  * component of the difference between from and to.
  * @param from {Vector} Starting point.
  * @param to {Vector} Ending point.
- * @return {Side}
+ * @return {number}
  */
 Vector.majorCardinalDirection = function (from, to) {
-    const diff = Vector.sub(from, to);
+    const diff = Vector.sub(to, from);
 
     if (Math.abs(diff.x) >= Math.abs(diff.y)) {
         return diff.x > 0 ? Side.Right : Side.Left;

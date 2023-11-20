@@ -8,6 +8,7 @@ import Selectable from "../../Selectable";
 import {PaletteImage} from "../../Graphics/PaletteImage";
 import {ManagedNode} from "./ManagedNode";
 import {MainSingleton} from "../../MainSingleton";
+import Side from "../../Utility/Side";
 
 export const ASSOCIATION_MIN_NODE_CREATE_DISTANCE = 25;
 
@@ -171,29 +172,18 @@ Association.prototype.showTags = true;
 //endregion
 
 //region Component Methods
-/**
- * Drops the association, then calls callback.
- * @param callback {function}
- */
-Association.prototype.dropWithCallback = function (callback) {
-    this.drop();
-    callback();
-}
-
 Association.prototype.drop = function () {
     Component.prototype.drop.call(this);
 
-    /**
-     *
-     * @type {NodeData}
-     */
+    console.log("Association drop called");
+
     this.nodes = new NodeData(this);
-    //attempt to connect the start node with the class
+
+    // Attempt to connect the start node with the class
     this.nodes.start.drop();
 
     this.x = 0;
     this.y = 0;
-    //console.log(this.paletteLbl);
 }
 
 /**
@@ -344,6 +334,16 @@ Association.prototype.loadComponent = function (obj) {
 
 //region Association Methods.
 /**
+ * Evaluates if both the start nad end nodes are attached to classes.
+ * @return {boolean} True if both the start nad end nodes are attached to
+ * classes, false otherwise.
+ */
+Association.prototype.isFullyFormed = function () {
+    return this.nodes.start.attachedTo !== null &&
+        this.nodes.end.attachedTo !== null;
+}
+
+/**
  * A generator that generates (iterates) all the nodes of the association.
  * @return {Generator<LineNode, void, *>}
  */
@@ -425,6 +425,50 @@ Association.prototype.nodeSpins = function* () {
  */
 Association.prototype.swapEnds = function () {
     this.nodes.swapEnds();
+}
+
+/**
+ * Ensures that the start and end nodes of the associations are ordered such
+ * that the line won't go over the attached classes. Does nothing if this
+ * association is not fully formed.
+ * @return {boolean} True if fully formed, false otherwise.
+ */
+Association.prototype.formatAttachedEnds = function () {
+    /**
+     *
+     * @param from {TerminationNode}
+     * @param to {TerminationNode}
+     */
+    const setSide = function(from, to) {
+        const axis = Vector.majorCardinalDirection(
+            from.position,
+            to.position
+        );
+
+        const side = Math.floor(from.side);
+
+        // Only need to format if on opposite side.
+        // deltaSide is the difference between the two sides.
+        const deltaSide = Math.floor(axis - side);
+
+        if (deltaSide > 1) {
+            // On opposite side. Needs format.
+            // Only care about decimal portion.
+            from.side = (side % 1) + axis;
+            from.refreshPosition();
+        }
+    }
+
+    if (this.isFullyFormed()) {
+        // The largest axis of the difference. This represents the "largest"
+        // distance of travel between start and end.
+        setSide(this.nodes.start, this.nodes.end);
+        setSide(this.nodes.end, this.nodes.start);
+
+        return true;
+    }
+
+    return false;
 }
 
 /**
