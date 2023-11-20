@@ -85,7 +85,6 @@ export const View = function(main, canvas, diagram) {
 
         let mouseDownListener = (event) => {
             event.preventDefault();
-            closeContextMenus();
 
             //Determine if the user left-clicked or right-clicked
             if(event.button === 0){
