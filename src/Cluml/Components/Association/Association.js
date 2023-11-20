@@ -435,7 +435,7 @@ Association.prototype.swapEnds = function () {
  */
 Association.prototype.formatAttachedEnds = function () {
     /**
-     *
+     * Attempts to set the side of the two association nodes.
      * @param from {TerminationNode}
      * @param to {TerminationNode}
      */
@@ -449,12 +449,24 @@ Association.prototype.formatAttachedEnds = function () {
 
         // Only need to format if on opposite side.
         // deltaSide is the difference between the two sides.
-        const deltaSide = Math.floor(axis - side);
+        const deltaSide = Math.abs(axis - side);
 
         if (deltaSide > 1) {
             // On opposite side. Needs format.
             // Only care about decimal portion.
-            from.side = (side % 1) + axis;
+
+            // The formula for this is as follows:
+
+            // (from.side % 1): Gets the decimal component of the side.
+
+            // 1 - ans: Force the point to be mirrored on the X/Y axis instead
+            // of being rotated. For example, if switching sides from the top
+            // left to the right, place the association at the top right
+            // instead of the bottom right.
+
+            // ans + axis: Actually set the new calculated axis.
+
+            from.side = 1 - (from.side % 1) + axis;
             from.refreshPosition();
         }
     }
