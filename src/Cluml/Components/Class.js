@@ -53,23 +53,40 @@ export const Class = function () {
             }
         }
 
-        map.clear();
+        // data structure that will reduce time complexity when searching for identical operations
+        class Node {
+            count = 0;
+            children = new Map();
+        }
+        let start = new Node();
+
+        // check for operations with the same name and parameter types
         for (const operation of this.operations) {
-            if (!map.has(operation.name)) {
-                map.set(operation.name, 1);
-            } else {
-                const count = map.get(operation.name);
-                // only generate the error once per unique operation name
-                if (count === 1) {
-                    let error = new SanityElement(this.naming, undefined);
-                    error.processSanityCheck = function () {
-                        return [new SanityErrorInfo("1100", "Class",
-                            name, `Multiple operations with the name <b>${operation.name}</b>`)];
-                    };
-                    yield error;
-                }
-                map.set(operation.name, count + 1);
+            let current = start;
+
+            if (!current.children.has(operation.name)) {
+                current.children.set(operation.name, new Node());
             }
+            current = current.children.get(operation.name);
+
+            for (const parameter of operation.parameters) {
+                const type = parameter[1];
+                if (!current.children.has(type)) {
+                    current.children.set(type, new Node());
+                }
+                current = current.children.get(type);
+            }
+
+            if (current.count === 1) {
+                let error = new SanityElement(this.naming, undefined);
+                error.processSanityCheck = function() {
+                    return [new SanityErrorInfo("1101", "Class", name,
+                        "Multiple operations with the name " +
+                        `<b>${operation.name}</b> have identical parameter types`)];
+                }
+                yield error;
+            }
+            current.count += 1
         }
     }
 
