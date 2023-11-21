@@ -43,7 +43,7 @@ export const DragAndDrop = function(main) {
 	this.draggable = (paletteItem) => {
 		paletteItem.element.addEventListener('mousedown', (event) => {
 			event.preventDefault();
-			closeContextMenus();
+			//closeContextMenus();
 			click(paletteItem);
 
 			mouseMove(event.pageX, event.pageY);
@@ -51,7 +51,7 @@ export const DragAndDrop = function(main) {
 
 		paletteItem.element.addEventListener('touchstart', (event) => {
 			event.preventDefault();
-			closeContextMenus();
+			//closeContextMenus();
 			click(paletteItem);
 
 			let touch = event.changedTouches[0];
