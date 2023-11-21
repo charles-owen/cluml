@@ -114,8 +114,15 @@ export const Class = function () {
      */
     this.visited = false;
 
+    /**
+     * The value displayed in the Class Name box.
+     * @type {string}
+     */
     this.naming = "Class";
 
+    /**
+     * A vector with this class' width and height.
+     */
     Object.defineProperty(this, 'size', {
         get: function () {
             return new Vector(this.width, this.height);
@@ -134,6 +141,10 @@ export const Class = function () {
      */
     this.operations = [new Operation('+Operation(): string')];
 
+    /**
+     * The context menu for this class that is spawned on right-clicks.
+     * @type {null}
+     */
     this.addPopup = null;
 
     /**
@@ -177,12 +188,18 @@ export const Class = function () {
      */
     this.maxChars = 60;
 
+    /**
+     * The height of a line in this class.
+     */
     Object.defineProperty(this, 'lineHeight', {
         get: function () {
             return this.fontHeight * 1.5;
         }
     });
 
+    /**
+     * The height of the name box in this class.
+     */
     Object.defineProperty(this, 'nameHeight', {
         get: function () {
             if (this.isVariation) {
@@ -193,6 +210,9 @@ export const Class = function () {
         }
     });
 
+    /**
+     * The bounds of the name box in this class.
+     */
     Object.defineProperty(this, 'nameBounds', {
         get: function () {
             return Rect.fromTopAndSize(
@@ -202,12 +222,18 @@ export const Class = function () {
         }
     });
 
+    /**
+     * The height of the attributes box in this class.
+     */
     Object.defineProperty(this, 'attributesHeight', {
         get: function () {
             return this.lineHeight * this.attributes.length;
         }
     });
 
+    /**
+     * The bounds of the attributes box in this class.
+     */
     Object.defineProperty(this, 'attributesBounds', {
         get: function () {
             return Rect.fromTopAndSize(
@@ -217,12 +243,18 @@ export const Class = function () {
         }
     });
 
+    /**
+     * The height of the operations box in this class.
+     */
     Object.defineProperty(this, 'operationsHeight', {
         get: function () {
             return this.lineHeight * this.operations.length;
         }
     });
 
+    /**
+     * The bounds of the operations box in this class.
+     */
     Object.defineProperty(this, 'operationsBounds', {
         get: function () {
             return Rect.fromTopAndSize(
@@ -295,6 +327,13 @@ Class.prototype.touch = function (x, y, rightclick = false) {
     return null;
 }
 
+/**
+ * Function that moves the class
+ * @param dx the distance on the x-axis to move the class
+ * @param dy the distance on the y-axis to move the class
+ * @param x the x value of the class
+ * @param y the y value of the class
+ */
 Class.prototype.move = function (dx, dy, x, y) {
     Selectable.prototype.move.call(this, dx, dy, x, y);
 
@@ -581,6 +620,10 @@ Class.prototype.added = function (diagram) {
     diagram.classMap.set(this.naming, diagram.classMap.get(this.naming) + 1);
 };
 
+/**
+ * Saves the component as JSON
+ * @returns {{id: string, x: number, y: number, name: string, type: *}}
+ */
 Class.prototype.saveComponent = function () {
     const obj = Component.prototype.saveComponent.call(this);
     obj.attributes = SanityElement.saveMultiple(this.attributes);
@@ -589,6 +632,10 @@ Class.prototype.saveComponent = function () {
     return obj;
 }
 
+/**
+ * Loads the component from JSON
+ * @param obj the JSON to load the component from
+ */
 Class.prototype.loadComponent = function (obj) {
     Component.prototype.loadComponent.call(this, obj);
 

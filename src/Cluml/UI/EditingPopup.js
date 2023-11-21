@@ -100,6 +100,11 @@ EditingPopup.prototype.drawAttributionEdit = function(context, view, x, y,
     this.inputElement.select();
 }
 
+/**
+ * Close the EditingPopup if the class is touched outside the EditingPopup
+ * @param x touch position (unused)
+ * @param y touch position (unused)
+ */
 EditingPopup.prototype.touch = function(x, y) {
     if(!this.enterClose) {
         this.close();
