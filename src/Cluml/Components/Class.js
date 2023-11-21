@@ -284,6 +284,7 @@ Class.prototype.copyFrom = function (component) {
  * the component.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
+ * @param rightclick was the touch a right-click?
  * @return {Class|null}
  */
 Class.prototype.touch = function (x, y, rightclick = false) {
@@ -375,6 +376,10 @@ Class.prototype.bounds = function () {
 Class.prototype.enableAddPopup = function (enable) {
     if (enable) {
         this.addPopup = new AddPopup(this);
+        if(this.editingPopup !== null) {
+            this.editingPopup.close();
+            this.editingPopup = null;
+        }
     } else {
         this.addPopup = null;
     }
