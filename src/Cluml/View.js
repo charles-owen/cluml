@@ -97,7 +97,7 @@ export const View = function(main, canvas, diagram) {
 
         let contextMenuListener = (event) => {
             event.preventDefault();
-            //closeContextMenus();
+            closeContextMenus();
             this.selection.rightClick(mouse.x, mouse.y, event);
             this.draw();
         }
