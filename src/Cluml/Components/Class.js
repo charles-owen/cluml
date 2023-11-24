@@ -443,7 +443,13 @@ Class.prototype.enableEditing = function (enable) {
  * @param view {View} View object
  */
 Class.prototype.draw = function (context, view) {
-    this.selectStyle(context, view);
+    //is the class currently selected?
+    let selected = this.selectStyle(context, view);
+    if(selected){
+        context.lineWidth = 2;
+    } else {
+        context.lineWidth = 1;
+    }
 
     // Sort Attributes/Operations before drawing text to the class
     this.sortAttributions();
