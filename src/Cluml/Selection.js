@@ -40,6 +40,7 @@ export const Selection = function (view) {
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
+            view.diagram.moveToFront(touched);
 
             touched.rightClick(x, y);
 
