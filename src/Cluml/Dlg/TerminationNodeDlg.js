@@ -39,7 +39,7 @@ export class TerminationNodeDlg extends Dialog {
         multiInput.id = Unique.uniqueName();
         this.multiInputID = multiInput.id;
         multiInput.type = 'text';
-        multiInput.tabIndex = 0;
+        multiInput.tabIndex = 5;
         multiInput.defaultValue = multiSE.elementValue;
         multiInput.value = multiSE.elementValue;
         multiInput.autocomplete = 'on';
@@ -59,7 +59,7 @@ export class TerminationNodeDlg extends Dialog {
         roleInput.id = Unique.uniqueName();
         this.roleInputID = roleInput.id;
         roleInput.type = 'text';
-        roleInput.tabIndex = 0;
+        roleInput.tabIndex = 5;
         roleInput.defaultValue = roleSE.elementValue;
         roleInput.value = roleSE.elementValue;
         roleInput.autocomplete = 'on';
@@ -188,9 +188,17 @@ export class TerminationNodeDlg extends Dialog {
         // Focus on first input.
         multiInput.focus();
 
-        //region Handle enter press for inputs.
-        const dialogDiv = this.div;
+        // Set tab index for the OK and Cancel buttons.
+        /**
+         * @type {HTMLDivElement}
+         */
+        const btns = document.querySelectorAll('.cs-ok, .cs-cancel');
 
+        for (const btn of btns) {
+            btn.tabIndex = 15;
+        }
+
+        //region Handle enter press for inputs.
         multiInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 roleLbl.focus();
