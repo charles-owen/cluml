@@ -21,6 +21,8 @@ import {Toast} from "./Graphics/Toast";
 import {ExportDlg} from "./Dlg/ExportDlg";
 import {ImportDlg} from "./Dlg/ImportDlg";
 import {MainSingleton} from "./MainSingleton";
+import {Rect} from "./Utility/Rect";
+import Vector from "./Utility/Vector";
 
 /**
  * Actual instance of cluml for a single element.
@@ -39,6 +41,10 @@ export const Main = function (cluml, element, tests) {
     this.test = new Test(this);
 
     /// div.main
+    /**
+     *
+     * @type {HTMLDivElement}
+     */
     this.div = null;
 
     //
@@ -259,7 +265,6 @@ export const Main = function (cluml, element, tests) {
 
         // Intercept print event.
         window.addEventListener('beforeprint', (e) => {
-            e.preventDefault();
             this.print();
         });
     }
@@ -408,25 +413,48 @@ export const Main = function (cluml, element, tests) {
     };
 
     this.print = function () {
-        const canvas = this.currentView().element;
+        // Trying to somehow scale the canvas, but not really working.
+        const canvas = document.querySelector('div.tab.selected canvas');
 
-        // Source: https://stackoverflow.com/a/8306028
-        // Create a new canvas
-        const copy = document.createElement('canvas');
-        const context = copy.getContext('2d');
+        // const canvas = this.currentView().element;
+        //
+        // // Source: https://stackoverflow.com/a/8306028
+        // // Create a new canvas
+        // const copy = document.createElement('canvas');
+        // copy.classList.add('print');
+        // const context = copy.getContext('2d');
+        //
+        // // Set dimensions
+        // copy.width = canvas.width;
+        // copy.height = canvas.height;
+        //
+        // // Need to scale everything. Do that.
+        // // First need to get the bounding box of both canvases.
+        // const bounds0 = new Rect(0, canvas.height, canvas.width, 0);
+        // const bounds1 = new Rect(0, 0, 0, 0);
+        // for (const component of this.currentView().diagram.components) {
+        //     bounds1.expand(component.bounds());
+        // }
+        //
+        // // Then determine the translation.
+        // const translate = Vector.sub(bounds0.center(), bounds1.center())
+        // context.translate(translate.x, translate.y);
+        //
+        // this.div.appendChild(copy);
 
-        // Set dimensions
-        copy.width = canvas.width;
-        copy.height = canvas.height;
+        // // Then determine the scale.
+        // const scale = new Vector(
+        //     bounds0.width
+        // )
 
-        // Apply the old canvas to the new one
-        context.drawImage(canvas, 0, 0);
-
-        const popup = window.open('', '_blank');
-        popup.document.body.appendChild(copy);
-        popup.focus();
-        popup.print();
-        popup.close();
+        // // Apply the old canvas to the new one
+        // context.drawImage(canvas, 0, 0);
+        //
+        // const popup = window.open('', '_blank');
+        // popup.document.body.appendChild(copy);
+        // popup.focus();
+        // popup.print();
+        // popup.close();
     }
 
     // this.importTab = function() {

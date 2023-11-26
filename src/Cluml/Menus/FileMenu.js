@@ -102,7 +102,7 @@ export const FileMenu = function (menu, main) {
         });
 
         menu.click('.cs-canvas-print', () => {
-            main.print();
+            print();
         });
 
         menu.click('.cs-file-load-menu', (event) => {

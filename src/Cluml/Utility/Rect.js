@@ -141,14 +141,33 @@ Rect.prototype.expandXY = function (x, y) {
 
 /**
  * Moves the rectangle.
+ * @param v {Vector}
+ */
+Rect.prototype.translate = function (v) {
+    this.translateXY(v.x, v.y);
+}
+
+/**
+ * Moves the rectangle.
  * @param x {number}
  * @param y {number}
  */
-Rect.prototype.moveXY = function (x, y) {
+Rect.prototype.translateXY = function (x, y) {
     this.left += x;
     this.right += x;
     this.top += y;
     this.bottom += y;
+}
+
+/**
+ * Computes the center of the rectangle.
+ * @return {Vector}
+ */
+Rect.prototype.center = function () {
+    return new Vector(
+        (this.right - this.left) / 2 + this.left,
+        (this.bottom - this.top) / 2 + this.top
+    );
 }
 
 /**
