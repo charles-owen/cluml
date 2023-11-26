@@ -257,6 +257,11 @@ export const Main = function (cluml, element, tests) {
             });
         }
 
+        // Intercept print event.
+        window.addEventListener('beforeprint', (e) => {
+            e.preventDefault();
+            this.print();
+        });
     }
 
 
@@ -401,6 +406,28 @@ export const Main = function (cluml, element, tests) {
         const dlg = new ImportDlg(this, model);
         dlg.open();
     };
+
+    this.print = function () {
+        const canvas = this.currentView().element;
+
+        // Source: https://stackoverflow.com/a/8306028
+        // Create a new canvas
+        const copy = document.createElement('canvas');
+        const context = copy.getContext('2d');
+
+        // Set dimensions
+        copy.width = canvas.width;
+        copy.height = canvas.height;
+
+        // Apply the old canvas to the new one
+        context.drawImage(canvas, 0, 0);
+
+        const popup = window.open('', '_blank');
+        popup.document.body.appendChild(copy);
+        popup.focus();
+        popup.print();
+        popup.close();
+    }
 
     // this.importTab = function() {
     //     // Is the current tab in this list?

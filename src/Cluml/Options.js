@@ -33,6 +33,12 @@ export const Options = function(options) {
     /// Options are: 'none', 'import', 'export', 'both'
     this.export = 'both';
 
+    /**
+     * Do we allow printing?
+     * @type {boolean}
+     */
+    this.allowPrint = true;
+
     /// Do we include the ability to export PNG files?
     this.exportPNG = false;
 

@@ -1,5 +1,7 @@
 /**
  * The File menu
+ * @param menu {Menu}
+ * @param main {Main}
  * @constructor
  */
 export const FileMenu = function (menu, main) {
@@ -54,6 +56,10 @@ export const FileMenu = function (menu, main) {
             }
         }
 
+        if (options.allowPrint) {
+            fileHtml += '<li><a class="cs-canvas-print"><span class="icons-cl icons-cl-print"></span>Print</a></li>';
+        }
+
         if (options.exportPNG) {
             fileHtml += '<li><a class="cs-file-export-png"><span class="icons-cl icons-cl-arrowthickstop-1-s"></span>Export PNG</a></li>';
         }
@@ -93,6 +99,10 @@ export const FileMenu = function (menu, main) {
 
         menu.click('.cs-file-export', () => {
             main.export();
+        });
+
+        menu.click('.cs-canvas-print', () => {
+            main.print();
         });
 
         menu.click('.cs-file-load-menu', (event) => {
