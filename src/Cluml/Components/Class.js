@@ -58,6 +58,7 @@ export const Class = function () {
             count = 0;
             children = new Map();
         }
+
         let start = new Node();
 
         // check for operations with the same name and parameter types
@@ -79,7 +80,7 @@ export const Class = function () {
 
             if (current.count === 1) {
                 let error = new SanityElement(this.naming, undefined);
-                error.processSanityCheck = function() {
+                error.processSanityCheck = function () {
                     return [new SanityErrorInfo("1101", "Class", name,
                         "Multiple operations with the name " +
                         `<b>${operation.name}</b> have identical parameter types`)];
@@ -364,11 +365,33 @@ Class.prototype.rightClick = function (x, y) {
     this.enableContextMenu(true);
 }
 
+Class.prototype.keyPress = function (e) {
+    if (e.key === 'Enter' && this.editingPopup !== null) {
+        // Enter pressed. Close existing popup,
+        // then create new attribute and select it.
+        this.enableEditing(false);
+        const newAttr = new Attribute('', this);
+        newAttr.deleteIfNoChange = true;
+        this.addAttribute(newAttr);
+
+        // Force a redraw to update position of attribute.
+        MainSingleton.singleton.redraw();
+
+        this.doubleClick(
+            this.x,
+            // This y value should select the new attribute.
+            newAttr.y + this.y
+        );
+
+        MainSingleton.singleton.redraw();
+    }
+}
+
 /**
  * Open a ClassPropertiesDlg box
  */
 Class.prototype.openProperties = function () {
-    const propertiesDlg = new ClassPropertiesDlg(this,  MainSingleton.singleton, false);
+    const propertiesDlg = new ClassPropertiesDlg(this, MainSingleton.singleton, false);
     propertiesDlg.open();
 }
 
@@ -415,7 +438,7 @@ Class.prototype.bounds = function () {
 Class.prototype.enableContextMenu = function (enable) {
     if (enable) {
         this.contextMenu = new ClassContextMenu(this);
-        if(this.editingPopup !== null) {
+        if (this.editingPopup !== null) {
             this.editingPopup.close();
             this.editingPopup = null;
         }
@@ -445,7 +468,7 @@ Class.prototype.enableEditing = function (enable) {
 Class.prototype.draw = function (context, view) {
     //is the class currently selected?
     let selected = this.selectStyle(context, view);
-    if(selected){
+    if (selected) {
         context.lineWidth = 2;
     } else {
         context.lineWidth = 1;
@@ -520,17 +543,19 @@ Class.prototype.draw = function (context, view) {
     let fromTop = this.nameHeight + this.fontHeight;
     for (let i = 0; i < this.attributes.length; i++) {
         const attribute = this.attributes[i];
+        attribute.x = 0;
+        attribute.y = fromTop + i * this.lineHeight;
         oldColor = attribute.modifyContextFill(context);
         let attributeText = attribute.elementValue.substring(
             !this.showVisibility && attribute.visibility !== '' ? 1 : 0);
         // Cut off drawing the attributes at the maxChars limit
-        if(attributeText.length > this.maxChars) {
+        if (attributeText.length > this.maxChars) {
             attributeText = attributeText.substring(0, this.maxChars);
             attributeText += "...";
         }
         context.fillText(attributeText,
             this.x - this.width / 2 + 5,
-            this.y + fromTop + i * this.lineHeight,
+            this.y + attribute.y,
             this.width)
         context.fillStyle = oldColor;
     }
@@ -544,18 +569,20 @@ Class.prototype.draw = function (context, view) {
             context.font = NAME_FONT;
         }
         const operation = this.operations[j];
+        operation.x = 0;
+        operation.y = fromTop + j * this.lineHeight;
         oldColor = operation.modifyContextFill(context);
         let operationText = operation.elementValue.substring(
             !this.showVisibility && operation.visibility !== '' ? 1 : 0);
         // Cut off drawing the operations at the maxChars limit
-        if(operationText.length > this.maxChars) {
+        if (operationText.length > this.maxChars) {
             operationText = operationText.substring(0, this.maxChars);
             operationText += "...";
         }
         context.fillText(operationText,
             this.x - this.width / 2 + 5,
-            this.y + fromTop + j * this.lineHeight,
-            this.width)
+            this.y + operation.y,
+            this.width);
         context.fillStyle = oldColor;
     }
     context.font = NAME_FONT;
@@ -766,40 +793,40 @@ Class.prototype.sortAttributions = function () {
  * Updates the width of this class based on the length of the text
  * within the class.
  */
-Class.prototype.setClassWidth = function() {
+Class.prototype.setClassWidth = function () {
     let longestText = 0;
     // Name text
-    if(this.naming.length > longestText) {
+    if (this.naming.length > longestText) {
         longestText = this.naming.length;
     }
     // Attribute text
-    for(let i = 0; i < this.attributes.length; i++) {
-        if(this.attributes[i].elementValue.length > longestText) {
+    for (let i = 0; i < this.attributes.length; i++) {
+        if (this.attributes[i].elementValue.length > longestText) {
             longestText = this.attributes[i].elementValue.length;
         }
     }
     // Operation text
-    for(let j = 0; j < this.operations.length; j++) {
-        if(this.operations[j].elementValue.length > longestText) {
+    for (let j = 0; j < this.operations.length; j++) {
+        if (this.operations[j].elementValue.length > longestText) {
             longestText = this.operations[j].elementValue.length;
         }
     }
     // Limits the text to the maxChars plus 3 (the ...)
-    if(longestText > this.maxChars) {
+    if (longestText > this.maxChars) {
         longestText = this.maxChars + 3;
     }
     // Sets the width of the class based on the longest text
     // in the class
-    if(longestText > 35) {
+    if (longestText > 35) {
         this.width = 200 * (longestText / 35);
     }
-    // Don't want classes to be too small, so the smallest
+        // Don't want classes to be too small, so the smallest
     // it can be is 200.
     else {
         this.width = 200;
     }
     // Update the TNodes attached to the class when updating the width
-    for(let k = 0; k < this.attachedTNodes.length; k++) {
+    for (let k = 0; k < this.attachedTNodes.length; k++) {
         this.attachedTNodes[k].refreshPosition();
     }
 }
@@ -817,15 +844,14 @@ Class.prototype.delete = function () {
     }
     // Deletes an EditingPopup if it happens to be open when the class is
     // deleted (can only happen from the Edit Menu).
-    if(this.editingPopup !== null) {
+    if (this.editingPopup !== null) {
         this.editingPopup.close();
     }
 
     const count = this.diagram.classMap.get(this.naming);
     if (count === 1) {
         this.diagram.classMap.delete(this.naming);
-    }
-    else {
+    } else {
         this.diagram.classMap.set(this.naming, count - 1);
     }
     Component.prototype.delete.call(this);
@@ -837,7 +863,7 @@ Class.prototype.delete = function () {
  * If left blank, no filter is applied and all association types are considered.
  * @return {boolean} True if cycle detected, false otherwise.
  */
-Class.prototype.hasAssociationCycle = function(...filterByFileLbl) {
+Class.prototype.hasAssociationCycle = function (...filterByFileLbl) {
     const stack = [this];
     const visited = [];
 

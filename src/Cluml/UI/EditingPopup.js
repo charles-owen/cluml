@@ -34,7 +34,7 @@ export const EditingPopup = function (component) {
     this.inputElement.style.padding = "0";
     this.inputElement.style.margin = "0";
 
-    this.inputElement.addEventListener('keypress', (event) => {
+    this.inputElement.addEventListener('keydown', (event) => {
         if(event.key === 'Enter') {
             this.enterClose = true;
             this.close();

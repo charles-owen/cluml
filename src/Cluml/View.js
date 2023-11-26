@@ -288,6 +288,13 @@ export const View = function(main, canvas, diagram) {
 
         let keysDown = {};
         let keyDownListener = (e) => {
+            if (e.type === 'keydown') {
+                // Propagate event to selected.
+                for (const selectable of this.selection.selected) {
+                    selectable.keyPress(e);
+                }
+            }
+
             if (this.selection.selected[0] instanceof Class) {
                 keysDown[e.keyCode] = e.type == 'keydown';
                 // Ctrl + A for Add
@@ -310,15 +317,15 @@ export const View = function(main, canvas, diagram) {
                     this.draw();
                     keysDown = {};
                 }
-                // Enter should count as a mouseDown/mouseUp (confirms changes)
-                else if(keysDown[13])
-                {
-                    e.preventDefault();
-                    this.selection.mouseDown(0, 0, e);
-                    this.selection.mouseUp(0, 0);
-                    this.draw();
-                    keysDown = {};
-                }
+                // // Enter should count as a mouseDown/mouseUp (confirms changes)
+                // else if(keysDown[13])
+                // {
+                //     e.preventDefault();
+                //     this.selection.mouseDown(0, 0, e);
+                //     this.selection.mouseUp(0, 0);
+                //     this.draw();
+                //     keysDown = {};
+                // }
             }
         }
 

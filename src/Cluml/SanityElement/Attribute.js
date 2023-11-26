@@ -17,6 +17,7 @@ export class Attribute extends SanityElement {
     name = "";
     type = "";
     defaultValue = "";
+    deleteIfNoChange = false;
 
     constructor(stringValue, relativeTo) {
         stringValue = stringValue.trim();

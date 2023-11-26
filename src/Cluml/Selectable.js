@@ -150,6 +150,14 @@ Selectable.prototype.doubleClick = function (x, y) {
 
 }
 
+/**
+ * Called when any key is pressed down.
+ * @param e {KeyboardEvent}
+ */
+Selectable.prototype.keyPress = function (e) {
+
+}
+
 Selectable.prototype.enablecontextMenu = function(enable) {
 
 }
