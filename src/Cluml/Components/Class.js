@@ -1,7 +1,7 @@
 import {Component} from "../Component";
 import {Rect} from "../Utility/Rect";
 import {PaletteImage} from "../Graphics/PaletteImage";
-import {AddPopup} from "../UI/AddPopup";
+import {ClassContextMenu} from "../ContextMenu/ClassContextMenu";
 import Vector from "../Utility/Vector";
 import {ClassName} from "../SanityElement/ClassName";
 import {EditingPopup} from "../UI/EditingPopup";
@@ -145,7 +145,7 @@ export const Class = function () {
      * The context menu for this class that is spawned on right-clicks.
      * @type {null}
      */
-    this.addPopup = null;
+    this.contextMenu = null;
 
     /**
      * The editing popup for this class when editing the class
@@ -361,7 +361,7 @@ Class.prototype.doubleClick = function (x, y) {
  * @param y touch position
  */
 Class.prototype.rightClick = function (x, y) {
-    this.enableAddPopup(true);
+    this.enableContextMenu(true);
 }
 
 /**
@@ -378,9 +378,9 @@ Class.prototype.openProperties = function () {
  * @param y touch position
  * @returns {touched}
  */
-Class.prototype.tryTouchAddPopup = function (x, y) {
-    if (this.addPopup != null) {
-        return this.addPopup.touch(x, y);
+Class.prototype.tryTouchContextMenu = function (x, y) {
+    if (this.contextMenu != null) {
+        return this.contextMenu.touch(x, y);
     }
     return null;
 }
@@ -412,15 +412,15 @@ Class.prototype.bounds = function () {
  * Open or close the context menu
  * @param enable
  */
-Class.prototype.enableAddPopup = function (enable) {
+Class.prototype.enableContextMenu = function (enable) {
     if (enable) {
-        this.addPopup = new AddPopup(this);
+        this.contextMenu = new ClassContextMenu(this);
         if(this.editingPopup !== null) {
             this.editingPopup.close();
             this.editingPopup = null;
         }
     } else {
-        this.addPopup = null;
+        this.contextMenu = null;
     }
 }
 
@@ -559,8 +559,8 @@ Class.prototype.draw = function (context, view) {
         context.fillStyle = oldColor;
     }
     context.font = NAME_FONT;
-    if (this.addPopup != null) {
-        this.addPopup.draw(context, view, this.x, this.y);
+    if (this.contextMenu != null) {
+        this.contextMenu.draw(context, view, this.x, this.y);
     }
 
     if (this.editingPopup != null) {

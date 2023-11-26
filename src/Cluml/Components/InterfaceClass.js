@@ -8,12 +8,21 @@ import {MainSingleton} from "../MainSingleton";
 export const InterfaceClass = function () {
     Class.call(this);
 
+    /**
+     * Interfaces are a variation of a class so always true
+     * @type {boolean}
+     */
     this.isVariation = true;
 
-    // Interfaces don't have attributes
+    /**
+     * Interfaces don't have attributes so always empty
+     * @type {*[]}
+     */
     this.attributes = [];
 
-    // All operations in an interface class must be abstract
+    /**
+     * Interface operations are always abstract
+     */
     for(let i = 0; i < this.operations.length; i++) {
         this.operations[i].abstract = true;
     }

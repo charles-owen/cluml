@@ -150,7 +150,7 @@ Selectable.prototype.doubleClick = function (x, y) {
 
 }
 
-Selectable.prototype.enableAddPopup = function(enable) {
+Selectable.prototype.enablecontextMenu = function(enable) {
 
 }
 

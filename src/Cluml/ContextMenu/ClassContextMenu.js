@@ -1,26 +1,74 @@
 import {Class} from "../Components/Class";
 import {Attribute} from "../SanityElement/Attribute";
 
-export const AddPopup = function (component) {
+export const ClassContextMenu = function (component) {
     Object.defineProperty(this, 'popup', {
 
     });
+
+    /**
+     * The component (class) this popup belongs to
+     */
     this.component = component;
+
+    /**
+     * X Offset for formatting
+     * @type {number}
+     */
     this.xOffset = 50;
+
+    /**
+     * Y Offset for formatting
+     * @type {number}
+     */
     this.yOffset = 100;
+
+    /**
+     * Margin used for formatting
+     * @type {number}
+     */
     this.margin = 5;
 
+    /**
+     * Height of the popup box
+     * @type {number}
+     */
     this.height = 90;
+
+    /**
+     * Width of the popup box
+     * @type {number}
+     */
     this.width = 150;
 
+    /**
+     * X position relative to where component is
+     * @type {number}
+     */
     this.x = 0;
+
+    /**
+     * Y position relative to where component is
+     * @type {number}
+     */
     this.y = 0;
 
+    /**
+     * Top of popup box relative to where component is
+     * @type {number}
+     */
     this.top = 0;
 };
-AddPopup.prototype.constructor = AddPopup;
+ClassContextMenu.prototype.constructor = ClassContextMenu;
 
-AddPopup.prototype.draw = function (context, view, x, y) {
+/**
+ * Draw the Context Menu
+ * @param context Display
+ * @param view view popup is on
+ * @param x parent component x position
+ * @param y parent component y position
+ */
+ClassContextMenu.prototype.draw = function (context, view, x, y) {
     this.x = x + this.xOffset + (this.width / 2);
     this.y = y + this.yOffset - (this.height / 2);
     this.top = this.y - (this.height / 2);
@@ -84,9 +132,9 @@ AddPopup.prototype.draw = function (context, view, x, y) {
  * the component.
  * @param x {number} Mouse x.
  * @param y {number} Mouse y.
- * @return {AddPopup|null}
+ * @return {ClassContextMenu|null}
  */
-AddPopup.prototype.touch = function (x, y) {
+ClassContextMenu.prototype.touch = function (x, y) {
     // this.x & this.y are the very middle of the box
     if (x >= this.x - this.width / 2 &&
         x <= this.x + this.width / 2 &&

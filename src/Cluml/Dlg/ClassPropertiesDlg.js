@@ -9,7 +9,6 @@ import {Class} from "../Components/Class";
  */
 export const ClassPropertiesDlg = function(component, main, isInterface) {
     Dialog.call(this, 'component');
-
     this.resize = 'both';
 
     /**
@@ -18,7 +17,10 @@ export const ClassPropertiesDlg = function(component, main, isInterface) {
      */
     let nameId = null;
 
-    // A unique ID for the abstract toggle
+    /**
+     * unique abstract checkbox element id
+     * @type {null}
+     */
     let abstractClassId = null;
 
     let extraHTML = '';
@@ -26,13 +28,22 @@ export const ClassPropertiesDlg = function(component, main, isInterface) {
     let extraValidate = function() {return null;};
     let extraTake = function() {return null;};
 
-    // ids for abstraction html elements
+    /**
+     * Element ids for the abstract checkboxes
+     * @type {*[]}
+     */
     let abstractInputs = [];
 
-    // ids for visibility html elements
+    /**
+     * Element ids for the visibility inputs
+     * @type {*[]}
+     */
     let visibilityInputs = [];
 
-    // ids for dropdown html elements for visibility inputs
+    /**
+     * Element ids for each visibility input's dropdown menu
+     * @type {*[]}
+     */
     let dropDowns = [];
 
     /**

@@ -1,7 +1,6 @@
 import {MainSingleton} from "../MainSingleton";
 
 export class ContextEntry {
-
     /**
      * Creates a new entry in the context menu.
      * @param text {string}

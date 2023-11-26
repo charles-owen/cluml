@@ -70,7 +70,7 @@ export const DragAndDrop = function(main) {
 		let classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
 		classes = classes.concat(MainSingleton.singleton.getCurrentComponentsByType("InterfaceClass"));
 		for (const cl of classes) {
-			cl.enableAddPopup(false);
+			cl.enableContextMenu(false);
 		}
 	}
 

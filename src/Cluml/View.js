@@ -103,7 +103,7 @@ export const View = function(main, canvas, diagram) {
             let classes = MainSingleton.singleton.getCurrentComponentsByType("Class");
             classes = classes.concat(MainSingleton.singleton.getCurrentComponentsByType("InterfaceClass"));
             for (const cl of classes) {
-                cl.enableAddPopup(false);
+                cl.enableContextMenu(false);
             }
         }
 
