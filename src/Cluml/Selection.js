@@ -40,8 +40,10 @@ export const Selection = function (view) {
         if (touched !== null) {
             event.preventDefault();
             this.selected = [touched];
-            this.selected[0].movable = false;
-            this.selected[0].enableAddPopup(true);
+
+            touched.rightClick(x, y);
+
+            view.draw();
         } else {
             // If we touch outside, we are clearing the selected if
             // shift is not selected, and we start a selected rectangle
@@ -50,15 +52,6 @@ export const Selection = function (view) {
             }
 
             rect = new Rect(x, y, x, y);
-        }
-
-        if (touched !== null) {
-            event.preventDefault();
-            this.selected = [touched];
-
-            touched.rightClick(x, y);
-
-            view.draw();
         }
     }
 

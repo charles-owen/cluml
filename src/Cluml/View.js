@@ -89,10 +89,7 @@ export const View = function(main, canvas, diagram) {
             //Determine if the user left-clicked or right-clicked
             if(event.button === 0){
                 downListener(event.pageX, event.pageY, false, event);
-            } else if (event.button === 2){
-                contextMenuListener(event);
             }
-
         }
 
         let contextMenuListener = (event) => {
