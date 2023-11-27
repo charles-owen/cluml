@@ -36,7 +36,7 @@ export const Association = function () {
     }
 }
 
-class NodeData {
+export class NodeData {
     /**
      * The start node of this association.
      * @type {TerminationNode}
