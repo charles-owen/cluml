@@ -1,5 +1,4 @@
 import {Operation} from '../../../src/Cluml/SanityElement/Operation';
-import {operation} from "../../../src/Cluml/SanityElement/operation";
 import {Class} from "../../../src/Cluml/Components/Class";
 
 describe('Operation', function() {

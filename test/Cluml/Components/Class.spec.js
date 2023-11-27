@@ -1,10 +1,6 @@
-import {Cluml} from "../../../src/Cluml/Cluml";
-import {Main} from "../../../src/Cluml/Main";
 import {Class} from "../../../src/Cluml/Components/Class";
 import {Attribute} from "../../../src/Cluml/SanityElement/Attribute";
 import {Operation} from "../../../src/Cluml/SanityElement/Operation";
-import {Diagram} from "../../../src/Cluml/Diagram";
-import {Diagrams} from "../../../src/Cluml/Diagrams";
 
 describe('Class', function(){
     it('Construct', function(){
@@ -34,4 +30,28 @@ describe('Class', function(){
         expect(c.getAttributes).not.toContain(oper);
         expect(c.getOperations()).toContain(oper);
     });
+
+    it('Should save and load', function() {
+        let c = new Class();
+        c.naming = "SavedClass";
+
+        c.attributes.pop();
+        let attribute = new Attribute('+attribute: String');
+        c.attributes.push(attribute);
+
+        c.operations.pop();
+        let operation = new Operation('+Operation()');
+        c.operations.push(operation);
+
+        let width = c.width;
+        let obj = c.saveComponent();
+        c.loadComponent(obj);
+
+        expect(c.naming).toEqual("SavedClass");
+        expect(c.width).toEqual(width);
+        expect(c.attributes.length).toEqual(1);
+        expect(c.attributes[0].elementValue).toEqual(attribute.elementValue);
+        expect(c.operations.length).toEqual(1);
+        expect(c.operations[0].elementValue).toEqual(operation.elementValue);
+    })
 });

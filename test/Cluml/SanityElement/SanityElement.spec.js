@@ -13,4 +13,12 @@ describe('SanityElement', function() {
         expect(element2.elementValue).toEqual(expectedValue);
         expect(element2.relativeTo).toBe(element1);
     });
+    it('Should save and load', function() {
+        let stringValue = "Hello, World!";
+        let element = new SanityElement(stringValue, undefined);
+
+        let obj = element.saveSanityElement();
+        element = SanityElement.loadSanityElement(SanityElement, obj, undefined);
+        expect(element.elementValue).toEqual(stringValue);
+    })
 });
