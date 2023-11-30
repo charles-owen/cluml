@@ -1,6 +1,5 @@
 import {SanityElement} from "./SanityElement";
 import {Name} from "../Utility/Name";
-import {MainSingleton} from "../MainSingleton";
 import {VISIBILITY_RX} from "./SanityRegExpressions";
 import {SanityErrorInfo} from "./SanityErrorInfo";
 import {Class} from "../Components/Class";
