@@ -298,10 +298,9 @@ Component.prototype.loadComponent = function (obj) {
     Commenting this out because we don't want dialog boxes to pop-up
     when editing classes in clUML.
  */
-// Component.prototype.properties = function (main) {
-//     const dlg = new ClassPropertiesDlg(this, main);
-//     dlg.open();
-// };
+ Component.prototype.properties = function (main) {
+     
+ };
 
 /**
  * Advance the animation for this component by delta seconds
