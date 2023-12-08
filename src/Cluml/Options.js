@@ -14,7 +14,7 @@ export const Options = function(options) {
     this.display = 'window';
 
     /// Any content (JSON) to preload
-    this.load = null;
+    this.preloadJson = null;
 
     /// Menu options to load content
     /// Each item is an object with the keys name and json.
@@ -32,6 +32,12 @@ export const Options = function(options) {
     /// Do we include the input/export menu options?
     /// Options are: 'none', 'import', 'export', 'both'
     this.export = 'both';
+
+    /**
+     * Do we allow printing?
+     * @type {boolean}
+     */
+    this.allowPrint = true;
 
     /// Do we include the ability to export PNG files?
     this.exportPNG = false;
@@ -55,15 +61,15 @@ export const Options = function(options) {
 	 * test: Array of tests, each an array of input/expected
 	 * staff: true if this is staff testing (no saving)
      * result: A results selector
-     * circuit: A circuit selector
+     * diagram: A diagram selector
      * success: A value to set the results selector to on a success
      * quiet: If true, don't provide actual/expected results
      *
      * If result is set, any element that matches that selector will
      * be set to 0 or the value of 'success' depending on the test failure/success
      *
-     * If circuit is set, any element that matches that selector will
-     * have its value set to the current circuit when the test is selected.
+     * If diagram is set, any element that matches that selector will
+     * have its value set to the current diagram when the test is selected.
 	 */
     this.tests = [];
 
@@ -98,14 +104,32 @@ export const Options = function(options) {
     this.exit = null;
 
     /// If set to a name, a global variable will be created with that name
-    /// that points to the Cirsim Main object. This allows Javascript in a
-    /// page script tag to control a Cirsim instance.
+    /// that points to the Cluml Main object. This allows Javascript in a
+    /// page script tag to control a Cluml instance.
     this.global = null;
+
+    /// Indication of what diagrams are included in the palette.
+    /// This can be:
+    /// A string with a palette name
+    /// [or] An array containing strings that name diagrams
+    /// or palette names.
+    ///
+    /// Examples:
+    /// diagrams: 'combinatorial'
+    /// diagrams: ['combinatorial', 'Or3', 'Or4']
+    /// diagrams: ['sequential']
+    ///
+
+    // changing this code doesn't cause problems
+    // will come back to code since some of the components are from cirsim not cluml
+    // this.components = ['combinatorial', 'sequential'];
+    this.components = 'all';
+
+    // this.always = ['Zero', 'One', 'InPin', 'OutPin', 'Clock', 'Button', 'LED', 'Text'];
+    this.always = ['Class'];
 
     /// Display all output states
     this.showOutputStates = false;
-
-    ////////////////////////////////////////////////////////////////////////////////////
 
     for(const property in options) {
         if(options.hasOwnProperty(property)) {

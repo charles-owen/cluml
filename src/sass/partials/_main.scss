@@ -1,0 +1,106 @@
+div.cluml-install {
+  display: none;
+}
+
+div.cluml {
+
+  .cluml-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #a00;
+    opacity: 0.05;
+    z-index: 2000;
+    display: none;
+  }
+
+  div.main {
+    // Normalizations
+    line-height: normal;
+    font-size: 1rem;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+
+  div.help-div {
+    // Normalizations
+    line-height: normal;
+    font-size: 1rem;
+
+    display: none;
+  }
+
+}
+
+div.cluml.docked-help {
+  .main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: $help-div-width;
+    bottom: 0;
+  }
+
+  .help-div {
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: $help-div-width;
+    overflow: auto;
+  }
+}
+
+div.cluml-full {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: white;
+}
+
+div.cluml-inline {
+  position: relative;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: white;
+  overflow: hidden;
+
+  div {
+    text-align: center;
+  }
+  canvas {
+    margin: 0 auto;
+  }
+}
+
+div.cluml-window {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  margin: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 0;
+  border-top: thin solid $window-borders;
+  background: white;
+  min-height: 100px;
+  min-width: 800px;
+}
+
+div.cluml.height300 {
+  height: 300px;
+}
+
+

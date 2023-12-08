@@ -40,7 +40,7 @@ Util.toBinary = function(d, len) {
  * Test if a string is in an array
  * @param needle String item to look for
  * @param haystack Array of strings
- * @return true if in array
+ * @return {boolean} true if in array
  */
 Util.inArray = function(needle, haystack) {
 	for(let i=0; i<haystack.length; i++) {

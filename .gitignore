@@ -10,6 +10,7 @@ doc/js
 dist/
 .DS_Store
 
+.yarn/
 .yarn/*
 !.yarn/patches
 !.yarn/releases
@@ -75,3 +76,14 @@ typings/
 
 # PHPStorm
 .idea
+
+# Diff tool
+[diff]
+    tool = meld
+[difftool]
+    prompt = false
+[difftool "meld"]
+    cmd = meld "$LOCAL" "$REMOTE"
+package-lock.json
+package.json
+yarn.lock

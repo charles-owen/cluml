@@ -48,15 +48,19 @@ module.exports = {
             patterns: [
                 {
                     from: 'src/img/*.png',
-                    to: 'cirsim/img/[name][ext]'
+                    to: 'cluml/img/[name][ext]'
                 },
                 {
                     from: 'src/img/*.ico',
-                    to: 'cirsim/img/[name][ext]'
+                    to: 'cluml/img/[name][ext]'
+                },
+                {
+                    from: 'src/img/*.svg',
+                    to: 'cluml/img/[name][ext]'
                 },
                 {
                     from: 'src/help',
-                    to: 'cirsim/help'
+                    to: 'cluml/help'
                 }
             ]
         })
@@ -75,7 +79,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(jpe?g|png|gif)$/i,
+                test: /\.(jpe?g|png|gif|svg)$/i,
                 loader:"file-loader",
                 options: {
                     name:'[name].[ext]',

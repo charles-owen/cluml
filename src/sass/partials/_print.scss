@@ -1,0 +1,9 @@
+@media print {
+  body {
+    visibility: hidden;
+  }
+
+  div.tab.selected canvas {
+    visibility: visible;
+  }
+}

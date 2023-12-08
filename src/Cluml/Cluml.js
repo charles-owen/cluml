@@ -1,12 +1,14 @@
-// import {Main} from './Main';
 import {Options} from './Options';
 import {Ready} from './Utility/Ready';
+import {Main} from "./Main";
+import Components from "./Components";
+import {All} from "./Components/All";
 
 /**
  * Create an instance of Cluml
  *
  * This creates a single Instance that manages the
- * components and starts actual Cluml windows.
+ * diagrams and starts actual Cluml windows.
  *
  * Construct and start running like this:
  *
@@ -42,8 +44,27 @@ export const Cluml = function(sel, options) {
     // The Options object that manages user options
     this.options = new Options(options);
 
-    // A collection of Main objects.
-    var mains = [];
+    /**
+     * Install all components and configure standard
+     * Cluml palettes.
+     * @type {Components}
+     */
+    this.components = new Components();
+    All(this.components);
+
+    /**
+     *  A collection of Main objects.
+     * @type {Main[]}
+     */
+    let mains = [];
+
+    /**
+     * A collection of tests.
+     * We collect those in Cluml because the actual
+     * Main may not be created, yet.
+     * @type {Test[]}
+     */
+    var tests = [];
 
     /**
      * Start Cluml running, creating the user interface.
@@ -133,5 +154,4 @@ export const Cluml = function(sel, options) {
             main.runTest(test);
         })
     }
-
 }
