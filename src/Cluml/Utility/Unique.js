@@ -1,5 +1,5 @@
 /**
- * Convenience class for generating unique Cirsim-specific ID's
+ * Convenience class for generating unique Cluml-specific ID's
  * @constructor
  */
 export const Unique = function() {
@@ -12,7 +12,7 @@ Unique.uniqueId = function() {
 }
 
 Unique.uniqueName = function() {
-    return "cirsim-id-" + Unique.unique++;
+    return "cluml-id-" + Unique.unique++;
 }
 
 export default Unique;
