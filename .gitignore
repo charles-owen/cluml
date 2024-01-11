@@ -18,6 +18,7 @@ dist/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+.vscode
 
 # Runtime data
 pids
